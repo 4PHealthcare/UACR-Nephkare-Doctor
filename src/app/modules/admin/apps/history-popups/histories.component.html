@@ -1,0 +1,46 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="text-2xl font-semibold tracking-tight">{{tempData.index?'Update':'Add'}} Histories</div>
+    <!-- <div *ngIf="editMode" class="text-2xl font-semibold tracking-tight">Edit User</div> -->
+    <button class="ml-auto" mat-icon-button (click)="close()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  
+  <div [ngClass]="tempData?.patient?.gender == 'female' ? 'history-tabfemale':'history-tabmale'">
+
+  <mat-tab-group class="pt-5 w-full history-tab" [(selectedIndex)]="tabIndex">
+    <mat-tab label="Medical History">
+      <ng-template matTabContent>
+        <app-medical-history></app-medical-history>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Surgical History">
+      <ng-template matTabContent>
+        <app-surgical-history></app-surgical-history>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Social Determinants of Health(SDOH)">
+      <ng-template matTabContent>
+        <app-social-history></app-social-history> 
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Family History">
+      <ng-template matTabContent>
+        <app-family-history></app-family-history>
+      </ng-template>
+    </mat-tab>
+    
+    <mat-tab label="Menstrual History" *ngIf="tempData?.patient?.gender !== 'male' && tempData?.patient?.gender !== 'other'">
+      <ng-template matTabContent>
+        <app-menustrual-history></app-menustrual-history>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+</div>

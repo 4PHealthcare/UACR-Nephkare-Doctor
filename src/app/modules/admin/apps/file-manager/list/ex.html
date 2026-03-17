@@ -1,0 +1,315 @@
+
+       
+          <div class="absolute w-full flex-col sm:flex-row items-start sm:items-center sm:justify-between p-6 sm:pt-12 pb-12 md:px-8 bg-card dark:bg-transparent">
+            <div class="text-4xl font-extrabold tracking-tight leading-none">
+              Reports
+              <div class="inline ml-7" *ngIf="!items.path.length">
+                <ng-container> </ng-container>
+                <button
+                  class="ml-4 float-right"
+                  mat-flat-button
+                  [color]="'primary'"
+                  [disabled]="!selectedPatientId"
+                  (click)="openUpload()"
+                >
+                  <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                  <span class="ml-2 mr-1">Upload files</span>
+                </button>
+                <mat-form-field
+                  class="float-right fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-2/4"
+                >
+                  <mat-icon
+                    class="icon-size-5"
+                    matPrefix
+                    [svgIcon]="'heroicons_solid:search'"
+                  ></mat-icon>
+                  <input
+                    matInput
+                    [matAutocomplete]="auto"
+                    (input)="onSearchTerm($event)"
+                    [placeholder]="'Search for Patient Name, Phone no'"
+                    [value]="selectedPatient$ | async"
+                    [disabled]="id || selectedPatientId"
+                  />
+
+                  <button
+                    *ngIf="!id && selectedPatientId"
+                    matSuffix
+                    mat-icon-button
+                    aria-label="Clear"
+                    (click)="clearReports()"
+                    
+                  >
+                    <mat-icon>close</mat-icon>
+                  </button>
+
+                  <mat-autocomplete
+                    #auto="matAutocomplete"
+                    (optionSelected)="onSelectionChange($event)"
+                  >
+                    <mat-option
+                      class="capitalize"
+                      *ngFor="let option of filteredOptions$ | async"
+                      [id]="option.patientid"
+                      [value]="option.full_name + ' - ' + option.age+' Years'+ ' - ' +(option.gender == 'male' ? 'Male' : option.gender == 'female' ? 'Female' : 'Other') + ' - ' +option.mobile_no "
+                    >
+                      <b>{{option.full_name}} </b> - {{option.age}} Years -
+                      {{option.gender}} - {{option.mobile_no}}
+                    </mat-option>
+                  </mat-autocomplete>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+        
+
+        <div class="p-6 md:p-8 space-y-8" *ngIf="selectedPatient$ | async">
+          <ng-container *ngIf="patientReport$ | async as reportcount">
+            <div class="ml-2 text-left">
+              <mat-button-toggle-group
+                class="profile-button-group"
+                value="lab"
+                [(ngModel)]="toggleGroupType"
+                #taskDistributionWeekSelector="matButtonToggleGroup"
+              >
+                <mat-button-toggle [value]="57" (click)="GetLabpreports()"
+                  >Lab Reports</mat-button-toggle
+                >
+                <mat-button-toggle
+                  [value]="55"
+                  (click)="GetPrescriptionpreports()"
+                  >Prescriptions
+                </mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+          </ng-container>
+
+          <ng-container *ngIf="patientReport$ | async as reportcount">
+            <div
+              *ngIf="reportcount?.lab_count !== 0 || reportcount?.radiology_count !== 0 || reportcount?.prescription_count !== 0"
+            >
+              <div
+                class="font-medium"
+                *ngIf="isLabReport && reportcount?.lab_count !== 0"
+              >
+                Lab reports
+              </div>
+              <div
+                class="font-medium"
+                *ngIf="isPrescription && reportcount?.prescription_count !== 0"
+              >
+                Prescriptions
+              </div>
+              <div class="flex flex-wrap -m-2 mt-2" *ngIf="isPrescription">
+                <ng-container *ngIf="investigationReport$ | async as reports">
+                  <ng-container *ngFor="let report of reports">
+                    <ng-container
+                      *ngIf="report.listOfFiles && report.listOfFiles.length !==0 && report.listOfFiles[0].mime_type.includes('image')"
+                    >
+                      <div
+                        class="flex flex-col w-60 m-2 shadow rounded-2xl cursor-pointer bg-card bg-no-repeat bg-cover"
+                        [ngStyle]="{background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,.4)),url(\'' + report.src  +'\')'}"
+                      >
+                        <div
+                          class="aspect-w-9 aspect-h-6"
+                          (click)="downloadFile(report)"
+                        ></div>
+                        <div
+                          class="flex flex-col flex-auto pl-2.5 rounded-b-2xl text-left text-sm font-medium bg-white h-10 leading-10"
+                        >
+                          <div>
+                            {{report?.name}} 
+                            {{report.from_prescription ? 'Created by' : 'Uploaded by'}}
+                              {{report.role_name}} - {{ report.created_on | date:
+                            'dd/MMM/yyyy' }}
+
+                            <button
+                              *ngIf="report.role_id != 3 && !report.from_prescription"
+                              mat-icon-button
+                              class="hover-ht w-6 h-6 float-right hover:bg-white"
+                              (click)="deleteInvestigationReport(report)"
+                            >
+                              <mat-icon class="icon-display"
+                                svgIcon="heroicons_outline:trash"
+                              ></mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-container
+                      *ngIf="report.listOfFiles && report.listOfFiles.length !==0 && !report.listOfFiles[0].mime_type.includes('image')"
+                    >
+                      <div
+                        class="flex flex-col w-60 m-2 shadow rounded-2xl cursor-pointer bg-card"
+                      >
+                        <div class="aspect-w-9">
+                          <pdf-viewer
+                            class="pdf-style"
+                            (click)="downloadFile(report)"
+                            [src]="report.src"
+                            [original-size]="false"
+                            [render-text]="false"
+                            [show-all]="false"
+                            style="
+                              width: 100%;
+                              height: 160px;
+                              border-bottom: 1px solid gray;
+                              overflow-y: hidden;
+                              background-color: black;
+                            "
+                          ></pdf-viewer>
+                        </div>
+                        <div
+                          class="flex flex-col flex-auto pl-2.5 rounded-b-2xl text-left text-sm font-medium bg-white h-10 leading-10"
+                        >
+                          <div class="truncate">
+                            {{report?.name}} 
+                            {{report.from_prescription ? 'Created by' : 'Uploaded by'}}
+                              {{report.role_name}} - {{ report.created_on | date:
+                            'dd/MMM/yyyy' }}
+
+                            <button
+                              *ngIf="report.role_id != 3 && !report.from_prescription"
+                              mat-icon-button
+                              class="hover-ht w-6 h-6 float-right hover:bg-white"
+                              (click)="deleteInvestigationReport(report)"
+                            >
+                              <mat-icon class="icon-display"
+                                svgIcon="heroicons_outline:trash"
+                              ></mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </div>
+              <div class="mt-2" *ngIf="isLabReport" infiniteScroll
+              [infiniteScrollDistance]="0.5"
+              (scrolled)="onScroll($event)">
+                <ng-container *ngIf="labReport$ | async as reports">
+                  <ng-container *ngFor="let report of reports" class="boxes">
+                    <ng-container
+                      *ngIf="report.listOfFiles && report.listOfFiles.length !==0 && report.listOfFiles[0].mime_type.includes('image')"
+                    >
+                      <div
+                        class="flex flex-col w-60 m-2 shadow rounded-2xl cursor-pointer bg-card bg-no-repeat bg-cover"
+                        [ngStyle]="{background: 'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,.4)),url(\'' + report.src +'\')'}"
+                      >
+                        <div
+                          class="aspect-w-9 aspect-h-6"
+                          (click)="downloadFile(report)"
+                        ></div>
+                        <div
+                          class="flex flex-col flex-auto pl-2.5 rounded-b-2xl text-left text-sm font-medium bg-white h-10 leading-10"
+                        >
+                          <div class="truncate">
+                            {{report?.name}} 
+                            {{report.from_prescription ? 'Created by' : 'Uploaded by'}}
+                              {{report.role_name}} - {{ report.created_on | date:
+                            'dd/MMM/yyyy' }}
+
+                            <button
+                              *ngIf="report.role_id != 3 && !report.from_prescription"
+                              mat-icon-button
+                              class="hover-ht w-6 h-6 float-right hover:bg-white"
+                              (click)="deleteInvestigationReport(report)"
+                            >
+                              <mat-icon class="icon-display"
+                                svgIcon="heroicons_outline:trash"
+                              ></mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+
+                    <ng-container
+                      *ngIf="report.listOfFiles && report.listOfFiles.length !==0 && !report.listOfFiles[0].mime_type.includes('image')"
+                    >
+                      <div
+                        class="flex flex-col w-60 m-2 shadow rounded-2xl cursor-pointer bg-card"
+                      >
+                        <div class="aspect-w-9">
+                          <pdf-viewer
+                            class="pdf-style"
+                            (click)="downloadFile(report)"
+                            [src]="report.src"
+                            [original-size]="false"
+                            [render-text]="false"
+                            [show-all]="false"
+                            style="
+                              width: 100%;
+                              height: 160px;
+                              border-bottom: 1px solid gray;
+                              overflow-y: hidden;
+                              background-color: black;
+                            "
+                          ></pdf-viewer>
+                        </div>
+                        <div
+                          class="flex flex-col flex-auto pl-2.5 rounded-b-2xl text-left text-sm font-medium bg-white h-10 leading-10"
+                        >
+                          <div class="truncate">
+                            {{report?.name}} 
+                            {{report.from_prescription ? 'Created by' : 'Uploaded by'}}
+                              {{report.role_name}} - {{ report.created_on | date:
+                            'dd/MMM/yyyy' }}
+
+                            <button
+                              *ngIf="report.role_id != 3 && !report.from_prescription"
+                              mat-icon-button
+                              class="hover-ht w-6 h-6 float-right hover:bg-white"
+                              (click)="deleteInvestigationReport(report)"
+                            >
+                              <mat-icon class="icon-display"
+                                svgIcon="heroicons_outline:trash"
+                              ></mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </ng-container>
+              </div>
+            </div>
+            <div
+              class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent"
+              *ngIf="(isLabReport && reportcount?.lab_count == 0) || (isPrescription && reportcount?.prescription_count == 0)"
+            >
+              <div class="m-auto">
+                <img
+                  class="w-3/4"
+                  src="../../../../../../assets/images/non-data-found.gif"
+                />
+              </div>
+            </div>
+          </ng-container>
+        </div>
+
+        <ng-container *ngIf="!selectedPatientId">
+          <div class="m-auto">
+            <img
+              class="w-3/4"
+              src="../../../../../../assets/images/non-data-found.gif"
+           />
+          </div>
+        </ng-container>
+
+        <ng-template #noItems>
+          <div
+            class="flex flex-auto flex-col items-center justify-center bg-gray-100 dark:bg-transparent"
+          >
+            <mat-icon class="icon-size-24" [svgIcon]="'iconsmind:file_hide'">
+            </mat-icon>
+            <div
+              class="mt-4 text-2xl font-semibold tracking-tight text-secondary"
+            >
+              There are no items!
+            </div>
+          </div>
+        </ng-template>
+      

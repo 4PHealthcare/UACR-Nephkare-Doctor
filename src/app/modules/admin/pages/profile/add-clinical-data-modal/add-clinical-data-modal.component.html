@@ -1,0 +1,94 @@
+<div class="h-screen flex flex-col">
+    <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+      <div class="text-2xl font-semibold tracking-tight">Clinical Data</div>
+      <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+        <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+      </button>
+    </div>
+    <form class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3" [formGroup]="clincicalDataForm"
+    #clincicalDataNGForm="ngForm">
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-4">
+            <mat-form-field class="fuse-mat-no-subscript w-full" appearance="fill"   floatLabel="always">
+                <mat-label>Tell us about your health</mat-label>
+                <textarea   matInput cdkTextareaAutosize
+                #autosize="cdkTextareaAutosize"
+                cdkAutosizeMinRows="1"
+                cdkAutosizeMaxRows="5" [formControlName]="'healthinfo'" >
+                </textarea>
+            </mat-form-field>
+        </div>
+        <div class="sm:col-span-4">
+            <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                <mat-label>Describe about your health problems</mat-label>
+                <textarea matInput  [formControlName]="'healthproblem'" >
+                </textarea>
+            </mat-form-field>
+        </div>
+        <div class="sm:col-span-4 form-group"> 
+            <mat-label class="clr-lt-blk">What symptoms are you experiencing right now? (check all that apply).</mat-label><br>
+            <div class="grid sm:grid-cols-3 pt-1 w-full">
+                <mat-checkbox class="example-margin" [color]="'primary'" *ngFor="let symptom of symptoms; let i = index;" 
+                    [value]="symptom.name" [checked]="symptom.checked" (change)="changeHandler(i);">
+                    {{symptom.name}}
+                </mat-checkbox>
+            </div>
+        </div>
+        <div class="sm:col-span-4 form-group">
+            <mat-label class="clr-lt-blk">Tell me about your Risk Factors</mat-label><br>
+            <div class="grid sm:grid-cols-3 pt-1 w-full">
+                <mat-checkbox class="example-margin" [color]="'primary'" *ngFor="let riskFactor of riskFactors; let i = index" 
+                [value]="riskFactor.name" [checked]="riskFactor.checked" (change)="changeRiskHandler(i);">
+                    {{riskFactor.name}}
+                </mat-checkbox>
+            </div>
+        </div> 
+        <div class="sm:col-span-4 form-group">
+          <mat-label class="clr-lt-blk">Have you used pain killer frequently in the past</mat-label><br>
+          <mat-radio-group class="pt-1" aria-label="Select an option" formControlName="painkiller_used">
+            <mat-radio-button  class="form-control example-radio-button" value="yes" class="capitalize">Yes</mat-radio-button>
+            <mat-radio-button  class="form-control example-radio-button" value="no" class="capitalize">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="sm:col-span-4 form-group">
+          <mat-label class="clr-lt-blk">Do you smoke?</mat-label><br>
+          <mat-radio-group class="pt-1" aria-label="Select an option" formControlName="do_smoke">
+            <mat-radio-button  class="form-control example-radio-button" value="yes" class="capitalize">Yes</mat-radio-button>
+            <mat-radio-button  class="form-control example-radio-button" value="no" class="capitalize">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="sm:col-span-4 form-group">
+          <mat-label class="clr-lt-blk">Do you drink alcohol?</mat-label><br>
+          <mat-radio-group class="pt-1" aria-label="Select an option" formControlName="do_drink">
+            <mat-radio-button  class="form-control example-radio-button" value="yes" class="capitalize">Yes</mat-radio-button>
+            <mat-radio-button  class="form-control example-radio-button" value="no" class="capitalize">No</mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <!-- <div class="sm:col-span-4 form-group"> 
+            <mat-label class="clr-lt-blk">Upload your medical reports</mat-label><br>
+            <input class="mt-3" type='file' (change)="onSelectFile($event)"><br>
+            <div class="flt-lt w-30pc mr-2.5" *ngFor='let url of urls;let i=index;'>
+              <mat-icon class="trash" color="warn" svgIcon="heroicons_solid:x-circle" (click)="deleteFileNew(i, url)" ></mat-icon>
+              <img  [src]="url" /> 
+              </div>
+            <div class="flt-lt w-30pc mr-2.5"  *ngFor='let url of edit_urls;let i=index;'>
+              <mat-icon class="trash" color="warn" svgIcon="heroicons_solid:x-circle" (click)="deleteFile(i, url)"></mat-icon>
+              <img   [src]="url.src"/>
+            </div>
+        </div> -->
+      </div>
+      <!-- Divider -->
+      <div class="mt-11 mb-10 border-t"></div>
+      <!-- Actions -->
+      <div class="flex items-center justify-end"> 
+        <button mat-flat-button type="button"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+        <!-- [disabled]="clincicalDataForm.invalid || urls.length==0"  -->
+        <button type="submit" mat-flat-button [color]="'primary'" (click)="save()">
+          <span  class="ml-2 mr-1">Save</span>
+        </button>
+      </div>
+    </form>
+  </div>
+  

@@ -1,0 +1,117 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div *ngIf="!editMode" class="text-2xl font-semibold tracking-tight">Add Present Illness</div>
+    <div *ngIf="editMode" class="text-2xl font-semibold tracking-tight">Update Present Illness</div>
+    <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+
+  <form
+    class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+    [formGroup]="presentIllnessForm"
+    #presentIllnessNGForm="ngForm" 
+  >
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-2 form-group">
+        <mat-label>Settings of AKI <span>*</span></mat-label><br />
+        <mat-radio-group aria-label="Select an option" [formControlName]="'settingAki'">
+          <mat-radio-button
+            class="form-control example-radio-button"
+            
+            *ngFor="let season of seasons"
+            
+            [value]="season.id"
+          >
+            {{ season.name }}
+          </mat-radio-button>
+        </mat-radio-group>
+        <div *ngIf="submitted && f.settingAki.errors" class="invalid-feedback alert alert-danger">
+          <div *ngIf="f.settingAki.errors.required">Settings of AKI is required</div>
+        </div>
+      </div>
+      <div class="sm:col-span-2 form-group" *ngIf="presentIllnessForm.get('settingAki').value">
+        <mat-label>Onset</mat-label><br />
+        <mat-radio-group aria-label="Select an option"  [formControlName]="'onset'">
+          <mat-radio-button
+            class="form-control example-radio-button"
+            *ngFor="let season of state"
+           
+            [value]="season.id"
+          >
+            {{ season.name }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="sm:col-span-2 form-group" *ngIf="presentIllnessForm.get('settingAki').value">
+        <mat-label>Recurrence</mat-label><br />
+        <mat-radio-group aria-label="Select an option" [formControlName]="'recurrence'">
+          <mat-radio-button
+            class="form-control example-radio-button"
+            *ngFor="let season of recurrence"
+            
+            [value]="season.value"
+          >
+            {{ season.name }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="sm:col-span-4 form-group" *ngIf="presentIllnessForm.get('settingAki').value">
+        <mat-label>Signs & Symptoms</mat-label> 
+        <br />
+        <div class="grid sm:grid-cols-1 gap-4 w-full">
+          
+          <section class="example-section">
+            <div class="grid grid-cols-4 gap-4">
+            <mat-checkbox
+            class="example-margin form-control"
+              [color]="'primary'"
+              [checked] = "symptom.checked"
+              *ngFor="let symptom of symptoms"
+              (change)="selectedSymptom(symptom, $event)"
+            >
+              {{ symptom.name }}
+            </mat-checkbox>
+          </div>
+          </section>
+          <div class="grid grid-cols-2 gap-4" *ngIf="test" >
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+              <mat-label>Other <span>*</span></mat-label>
+              <input
+                matInput
+               
+                [placeholder]="'Enter'"
+                
+              />
+            </mat-form-field>
+            </div>
+        </div>
+      </div>
+    </div>
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+      <button mat-flat-button type="button" (click)="dialogRef.close()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+        <span class="ml-2 mr-1">Cancel</span>
+      </button>
+      <button
+        type="submit"
+        mat-flat-button
+        [color]="'primary'" 
+        (click)="onSubmit()"     
+      >
+        <span *ngIf="!editMode" class="ml-2 mr-1">Save</span>
+        <span *ngIf="editMode" class="ml-2 mr-1">Update</span>
+      </button>
+    </div>
+  </form>
+</div>

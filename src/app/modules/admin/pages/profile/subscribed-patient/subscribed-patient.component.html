@@ -1,0 +1,14 @@
+
+    <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-white mb-5  text-secondary dark:bg-white dark:bg-opacity-5 border-d3d3d3" *ngIf="isSubscribedPatient"> 
+        <div class="text-5xl font-semibold leading-none tracking-tight" >
+            <img src="assets/images/avatars/Payment.png">
+        </div>
+        
+        <div class="text-3xl text-blue-500 font-semibold leading-none tracking-tight mt-5">{{subscriptionObj.planname}}</div>
+    </div>
+    <div class="col-span-2 sm:col-span-1 flex flex-col items-center justify-center py-8 px-1 rounded-2xl bg-white mb-5  text-secondary dark:bg-white dark:bg-opacity-5 border-d3d3d3 h-350" *ngIf="!isSubscribedPatient">
+        <div class="text-2xl text-blue-500 font-semibold leading-none tracking-tight ">Unsubscribed</div>
+    </div>
+   
+    
+

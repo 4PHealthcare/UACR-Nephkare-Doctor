@@ -1,0 +1,223 @@
+<!-- <div class="w-full">
+  
+  <form [formGroup]="serviceForm">
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Service name</mat-label>
+
+          <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+          <input 
+            matInput
+            [placeholder]="'Search / Enter service name'"
+            [formControlName]="'service'"
+            [matAutocomplete]="auto" 
+            (input)="type=='lab' && searchDrugsTerm($event)"
+          />
+          <mat-autocomplete #auto="matAutocomplete">
+
+            <mat-option *ngFor="let option of filteredOptions$ | async" [id]="option.icdCodeId" [value]="option.hospital_test_name">
+              {{option.hospital_test_name}}
+            </mat-option>
+          </mat-autocomplete>
+
+        </mat-form-field>
+      </div>
+
+     
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Price</mat-label>
+          <input
+            matInput
+            type="number"
+            [placeholder]="'Enter'"
+            [formControlName]="'fee'"
+          />
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="flex items-center justify-end mt-8">
+      <button mat-stroked-button type="button" (click)="clear()">
+        {{serviceId ? 'Cancel':'Clear'}}
+      </button>
+
+      <button
+        class="ml-4"
+        [color]="'primary'"
+        (click)="saveDoctorSchedule()"
+        [disabled]="serviceForm.invalid"
+        mat-flat-button
+        type="button"
+      >
+        {{ serviceId ? "Update" : "Save" }}
+      </button>
+    </div>
+  </form>
+</div> -->
+<!-- Divider -->
+<!-- <div class="mt-11 mb-10 border-t"></div> -->
+
+<div
+  class="relative flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between pb-6 border-b"
+>
+  <!-- Loader -->
+  <div class="absolute inset-x-0 bottom-0"></div>
+  <!-- Title -->
+  <div class="text-2xl font-extrabold tracking-tight">Service Names</div>
+  <!-- Actions -->
+  <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+    <!-- Search -->
+    <mat-form-field
+      class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-100"
+    >
+      <mat-icon
+        class="icon-size-5"
+        matPrefix
+        [svgIcon]="'heroicons_solid:search'"
+      ></mat-icon>
+      <input
+        matInput
+        [autocomplete]="'off'"
+        [placeholder]="'Search for service name'"
+        (keyup)="applyFilter($event.target.value)"
+      />
+    </mat-form-field>
+
+    <button class="ml-4" mat-flat-button [color]="'primary'" (click)="openAddService()" *ngIf="!(userInfo.role_id != 5 && type == 'op')">
+      <mat-icon [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+      <span class="ml-2 mr-1">Add</span>
+    </button>
+
+    <!-- Add product button -->
+  </div>
+</div>
+<!-- {{dataSource}} -->
+<div class="flex flex-auto overflow-hidden">
+  <div
+    class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto"
+  >
+    <table
+      mat-table
+      [dataSource]="dataSource"
+      matSort
+      (matSortChange)="announceSortChange($event)"
+      class="mat-elevation-z8"
+    >
+      <!-- Name Column -->
+      <ng-container matColumnDef="service_type">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by name"
+          class="col-width-40"
+        >
+          Service name 
+        </th>
+        <td mat-cell class="pr-5" *matCellDef="let element">{{element.doctor_name ? element.doctor_name : element.service_type}}</td>
+      </ng-container>
+      <ng-container matColumnDef="service_name">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by name"
+          class="col-width-20"
+        >
+          Service Type 
+        </th>
+        <td mat-cell class="pr-5" *matCellDef="let element">{{element.services ?element.services: '--'}}</td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="price">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by price"
+          class="col-width-20"
+        >
+          Price
+        </th>
+        <td mat-cell *matCellDef="let element">&#8377;{{element.price}}</td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="created_on">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by weight"
+          class="col-width-20"
+        >
+          Creation date
+        </th>
+        <td mat-cell *matCellDef="let element">
+          {{element.created_on | date:'dd MMM, y' }}
+        </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="action">
+        <th
+          mat-header-cell
+          *matHeaderCellDef
+          mat-sort-header
+          sortActionDescription="Sort by symbol"
+          class="col-width-15"
+        >
+          Actions
+        </th>
+        <td mat-cell *matCellDef="let element" class="col-width-15">
+          <button
+            class="min-w-10 min-h-7 h-7 px-2 mr-2 leading-6"
+            mat-stroked-button
+            (click)="openAddService(element)"
+          >
+            <mat-icon
+              [matTooltip]="'Edit'"
+              class="icon-size-5"
+              [svgIcon]="'heroicons_solid:pencil-alt'"
+            >
+            </mat-icon>
+          </button>
+
+          <button
+            class="min-w-10 min-h-7 h-7 px-2 leading-6"
+            mat-stroked-button
+            (click)="deleteRecord(element.service_id)"
+          >
+            <mat-icon
+              class="icon-size-5"
+              [matTooltip]="'Delete'"
+              [svgIcon]="'heroicons_solid:trash'"
+            >
+            </mat-icon>
+          </button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+
+      <tr class="mat-row" *matNoDataRow>
+        <td class="mat-cell text-center" colspan="4">No data</td>
+      </tr>
+
+      <!-- <ng-template [ngIf]="dataSource.data.length === 0">
+    <tr mat-footer-row *matFooterRowDef="['noRecord']"></tr>
+  </ng-template> -->
+
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+  </div>
+</div>

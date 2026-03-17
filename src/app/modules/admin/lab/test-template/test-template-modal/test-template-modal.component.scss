@@ -1,0 +1,47 @@
+.temlate-list-modal-grid {
+    grid-template-columns: 48px auto 40px;
+  
+    @screen sm {
+      grid-template-columns: 48px auto 112px 72px;
+    }
+  
+    @screen md {
+      grid-template-columns: 48px 112px auto 112px 72px;
+    }
+  
+    @screen lg {
+      grid-template-columns: 25% 15% 10% 25% 10%;
+    }
+  
+    .mat-icon.vitals-active {
+      color: green !important;
+    }
+  }
+  
+  .back-ground-sky-100{
+    background: rgb(219 234 254);
+  }
+table tr td{
+  
+  padding-bottom: 5px;
+}
+.bg-color-sky{
+  background: #d1eef8 !important;
+}
+
+.test-list-modal {
+  border-collapse: collapse;
+
+  td, th {
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+  }
+  th {
+    font-size: 16px !important;
+  }
+}
+
+
+.no-data {
+  pointer-events: none;
+}

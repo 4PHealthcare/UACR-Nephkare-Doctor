@@ -1,0 +1,30 @@
+.content-info-main {
+
+    padding-inline-start: 20px;
+    margin-top: 10px;
+ 
+   .content-header {
+     font-size: 12px;
+     font-weight: bold;
+     color: #397EF5;
+ 
+     a {
+       text-decoration: underline;
+       text-underline-offset: 2px;
+     }
+   }
+ 
+   .content-info {
+     font-size: 12px;
+   }
+ 
+   li {
+     padding-bottom: 8px;
+   }
+   
+   li::marker {
+     // font-size: 1.2em;
+     color: #387DF2;
+   }
+ 
+ }

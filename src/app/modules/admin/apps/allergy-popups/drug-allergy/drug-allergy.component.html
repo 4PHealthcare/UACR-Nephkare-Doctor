@@ -1,0 +1,176 @@
+<div class="h-screen flex flex-col">
+  <!-- [formGroup]="drugAllergForm" -->
+
+  <form
+    class="flex-auto px-6"
+    [formGroup]="drugAllergForm"
+    #drugAllergyNGForm="ngForm"
+  >
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8"> 
+      <div class="sm:col-span-2">
+        <!-- <mat-form-field
+        class="fuse-mat-no-subscript w-full"
+        floatLabel="always">
+          <mat-label>Allergen/Drug <span>*</span></mat-label>
+          <input matInput [formControlName]="'allergyName'" [placeholder]="'Enter'" />
+        </mat-form-field> -->
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always">
+          <mat-label>Allergen/Drug <span>*</span></mat-label>
+          <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+          <input
+            matInput
+            formControlName="allergyName"
+            [placeholder]="'Search'"
+            [matAutocomplete]="auto"
+            (focus)="searchAllergies()"
+            
+          />
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option
+              *ngFor="let data of filteredOptions | async"
+              [value]="data.data_name" [ngClass]="_allowSelection(data.data_name)"
+            >
+              {{ data.data_name }}
+            </mat-option>
+          </mat-autocomplete>
+          <!-- <mat-select
+              [formControlName]="'allergyName'"
+              class="mr-4 min-w-50"
+              placeholder="Select"
+              multiple>
+              <mat-option *ngFor="let data of DrugAllergies" [value]="data.data_name">{{
+                data.data_name
+              }}</mat-option>
+          </mat-select> -->
+      </mat-form-field>
+        <div
+          *ngIf="f.allergyName.touched && f.allergyName.invalid"
+          class="alert alert-danger"
+        >
+          <div
+            *ngIf="f.allergyName.errors && f.allergyName.errors.required"
+          >
+          Allergen/Drug is required.
+          </div>
+        </div>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Reaction <span>*</span></mat-label>
+
+          <!-- <mat-select
+            [placeholder]="'Select'"
+            multiple
+            [formControlName]="'reaction'">
+            <mat-option *ngFor="let data of reactions" [value]="data.data_name">
+              {{data.data_name}}
+            </mat-option>
+          </mat-select> -->
+          <mat-chip-list #chipList2 aria-label="Select" class="custom-chip-list">
+            <mat-chip
+              *ngFor="let lab of observations | isActivePipe"
+              (removed)="removeObservation(lab)"
+            >
+              {{ lab.complaint_name }}
+              <button matChipRemove>
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+            <!-- (focus)="recentObservation()"  -->
+            <input
+              placeholder="Enter"
+              #observationsInput
+              [formControlName]="'reaction'"
+              [matAutocomplete]="auto2"
+              [matChipInputFor]="chipList2"
+              [matChipInputAddOnBlur]="false"
+              (blur)="addOnBlur($event)"
+              (matChipInputTokenEnd)="addObservation($event)"
+              [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+              (input)="searchObservationsTerm($event)"
+              (focus)="recentObservation()"
+              #trigger="matAutocompleteTrigger" 
+              (click)="selectionMade($event, trigger)"
+            />
+          </mat-chip-list>
+          <mat-autocomplete
+            #auto2="matAutocomplete"
+            (optionSelected)="selectedObervation($event)"
+          >
+            <mat-option
+            *ngFor="let option of filteredObervationsOptions$ | async"
+            [id]="option.name"
+            [value]="option.name"
+            >
+              {{ option.name }}
+            </mat-option>
+          </mat-autocomplete> 
+        </mat-form-field>
+        <div
+          *ngIf="f.reaction.touched && f.reaction.invalid"
+          class="alert alert-danger"
+        >
+          <div
+            *ngIf="f.reaction.errors && f.reaction.errors.required"
+          >
+            Reaction is required.
+          </div>
+        </div>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Status <span>*</span></mat-label>
+        <br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'status'"
+        >
+          <mat-radio-button
+            [color]="primary"
+            *ngFor="let status of status"
+            [value]="status"
+            class="capitalize"
+          >
+            {{ status }}
+          </mat-radio-button>
+        </mat-radio-group>
+        <div
+          *ngIf="f.status.touched && f.status.invalid"
+          class="alert alert-danger"
+        >
+          <div
+            *ngIf="f.status.errors && f.status.errors.required"
+          >
+          Status is required.
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+      <button mat-flat-button type="button" (click)="onReset()" class="border-solid border-primary-500 text-primary-500 mr-2">
+        <span class="ml-2 mr-1" >Cancel</span>
+      </button>
+      <button
+        type="submit"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="drugAllergyNGForm.invalid || isLoadingSpinner || observations.length == 0"
+         (click)="onSubmit();drugAllergyNGForm.resetForm()"
+      >
+        <span *ngIf="!editMode" class="ml-2 mr-1" >Save</span>
+        <mat-progress-spinner
+        *ngIf="isLoadingSpinner"
+         [diameter]="24"
+         [mode]="'indeterminate'"></mat-progress-spinner>
+        <span *ngIf="editMode" class="ml-2 mr-1">Update</span>
+      </button>
+    </div>
+  </form>
+</div>

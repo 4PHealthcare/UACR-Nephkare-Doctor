@@ -1,0 +1,84 @@
+<div class="flex flex-col h-screen">
+  <header>
+    <div
+      class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+    >
+      <div class="ml-3 text-2xl font-semibold tracking-tight">Relations</div>
+
+      <button class="ml-auto" mat-icon-button (click)="dismiss('patient')">
+        <mat-icon
+          class="text-current"
+          [svgIcon]="'heroicons_outline:x'"
+        ></mat-icon>
+      </button>
+    </div>
+  </header>
+  <main class="flex-1 overflow-y-auto p-5">
+    <form
+      [formGroup]="testListForm"
+      #testListFormNGForm="ngForm"
+      class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-8 lg:pr-8 lg:pt-3"
+    >
+      <div
+        class="flex flex-col flex-auto mt-4 overflow-hidden sm:overflow-y-auto"
+        formArrayName="tests"
+      >
+        <ng-container>
+          <div class="grid">
+            <!-- Header -->
+            <div
+              class="test-list-modal-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md text-font-500 text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+            >
+              <div class="hidden md:block items-center">Patinet Name</div>
+              <div class="hidden md:block items-center">Relation Type</div>
+              <div class="hidden md:block items-center">DOB</div>
+              <div class="hidden md:block items-center">Age</div>
+              <div class="hidden md:block items-center">Gender</div>
+              <div></div>
+            </div>
+            <!--  -->
+            <ng-container *ngFor="let data of relationsList; let i = index">
+              <ng-container>
+                <div
+                  class="test-list-modal-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                >
+                  <div>{{ data.first_name }} {{ data.last_name }}</div> 
+
+                  <div>
+                    {{
+                      data.dependent_relationship
+                        ? data.dependent_relationship
+                        : "Me"
+                    }}
+                  </div>
+                  <div>{{ data.dob | date: "dd/MMM/yyyy" }}</div>
+                  <div>{{ data.age }}</div>
+                  <div class="capitalize">{{ data.gender }}</div>
+                  <div>
+                    <button mat-flat-button class="bg-blue-400 text-white ml-4" (click)="dismiss('booking', data)">
+                      <span class="ml-2 mr-1">Continue</span>
+                    </button>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+    </form>
+  </main>
+  <footer>
+    <div
+      class="bg-color-sky text-center flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-4 px-4 md:px-4 border-b"
+    >
+      <button
+        type="submit"
+        mat-flat-button
+        [color]="'primary'"
+        (click)="dismiss('patient')"
+      >
+        <span class="ml-2 mr-1">Add New patient</span>
+      </button>
+    </div>
+  </footer>
+</div>

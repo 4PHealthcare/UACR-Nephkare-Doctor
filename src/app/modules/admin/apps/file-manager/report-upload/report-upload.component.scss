@@ -1,0 +1,39 @@
+.upload {
+    padding-left: 20px;
+    padding-top: 0px;
+    .upload_card {
+      height: 112px;
+      border-style: dashed;
+      border-color: #fd0d1b;
+      border-radius: 14px;
+      width: 92px;
+      .upload_file {
+        color: #fd0d1b;
+        font-size: 12px;
+        font-weight: 400 !important;
+      }
+    }
+  }
+  .upload_card {
+    position: relative;
+  }
+  .vertical-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+  
+    ion-button {
+      img {
+        padding-right: 5px;
+      }
+    }
+  }
+  .no-margin {
+    margin-top: 0px;
+    margin-bottom: 0px;
+    font-weight: bold;
+  }
+  #fileInput {
+    display: none;
+  }

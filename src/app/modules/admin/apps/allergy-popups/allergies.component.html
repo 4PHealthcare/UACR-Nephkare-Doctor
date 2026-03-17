@@ -1,0 +1,32 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="text-2xl font-semibold tracking-tight" *ngIf="!editMode"> Add Allergies</div>
+    <div class="text-2xl font-semibold tracking-tight" *ngIf="editMode"> Update Allergies</div>
+    <button class="ml-auto" mat-icon-button (click)="close()"> 
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+
+  <mat-tab-group class="pt-5 w-full history-tab" [(selectedIndex)]="tabIndex">
+    <mat-tab label="Food Allergies">
+      <ng-template matTabContent>
+        <app-food-allergy></app-food-allergy>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Drug Allergies">
+      <ng-template matTabContent>
+        <app-drug-allergy></app-drug-allergy>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Environmental Allergies">
+      <ng-template matTabContent>
+        <app-environmental-allergy></app-environmental-allergy>
+      </ng-template>
+    </mat-tab>
+    
+  </mat-tab-group>
+</div>

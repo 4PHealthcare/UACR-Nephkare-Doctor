@@ -1,0 +1,22 @@
+table{
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 25px;
+    width: 70%;
+    margin-bottom: 10px;
+}
+
+table th, td {
+    border: 1px solid rgba(0,0,0,0.15);
+    border-collapse: collapse;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+    padding-top: 7px;
+    padding-bottom: 7px;
+  }
+
+  .main-title {
+    margin-bottom: 10px;
+    font-weight: bold;
+    font-size: 20px;
+  }

@@ -1,0 +1,49 @@
+.lab-list-grid {
+  grid-template-columns: 48px auto 40px;
+
+  @screen sm {
+    grid-template-columns: 48px auto 112px 72px;
+  }
+
+  @screen md {
+    grid-template-columns: 160px auto 112px 72px;
+  }
+
+  @screen lg {
+    grid-template-columns: 18% 10% 11% 10% 10% 7% 10%;
+  }
+}
+.doctor-lab-list-grid {
+  grid-template-columns: 48px auto 40px;
+
+  @screen sm {
+    grid-template-columns: 48px auto 112px 72px;
+  }
+
+  @screen md {
+    grid-template-columns: 160px auto 112px 72px;
+  }
+
+  @screen lg {
+    grid-template-columns: 18% 15% 11% 15% 15% 7% 10%;
+  }
+}
+
+.request-list-grid {
+  grid-template-columns: 48px auto 40px;
+
+  @screen sm {
+    grid-template-columns: 48px auto 112px 72px;
+  }
+
+  @screen md {
+    grid-template-columns: 20% 18% 18%  19% 15%;
+  }
+
+  @screen lg {
+    grid-template-columns: 20% 18% 18%  19% 15%;
+  }
+}
+.leading-12{
+  line-height: 3rem;
+}

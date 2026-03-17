@@ -1,0 +1,139 @@
+<div class="flex flex-col w-full overflow-auto bg-card">
+  <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"> 
+    <div  *ngIf="!editMode" class="text-2xl font-semibold tracking-tight">Add Medication</div>
+    <div  *ngIf="editMode" class="text-2xl font-semibold tracking-tight">Update Medication</div>
+   
+    <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+      <mat-icon class="text-current"
+        [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <form [formGroup]="medicationForm" (ngSubmit)="onSubmit()" class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3">
+    <div formArrayName="employees" class="medication-section">
+        <table class="tab">
+          <tr class="h-14 tab-head">
+            <th class="w-1/3">Medicine</th> 
+            <th>Dose</th>
+            <!-- <th>Time</th> -->
+            <th>Food</th>
+            <!-- <th>Frequency</th> -->
+
+            <th>Duration</th>
+            <th>Note</th>
+            <th>
+              <!-- <button type="button" (click)="addEmployee()">Add</button> -->
+              <div class="text-center" *ngIf="!editMode">
+                <mat-icon
+                (click)="addEmployee()"
+                  class="icon-size-5 text-green-500 cursor-pointer"
+                  [svgIcon]="'heroicons_solid:plus-circle'"
+                ></mat-icon>
+              </div>
+            </th>
+          </tr>
+          <tr *ngFor="let employee of employees().controls; let empIndex = index" 
+            [formGroupName]="empIndex">
+            <td>
+              <mat-form-field
+                [ngClass]="formFieldHelpers"
+                class="flex-auto gt-xs:pr-3 w-full mt-4 " >
+                <input matInput formControlName="medicine" [placeholder]="'Search'" [matAutocomplete]="auto" (input)="searchDrugsTerm($event)"/>
+                <mat-autocomplete #auto="matAutocomplete">
+                  <mat-option *ngFor="let option of filteredOptions$ | async" [id]="option.drugId" [value]="option.description">
+                    {{option.description}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field
+                [ngClass]="formFieldHelpers"
+                class="flex-auto gt-xs:pr-3 w-full mt-4 ">
+                <input matInput formControlName="dose" [placeholder]="'Select'" [matAutocomplete]="auto1" />
+                <mat-autocomplete #auto1="matAutocomplete">
+                  <mat-option *ngFor="let option of doseMedication$ | async" [id]="option.masterdata_id" [value]="option.data_name">
+                    {{option.data_name}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </td>
+            <!-- <td>
+              <mat-form-field
+                [ngClass]="formFieldHelpers"
+                class="flex-auto gt-xs:pr-3 w-full mt-4 ">
+                <input matInput formControlName="time" [placeholder]="'Enter'" />
+              </mat-form-field>
+            </td> -->
+            <td>
+              <mat-form-field
+                [ngClass]="formFieldHelpers"
+                class="flex-auto gt-xs:pr-3 w-full mt-4 ">
+                <input matInput formControlName="food" [placeholder]="'Select'" [matAutocomplete]="auto2"/>
+                <mat-autocomplete #auto2="matAutocomplete">
+                  <mat-option *ngFor="let option of foodMedication$ | async" [id]="option.masterdata_id" [value]="option.data_name">
+                    {{option.data_name}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </td>
+            <!-- <td>
+              <mat-form-field
+                [ngClass]="formFieldHelpers"
+                class="flex-auto gt-xs:pr-3 w-full mt-4 ">
+                <input matInput formControlName="frequency" [placeholder]="'Select'" [matAutocomplete]="auto3"/>
+                <mat-autocomplete #auto3="matAutocomplete">
+                  <mat-option *ngFor="let option of frequencyMedication$ | async" [id]="option.masterdata_id" [value]="option.data_name">
+                    {{option.data_name}}
+                  </mat-option>
+                </mat-autocomplete>
+              </mat-form-field>
+            </td> -->
+            <td>
+              <mat-form-field
+                [ngClass]="formFieldHelpers" floatLabel="always"
+                class="fuse-mat-no-subscript gt-xs:pr-3 w-full mt-4 "> 
+                <input matInput formControlName="duration" [placeholder]="'Enter'" />
+                <!-- <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:translate'"></mat-icon> -->
+                <span matSuffix>Days</span> 
+              </mat-form-field>
+            </td>
+            <td>
+              <mat-form-field
+                [ngClass]="formFieldHelpers"
+                class="flex-auto gt-xs:pr-3 w-full mt-4 ">
+                <input matInput formControlName="note" [placeholder]="'Enter'" />
+              </mat-form-field>
+            </td>
+            <td>
+              <!-- <button (click)="removeEmployee(empIndex)">Remove</button> -->
+              <!-- *ngIf="empIndex!=0" -->
+              <div class="text-center" >
+                <mat-icon
+                (click)="removeEmployee(empIndex)"
+                  class="icon-size-5 text-red-500 cursor-pointer"
+                  [svgIcon]="'heroicons_solid:minus-circle'"
+                ></mat-icon>
+              </div>
+            </td>
+          </tr>
+        </table>
+    </div>
+    <!-- Divider --> 
+  <div class="mt-11 mb-10 border-t"></div>
+  <!-- Actions -->
+  <div class="flex items-center justify-end">
+    <button mat-flat-button type="button" (click)="dialogRef.close()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+      <span class="ml-2 mr-1">Cancel</span>
+    </button>
+    <button type="submit" mat-flat-button [color]="'primary'" [disabled]="medicationForm.invalid ||isLoadingSpinner">
+      <span *ngIf="!editMode" class="ml-2 mr-1" >Save</span>
+      <mat-progress-spinner
+        *ngIf="isLoadingSpinner"
+         [diameter]="24"
+         [mode]="'indeterminate'"></mat-progress-spinner>
+      <span *ngIf="editMode" class="ml-2 mr-1" >Update</span>
+    </button>
+  </div>
+  </form>
+  
+</div>

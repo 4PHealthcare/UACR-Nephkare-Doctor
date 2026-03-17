@@ -1,0 +1,680 @@
+<div *ngIf="userInfo.role_id != 5"
+  class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
+>
+  <div class="relative flex pt-6 px-6 md:px-8">
+    <div class="text-4xl font-extrabold tracking-tight">Disease Management</div>
+  </div>
+  <mat-tab-group 
+    class="pt-5 absolute w-full h-full request-list-tab"
+    dynamicHeight
+  >
+    <mat-tab label="Subscribed Patients">
+      <ng-template matTabContent>
+        <div
+          class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-4 px-6 md:px-8"
+        >
+          <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <!-- Search -->
+
+            <mat-form-field
+              class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-100"
+            >
+              <mat-icon
+                class="icon-size-5"
+                matPrefix
+                [svgIcon]="'heroicons_solid:search'"
+              ></mat-icon>
+              <input
+                matInput
+                (input)="filterData($event.target.value)"
+                [autocomplete]="'off'"
+                [placeholder]="'Search for Patient Name, Phone Number'"
+              />
+            </mat-form-field>
+
+            <!-- Add product button -->
+            <!-- <button
+          class="ml-4"
+          mat-flat-button
+          [color]="'primary'"
+          (click)="createProduct()">
+          <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+          <span class="ml-2 mr-1">Add</span>
+      </button> -->
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
+        >
+          <div
+            class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
+          >
+            <div class="flex flex-auto overflow-hidden">
+              <div
+                class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto lablst-ht"
+              >
+                <ng-container
+                  *ngIf="subscriptions$ | async as patients; else noPatients"
+                >
+                  <div class="grid">
+                    <div
+                      class="lab-list-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                      matSort
+                      (matSortChange)="sortData($event)"
+                    >
+                      <div
+                        class="hidden md:block items-center"
+                        [mat-sort-header]="'first_name'"
+                      >
+                        Patient Info
+                      </div>
+                      <div class="hidden md:block items-center">
+                        Subscription Plan
+                      </div>
+
+                      <div class="hidden md:block items-center">
+                        Coordinator
+                      </div>
+                      <div class="hidden md:block items-center">Doctor</div>
+                      <div class="hidden md:block items-center">Coach</div>
+                      <div class="hidden md:block items-center">Status</div>
+
+                      <div class="hidden md:block items-center">Actions</div>
+                    </div>
+
+                    <ng-container *ngIf="subscriptions$ | async as patients">
+                      <ng-container
+                        *ngFor="
+                          let data of patients;
+                          let i = index;
+                          trackBy: trackByFn
+                        "
+                      >
+                        <div
+                          class="lab-list-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                        >
+                          <div
+                            *ngIf="userInfo.role_id != 6"
+                            [routerLink]="['/pages/profile']"
+                            [queryParams]="{
+                              id: data?.patient_id,
+                              opinion_id: data?.opinion_id
+                            }"
+                          >
+                            <span
+                              class="font-semibold capitalize text-blue-500 cursor-pointer"
+                              [matTooltip]="
+                                data?.full_name.length > 25
+                                  ? data?.full_name
+                                  : ''
+                              "
+                              >{{
+                                data?.full_name?.length > 25
+                                  ? (data?.full_name | slice : 0 : 25) + " ..."
+                                  : data?.full_name.trim()
+                              }},
+                            </span>
+                            <span *ngIf="data?.age > 0">
+                              {{ data?.age }} yrs,</span
+                            >
+                            <span class="capitalize"> {{ data?.gender }}</span
+                            ><br /><span>{{ data?.patient_uniqueid }}</span>
+                          </div>
+                          <div *ngIf="userInfo.role_id == 6">
+                            <span
+                              class="font-semibold capitalize"
+                              [matTooltip]="
+                                data?.full_name.length > 25
+                                  ? data?.full_name
+                                  : ''
+                              "
+                              >{{
+                                data?.full_name?.length > 25
+                                  ? (data?.full_name | slice : 0 : 25) + " ..."
+                                  : data?.full_name.trim()
+                              }},
+                            </span>
+                            <span *ngIf="data?.age > 0">
+                              {{ data?.age }} yrs,</span
+                            >
+                            <span class="capitalize"> {{ data?.gender }}</span
+                            ><br /><span>{{ data?.patient_uniqueid }}</span>
+                          </div>
+
+                          <div>
+                            <span *ngIf="data.subscription_plan">
+                              {{ data?.subscription_plan }}</span
+                            >
+                          </div>
+
+                          <div>
+                            {{ data.coordinator || "--" }}
+                          </div>
+
+                          <div>
+                            {{ data.doctor || "--" }}
+                          </div>
+                          <div>
+                            {{ data.coach || "--" }}
+                          </div>
+                          <div> {{data.patient_current_wizard_status || "--"}}</div>
+
+                          <div class="flex">
+                            <!-- <mat-icon svgIcon="heroicons_outline:check-circle"></mat-icon> -->
+
+                            <div class="pr-1">
+                              <button
+                                class="min-w-10 min-h-7 h-7 px-0 leading-12"
+                                (click)="addSettings(data)"
+                                [matTooltip]="'Settings'"
+                                
+                              >
+                                <mat-icon svgIcon="settings"></mat-icon>
+                              </button>
+                            </div>
+
+                            <div class="pr-1"> 
+                              <!-- <button
+                                class="min-w-10 min-h-7 h-7 px-0 leading-6"
+                                (click)="bookAppointment(data, 'enroll')"
+                                [matTooltip]="'Book Appointment'"
+                                  [ngClass]="{'border-blue-500': !(data.preconsulation_status == 8 || data.preconsulation_status == 9), 'text-blue-500': !(data.preconsulation_status == 8 || data.preconsulation_status == 9)}"
+                              [disabled]="data.preconsulation_status == 8 || data.preconsulation_status == 9"
+                              >
+                                <mat-icon
+                                  svgIcon="heroicons_outline:calendar"
+                                ></mat-icon>
+                              </button> -->
+                              <!-- <button  *ngIf="data.appointment_status != 10"
+                              mat-flat-button
+                              class=" border-solid border-blue-500 text-blue-500"
+                              (click)="bookAppointment(data, 'enroll')" 
+                            
+                            >
+                            <mat-icon svgIcon="heroicons_outline:calendar"></mat-icon>
+                              <span class="ml-2 mr-1">Book Primary consultation</span>
+                            </button> -->
+                            <!--  [ngClass]="{'border-blue-500': data.appointment_status !== 10 || data.appointment_status == 13, 'text-blue-500': data.appointment_status !== 10 || data.appointment_status == 13}" -->
+                            <button  (click)="bookAppointment(data, 'enroll')"
+                              
+                                mat-flat-button
+                                class=" border-solid border-blue-500 text-blue-500"
+                                [disabled]="data?.appointment_status == 8"
+                               
+                              >
+                              <mat-icon svgIcon="heroicons_outline:calendar"></mat-icon> 
+                                <span class="ml-2 mr-1"> {{data?.status == 'InProcess' ? 'Book Primary consultation' : 'Book Follow up'}}</span>
+                              </button>
+                            </div>
+                            <!-- <div class="pr-2">
+                      <button
+                        class="min-w-10 min-h-7 h-7 px-0 leading-6"
+                        [routerLink]="['/pages/profile']"
+                        [queryParams]="{ id: data?.patient_id }"
+                        [matTooltip]="'Patient View'"
+                      >
+                        <mat-icon
+                          svgIcon="heroicons_outline:duplicate"
+                        ></mat-icon>
+                      </button>
+                    </div> -->
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+
+                  <mat-paginator
+                    class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                    [ngClass]="{ 'pointer-events-none': isLoading }"
+                    [length]="totalRecordsSubscriptions$ | async"
+                    [pageIndex]="subscriptionCurrentPage"
+                    [pageSize]="subscriptionPageSize"
+                    [pageSizeOptions]="[5,10]"
+                    [showFirstLastButtons]="true"
+                    (page)="
+                      pageEvent = $event; onSubscriptionPageChange($event)
+                    "
+                  ></mat-paginator>
+                </ng-container>
+
+                <ng-template #noPatients>
+                  <div
+                    class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
+                  >
+                    No Records
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+    <mat-tab label="Unsubscribed Patients"> 
+      <ng-template matTabContent>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
+        >
+          <div
+            class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
+          >
+            <div
+              class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-4 px-6 md:px-8 border-b"
+            >
+              <mat-form-field
+                class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-2/5"
+              >
+                <mat-icon
+                  class="icon-size-5"
+                  matPrefix
+                  [svgIcon]="'heroicons_solid:search'"
+                ></mat-icon>
+                <input
+                  matInput
+                  (input)="unsubscribedPatientFilterData($event.target.value)"
+                  [autocomplete]="'off'"
+                  [placeholder]="'Search for Patient Name, Phone Number'"
+                />
+              </mat-form-field>
+            </div>
+
+            <div class="flex flex-auto overflow-hidden">
+              <div
+                class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto lablst-ht"
+              >
+                <ng-container
+                  *ngIf="
+                    unsubscribedPatients$ | async as patients;
+                    else noPatients
+                  "
+                >
+                  <div class="">
+                    <div
+                      class="grid request-list-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                      matSort
+                      (matSortChange)="sortData($event)"
+                    >
+                      <div
+                        class="hidden md:block items-center"
+                        [mat-sort-header]="'first_name'"
+                      >
+                        Patient Info
+                      </div>
+                      <div class="hidden md:block items-center">
+                        Phone Number
+                      </div>
+
+                      <div
+                        class="hidden md:block items-center"
+                        [mat-sort-header]="'created_on'"
+                      >
+                        Register Date
+                      </div>
+                      <div class="hidden md:block items-center">Last Appointment Date</div>
+                      <div class="hidden md:block items-center">Actions</div>
+                    </div>
+
+                    <ng-container
+                      *ngIf="unsubscribedPatients$ | async as patients"
+                    >
+                      <ng-container
+                        *ngFor="
+                          let data of patients;
+                          let i = index;
+                          trackBy: trackByFn
+                        "
+                      >
+                        <div
+                          class="request-list-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                        >
+                          <div
+                            *ngIf="userInfo.role_id != 6"
+                            [routerLink]="['/pages/profile']"
+                            [queryParams]="{ id: data?.user_id }"
+                          >
+                            <span
+                              class="font-semibold capitalize text-blue-500 cursor-pointer"
+                              [matTooltip]="
+                                data?.full_name.length > 25
+                                  ? data?.full_name
+                                  : ''
+                              "
+                              >{{
+                                data?.full_name?.length > 25
+                                  ? (data?.full_name | slice : 0 : 25) + " ..."
+                                  : data?.full_name.trim()
+                              }},
+                            </span>
+                            <span *ngIf="data?.age > 0">
+                              {{ data?.age }} yrs,</span
+                            >
+                            <span class="capitalize"> {{ data?.gender }}</span
+                            ><br /><span>{{ data?.patient_uniqueid }}</span>
+                          </div>
+                          <div *ngIf="userInfo.role_id == 6">
+                            <span
+                              class="font-semibold capitalize"
+                              [matTooltip]="
+                                data?.full_name.length > 25
+                                  ? data?.full_name
+                                  : ''
+                              "
+                              >{{
+                                data?.full_name?.length > 25
+                                  ? (data?.full_name | slice : 0 : 25) + " ..."
+                                  : data?.full_name.trim()
+                              }},
+                            </span>
+                            <span *ngIf="data?.age > 0">
+                              {{ data?.age }} yrs,</span
+                            >
+                            <span class="capitalize"> {{ data?.gender }}</span
+                            ><br /><span>{{ data?.patient_uniqueid }}</span>
+                          </div>
+
+                          <div>
+                            <span *ngIf="data.mobile_no"
+                              >+91 {{ addSpace(data?.mobile_no) }}</span 
+                            >
+                          </div>
+
+                          <div>
+                            {{ data?.created_on | date : "d MMM, y" }}
+                          </div>
+                          <div>
+                            {{ data?.preconsultation_date ? (data?.preconsultation_date | date : "d MMM, y | hh:mm a") : "--" }}
+                          </div> 
+
+                          <div class="flex">
+                            <div class="pr-1">
+                              <!-- <button
+                                class="min-w-10 min-h-7 h-7 px-0 leading-6"
+                                (click)="bookAppointment(data, 'unsubscribed')"
+                                [matTooltip]="'Book Appointment'"
+                              >
+                                <mat-icon
+                                  svgIcon="heroicons_outline:calendar"
+                                ></mat-icon>
+                              </button> -->
+                              <button 
+                              mat-flat-button 
+                              class=" border-solid "
+                              (click)="bookAppointment(data, 'unsubscribed')"
+                              [ngClass]="{'border-blue-500': !(data.preconsulation_status == 8 || data.preconsulation_status == 9), 'text-blue-500': !(data.preconsulation_status == 8 || data.preconsulation_status == 9)}"
+                              [disabled]="data.preconsulation_status == 8 || data.preconsulation_status == 9"
+                            >
+                            <mat-icon svgIcon="heroicons_outline:calendar"></mat-icon>
+                              <span class="ml-2 mr-1">Book Pre consultation</span>
+                            </button>
+                            </div>
+
+                            <div class="pr-2"></div>
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+
+                  <mat-paginator
+                    class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                    [ngClass]="{ 'pointer-events-none': isLoading }"
+                    [length]="unsubscribedPatientstotalRecords$ | async"
+                    [pageIndex]="unsubscribedPatientscurrentPage"
+                    [pageSize]="unsubscribedPatientsPageSize"
+                    [pageSizeOptions]="[5,10]"
+                    [showFirstLastButtons]="true"
+                    (page)="pageEvent = $event; onPatientsPageChange($event)"
+                  ></mat-paginator>
+                </ng-container>
+
+                <ng-template #noPatients>
+                  <div
+                    class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
+                  >
+                    No Records
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+      </ng-template>
+    </mat-tab>
+  </mat-tab-group>
+</div>
+<div *ngIf="userInfo.role_id == 5"
+  class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
+>
+  <div class="relative flex pt-6 px-6 md:px-8">
+    <div class="text-4xl font-extrabold tracking-tight">Disease Management</div>
+  </div>
+        <div
+          class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between py-4 px-6 md:px-8"
+        >
+          <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+            <!-- Search -->
+
+            <mat-form-field
+              class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded min-w-100"
+            >
+              <mat-icon
+                class="icon-size-5"
+                matPrefix
+                [svgIcon]="'heroicons_solid:search'"
+              ></mat-icon>
+              <input
+                matInput
+                (input)="filterData($event.target.value)"
+                [autocomplete]="'off'"
+                [placeholder]="'Search for Patient Name, Phone Number'"
+              />
+            </mat-form-field>
+
+            <!-- Add product button -->
+            <!-- <button
+          class="ml-4"
+          mat-flat-button
+          [color]="'primary'"
+          (click)="createProduct()">
+          <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+          <span class="ml-2 mr-1">Add</span>
+      </button> -->
+          </div>
+        </div>
+        <div
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
+        >
+          <div
+            class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
+          >
+            <div class="flex flex-auto overflow-hidden">
+              <div
+                class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto lablst-ht"
+              >
+                <ng-container
+                  *ngIf="subscriptions$ | async as patients; else noPatients"
+                >
+                  <div class="grid"> 
+                    <div
+                      class="doctor-lab-list-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                      matSort
+                      (matSortChange)="sortData($event)"
+                    >
+                      <div
+                        class="hidden md:block items-center"
+                        [mat-sort-header]="'first_name'"
+                      >
+                        Patient Info
+                      </div>
+                      <div class="hidden md:block items-center">
+                        Subscription Plan
+                      </div>
+
+                      <div class="hidden md:block items-center">
+                        Coordinator
+                      </div>
+                      <div class="hidden md:block items-center">Doctor</div>
+                      <div class="hidden md:block items-center">Coach</div>
+                      <div class="hidden md:block items-center">Status</div>
+
+                      <div class="hidden md:block items-center">Actions</div>
+                    </div>
+
+                    <ng-container *ngIf="subscriptions$ | async as patients">
+                      <ng-container
+                        *ngFor="
+                          let data of patients;
+                          let i = index;
+                          trackBy: trackByFn
+                        "
+                      >
+                        <div
+                          class="doctor-lab-list-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                        >
+                          <div
+                            *ngIf="userInfo.role_id != 6"
+                            [routerLink]="['/pages/profile']"
+                            [queryParams]="{
+                              id: data?.patient_id,
+                              opinion_id: data?.opinion_id
+                            }"
+                          >
+                            <span
+                              class="font-semibold capitalize text-blue-500 cursor-pointer"
+                              [matTooltip]="
+                                data?.full_name.length > 25
+                                  ? data?.full_name
+                                  : ''
+                              "
+                              >{{
+                                data?.full_name?.length > 25
+                                  ? (data?.full_name | slice : 0 : 25) + " ..."
+                                  : data?.full_name.trim()
+                              }},
+                            </span>
+                            <span *ngIf="data?.age > 0">
+                              {{ data?.age }} yrs,</span
+                            >
+                            <span class="capitalize"> {{ data?.gender }}</span
+                            ><br /><span>{{ data?.patient_uniqueid }}</span>
+                          </div>
+                          <div *ngIf="userInfo.role_id == 6">
+                            <span
+                              class="font-semibold capitalize"
+                              [matTooltip]="
+                                data?.full_name.length > 25
+                                  ? data?.full_name
+                                  : ''
+                              "
+                              >{{
+                                data?.full_name?.length > 25
+                                  ? (data?.full_name | slice : 0 : 25) + " ..."
+                                  : data?.full_name.trim()
+                              }},
+                            </span>
+                            <span *ngIf="data?.age > 0">
+                              {{ data?.age }} yrs,</span
+                            >
+                            <span class="capitalize"> {{ data?.gender }}</span
+                            ><br /><span>{{ data?.patient_uniqueid }}</span>
+                          </div>
+
+                          <div>
+                            <span *ngIf="data.subscription_plan">
+                              {{ data?.subscription_plan }}</span
+                            >
+                          </div>
+
+                          <div>
+                            {{ data.coordinator || "--" }}
+                          </div>
+
+                          <div>
+                            {{ data.doctor || "--" }}
+                          </div>
+                          <div>
+                            {{ data.coach || "--" }}
+                          </div>
+                          <div> {{data.patient_current_wizard_status || "--"}}</div>
+
+                          <div class="flex">
+                            <!-- <mat-icon svgIcon="heroicons_outline:check-circle"></mat-icon> -->
+
+                            <div class="pr-1">
+                              <button
+                                class="min-w-10 min-h-7 h-7 px-0 leading-12"
+                                (click)="addSettings(data)"
+                                [matTooltip]="'Settings'"
+                                
+                              >
+                                <mat-icon svgIcon="settings"></mat-icon>
+                              </button>
+                            </div>
+
+                            <div class="pr-1"> 
+                              <!-- <button
+                                class="min-w-10 min-h-7 h-7 px-0 leading-6"
+                                (click)="bookAppointment(data, 'enroll')"
+                                [matTooltip]="'Book Appointment'"
+                                  [ngClass]="{'border-blue-500': !(data.preconsulation_status == 8 || data.preconsulation_status == 9), 'text-blue-500': !(data.preconsulation_status == 8 || data.preconsulation_status == 9)}"
+                              [disabled]="data.preconsulation_status == 8 || data.preconsulation_status == 9"
+                              >
+                                <mat-icon
+                                  svgIcon="heroicons_outline:calendar"
+                                ></mat-icon>
+                              </button> -->
+                              <button  *ngIf="data.appointment_status != 10 && userInfo.role_id != 5"
+                              mat-flat-button
+                              class=" border-solid border-blue-500 text-blue-500"
+                              (click)="bookAppointment(data, 'enroll')"
+                            
+                            >
+                            <mat-icon svgIcon="heroicons_outline:calendar"></mat-icon>
+                              <span class="ml-2 mr-1">Book Primary consultation</span>
+                            </button>
+                            </div>
+                            <!-- <div class="pr-2">
+                      <button
+                        class="min-w-10 min-h-7 h-7 px-0 leading-6"
+                        [routerLink]="['/pages/profile']"
+                        [queryParams]="{ id: data?.patient_id }"
+                        [matTooltip]="'Patient View'"
+                      >
+                        <mat-icon
+                          svgIcon="heroicons_outline:duplicate"
+                        ></mat-icon>
+                      </button>
+                    </div> -->
+                          </div>
+                        </div>
+                      </ng-container>
+                    </ng-container>
+                  </div>
+
+                  <mat-paginator
+                    class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                    [ngClass]="{ 'pointer-events-none': isLoading }"
+                    [length]="totalRecordsSubscriptions$ | async"
+                    [pageIndex]="subscriptionCurrentPage"
+                    [pageSize]="subscriptionPageSize"
+                    [pageSizeOptions]="[5,10]"
+                    [showFirstLastButtons]="true"
+                    (page)="
+                      pageEvent = $event; onSubscriptionPageChange($event)
+                    "
+                  ></mat-paginator>
+                </ng-container>
+
+                <ng-template #noPatients>
+                  <div
+                    class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
+                  >
+                    No Records
+                  </div>
+                </ng-template>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>

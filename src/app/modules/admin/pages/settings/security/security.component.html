@@ -1,0 +1,109 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+    <form [formGroup]="securityForm">
+
+        <!-- Section -->
+        <!-- <div class="w-full">
+            <div class="text-xl">Change your password</div>
+            <div class="text-secondary">You can only change your password twice within 24 hours!</div>
+        </div> -->
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <!-- Current password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Current password</mat-label>
+                    <mat-icon matSuffix (click)="togglePasswordVisibility()">
+                        {{showPassword?'visibility_off':'visibility'}}
+                    </mat-icon>
+                    <input
+                        [formControlName]="'currentPassword'"
+                        [type]="showPassword ? 'text' : 'password'" name="currentPassword"
+                        placeholder="Enter Current Password"
+                        matInput>
+                </mat-form-field>
+            </div>
+            <!-- New password -->
+            <div class="sm:col-span-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>New password</mat-label>
+                    <mat-icon matSuffix (click)="togglePasswordVisibility2()">
+                        {{showPassword2?'visibility_off':'visibility'}}
+                    </mat-icon>
+                    <input
+                        [formControlName]="'newPassword'"
+                        [type]="showPassword2 ? 'text' : 'password'" name="newPassword"
+                        placeholder="Enter New Password"
+                        matInput>
+                </mat-form-field>
+                <div class="mt-1 text-md text-hint">Minimum 8 characters. Must include numbers, upper and lowercase letters and special characters.</div>
+            </div>
+        </div>
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+
+        <!-- Section -->
+        <!-- <div class="w-full">
+            <div class="text-xl">Security preferences</div>
+            <div class="text-secondary">Keep your account more secure with following preferences.</div>
+        </div> -->
+        <!-- <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <div class="sm:col-span-4 flex items-center justify-between">
+                <div
+                    class="flex-auto cursor-pointer"
+                    (click)="twoStepToggle.toggle()">
+                    <div class="leading-6 font-medium">Enable 2-step authentication</div>
+                    <div class="text-md text-secondary">
+                        Protects you against password theft by requesting an authentication code via SMS on every login.
+                    </div>
+                </div>
+                <mat-slide-toggle
+                    class="ml-4"
+                    [color]="'primary'"
+                    [formControlName]="'twoStep'"
+                    #twoStepToggle>
+                </mat-slide-toggle>
+            </div>
+            <div class="sm:col-span-4 flex items-center justify-between">
+                <div
+                    class="flex-auto cursor-pointer"
+                    (click)="askPasswordChangeToggle.toggle()">
+                    <div class="leading-6 font-medium">Ask to change password on every 6 months</div>
+                    <div class="text-md text-secondary">
+                        A simple but an effective way to be protected against data leaks and password theft.
+                    </div>
+                </div>
+                <mat-slide-toggle
+                    class="ml-4"
+                    [color]="'primary'"
+                    [formControlName]="'askPasswordChange'"
+                    #askPasswordChangeToggle>
+                </mat-slide-toggle>
+            </div>
+        </div> -->
+
+        <!-- Divider -->
+        <!-- <div class="my-10 border-t"></div> -->
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button [disabled]="securityForm.pristine"
+            mat-flat-button
+                type="button" (click)="clearForm()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+                Clear
+            </button>
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                [color]="'primary'" [disabled]="securityForm.invalid"
+                (click)="changePassword()">Update<mat-progress-spinner
+                *ngIf="isLoadingSpinner"
+                 [diameter]="24"
+                 [mode]="'indeterminate'"></mat-progress-spinner>
+            </button>
+        </div>
+    </form>
+
+</div>

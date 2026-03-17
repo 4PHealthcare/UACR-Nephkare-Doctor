@@ -1,0 +1,92 @@
+<div class="flex flex-col">
+    <!-- [formGroup]="cheifComplaintForm" -->
+  
+    <form
+      class="flex-auto px-6"
+      [formGroup]="cheifComplaintForm" 
+      #cheifComplaintNGForm="ngForm"
+    >
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-2">
+          <mat-label>Frequency <span>*</span></mat-label>
+          <br />
+          <mat-radio-group
+            aria-label="Select an option"
+            [formControlName]="'frequency'"
+          >
+            <mat-radio-button
+              [color]="primary"
+              *ngFor="let status of frequency"
+              [value]="status.id"
+            >
+              {{ status.name }}
+            </mat-radio-button>
+          </mat-radio-group>
+          <div
+          *ngIf="f.frequency.touched && f.frequency.invalid"
+          class="alert alert-danger"
+        >
+          <div
+            *ngIf="f.frequency.errors && f.frequency.errors.required"
+          >
+          Frequency is required.
+          </div>
+        </div>
+        </div>
+        </div>
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-2">
+          <mat-label>Menorrhagia</mat-label>
+          <br />
+          <mat-radio-group
+            aria-label="Select an option"
+            [formControlName]="'menorrhagia'"
+          >
+            <mat-radio-button
+              *ngFor="let status of menorrhagia"
+              [value]="status"
+            >
+              {{ status }}
+            </mat-radio-button>
+          </mat-radio-group>
+        </div>
+        <div class="sm:col-span-2">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Menopause at age</mat-label>
+            <input
+              matInput
+              [formControlName]="'menopause'"
+              [placeholder]="'Enter'"
+            />
+          </mat-form-field>
+        </div>
+        
+      </div>
+      <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+      <button mat-flat-button type="button" class="border-solid border-primary-500 text-primary-500 mr-2"  (click)="onReset()" [disabled]="cheifComplaintForm.invalid">
+        <span class="ml-2 mr-1" >Cancel</span>
+      </button>
+      <button
+        type="submit"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="cheifComplaintForm.invalid || isLoadingSpinner"
+        (click)="onSubmit();
+        cheifComplaintNGForm.resetForm()"
+      >
+        <span class="ml-2 mr-1" >Save</span>
+        <mat-progress-spinner
+              *ngIf="isLoadingSpinner"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner> 
+      </button>
+    </div>
+    </form>
+  </div>
+  

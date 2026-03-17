@@ -1,0 +1,121 @@
+<div class="relative flex flex-col flex-auto min-w-0 overflow-hidden">
+
+    <!-- Main -->
+    <div class="flex flex-col flex-auto px-6 py-10 sm:px-16 sm:pt-18 sm:pb-20">
+
+        
+        <div class="w-full max-w-3xl">
+
+            
+            <div class="text-4xl font-extrabold tracking-tight leading-none">All Activities</div>
+            <div class="mt-1.5 text-lg text-secondary">Application wide activities are listed here as individual items, starting with the most recent.</div>
+
+            <ng-container *ngIf="(allActivities$ | async) as activities; else loading">
+                <ng-container *ngIf="activities.length; else noActivity">
+                    <div class="mt-8">
+                        <ol>
+                            
+                            <ng-container *ngFor="let activity of activities; let i = index; let first = first; let last = last; trackBy: trackByFn">
+
+                                
+                                <ng-container *ngIf="first || !isSameDay(activity.action_at, activities[i - 1].action_at)">
+                                    <li class="relative flex py-7">
+                                        <div class="relative py-2 px-8 text-md font-medium leading-5 rounded-full bg-primary text-on-primary">
+                                            {{getRelativeFormat(activity.action_at)}}
+                                        </div>
+                                    </li>
+                                </ng-container>
+
+                                
+                                <li class="relative flex py-7">
+                                    
+                                    <ng-container *ngIf="!last && isSameDay(activity.action_at, activities[i + 1].action_at)">
+                                        <div class="absolute top-7 left-5 w-0.5 h-full -ml-px bg-gray-300 dark:bg-gray-600"></div>
+                                    </ng-container>
+
+                                    <div class="relative flex flex-auto">
+                                        
+                                        <ng-container >
+                                            <div class="flex flex-shrink-0 items-center justify-center w-10 h-10 mr-4 rounded-full bg-gray-400">
+                                                <mat-icon *ngIf="!(activity?.photo_folderpath && activity?.photo_filename)">person</mat-icon>
+                                                <img *ngIf="activity?.photo_folderpath && activity?.photo_filename" class="rounded-full w-10 h-10" [src]="'https://hellokidneydata.s3.ap-south-1.amazonaws.com/'+activity.photo_folderpath+'/'+activity.photo_filename">
+               
+                                            </div>
+                                        </ng-container>
+
+                                        
+                                        <!-- <ng-container *ngIf="activity.image">
+                                            <img
+                                                class="flex-shrink-0 w-10 h-10 mr-4 rounded-full overflow-hidden object-cover object-center"
+                                                [src]="activity.image"
+                                                [alt]="'Activity image'">
+                                        </ng-container> -->
+
+                                        
+                                        <div class="flex flex-col flex-auto items-start">
+                                            
+                                            <ng-container *ngIf="!isSuperAdmin">
+                                                <div [innerHTML]="activity.title"></div>
+                                            </ng-container>
+                                            <ng-container *ngIf="isSuperAdmin && activity.action_by === userInfo.user_id">
+                                                <div>You</div>
+                                            </ng-container>
+                                            <ng-container *ngIf="isSuperAdmin && activity.action_by != userInfo.user_id">
+                                                <span>{{activity.actionby_name}} - Admin</span>
+                                            </ng-container>
+                                            <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 sm:space-x-2 text-md leading-5">
+                                                
+                                                <div class="text-secondary">
+                                                    {{activity.action_at | date:'MMM dd, h:mm a'}}
+                                                </div>
+                                                
+                                                <!-- <ng-container *ngIf="activity.linkedContent">
+                                                    <div class="hidden sm:block">&bull;</div>
+                                                    
+                                                    <ng-container *ngIf="activity.useRouter">
+                                                        <a
+                                                            class="cursor-pointer text-primary"
+                                                            [routerLink]="activity.link">
+                                                            {{activity.linkedContent}}
+                                                        </a>
+                                                    </ng-container>
+                                                    
+                                                    <ng-container *ngIf="!activity.useRouter">
+                                                        <a
+                                                            class="cursor-pointer text-primary"
+                                                            [href]="activity.link"
+                                                            target="_blank">
+                                                            {{activity.linkedContent}}
+                                                        </a>
+                                                    </ng-container>
+                                                </ng-container> -->
+                                            </div>
+                                            
+                                            <ng-container *ngIf="activity.description">
+                                                <div class="mt-4 py-4 px-5 rounded-lg bg-gray-200 dark:bg-gray-800">
+                                                    <span [innerHTML]="activity.description"></span>
+                                                </div>
+                                            </ng-container>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ng-container>
+                        </ol>
+                    </div>
+                </ng-container>
+            </ng-container>
+
+            <ng-template #loading>
+                <div>
+                    No activities done yet.
+                </div>
+            </ng-template>
+
+            <ng-template #noActivity>
+                There are is activity at the moment...
+            </ng-template>
+
+        </div>
+    </div>
+
+</div>

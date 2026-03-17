@@ -1,0 +1,176 @@
+<div class="w-full"> 
+ <form [formGroup]="feeForm" #feeNGForm="ngForm" class="flex-auto  pt-9  lg:pr-12 lg:pt-3">
+    <div class="grid sm:grid-cols-4 gap-6 w-full"> 
+        <div class="sm:col-span-2 form-group"> 
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+              <mat-label>Date <span>*</span></mat-label>
+              <input
+                matInput
+                [formControlName]="'fromDate'"
+                [matDatepicker]="fromDate"
+                [min]="maxDate"
+                (focus)="fromDate.open()"
+                (click)="fromDate.open()"
+                [placeholder]="'dd,mmm,yyyy'"
+                [ngClass]="{ 'is-invalid': submitted && f.fromDate.errors }"
+              />
+              <mat-datepicker-toggle matPrefix [for]="fromDate">
+              </mat-datepicker-toggle>
+              <mat-datepicker #fromDate></mat-datepicker>
+            </mat-form-field>
+           
+          </div>
+          <div class="sm:col-span-2">
+            <mat-label
+              >Time</mat-label
+            >
+            <div class="grid grid-cols-2 gap-4">
+              <mat-form-field
+                class="fuse-mat-no-subscript w-full pt-3px"
+                floatLabel="always"
+              >
+                <input
+                  matInput
+                  [placeholder]="'From'"
+                  [formControlName]="'fromtime'"
+                  aria-label="12hr format"
+                  [ngxTimepicker]="fromtime"
+                  readonly
+                />
+                <ngx-material-timepicker #fromtime></ngx-material-timepicker>
+                <mat-icon
+                  svgIcon="heroicons_solid:clock"
+                  (click)="openFromIcon(fromtime)"
+                ></mat-icon>
+              </mat-form-field>
+              <mat-form-field
+                class="fuse-mat-no-subscript w-full"
+                floatLabel="always"
+              >
+                <input
+                  matInput
+                  [placeholder]="'To'"
+                  [formControlName]="'totime'"
+                  aria-label="12hr format"
+                  [ngxTimepicker]="totime"
+                  [min]="feeForm.value.fromtime"
+                  readonly
+                />
+                <ngx-material-timepicker #totime></ngx-material-timepicker>
+                <mat-icon
+                  svgIcon="heroicons_solid:clock"
+                  (click)="openFromIcon(totime)"
+                ></mat-icon>
+              </mat-form-field>
+            </div>
+            <!-- <div class="text-red-500" *ngIf="fromTimeError">Please enter from time</div>
+            <div class="text-red-500" *ngIf="toTimeError">Please enter to time</div>
+
+            <div class="text-red-500" *ngIf="endTimeError">To time should be greater than from time</div> -->
+          </div>
+    </div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end mt-8">
+      <button [disabled]="feeForm.pristine" 
+      mat-flat-button type="button" (click)="clear()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+        Clear
+      </button>
+     
+      <button
+        class="ml-4"
+        [color]="'primary'"
+        (click)="save()"
+        [disabled]="feeForm.invalid || isLoadingSpinner"
+        mat-flat-button
+        type="button"
+      >
+       Save<mat-progress-spinner
+       *ngIf="isLoadingSpinner"
+        [diameter]="24"
+        [mode]="'indeterminate'"></mat-progress-spinner>
+      </button>
+    </div>
+ </form>
+</div>
+<!-- Divider -->
+<div class="mt-11 mb-10 border-t"></div>
+<!-- {{dataSource}} -->
+<div class="flex flex-auto overflow-hidden">
+
+  <div
+    class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto"
+  >
+    <div class="grid bg-white">
+      <!-- Header -->
+      <div
+        class="schedule-grid z-10 sticky top-0 grid grid-cols-8 gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+      >
+        
+        <div class="hidden md:block items-center col-span-3">Date </div>
+        <div class="hidden md:block items-center col-span-3">Time</div>
+       
+        <div class="hidden lg:block float-right">Actions</div>
+      </div>
+      <!-- Rows -->
+      <ng-container *ngIf="feesList?.length !== 0">
+        <!-- use Ng for dynmaic data -->
+        <ng-container
+          *ngFor="let data of feesList"
+        >
+          <div
+            class="schedule-grid grid grid-cols-8 gap-4 items-center py-3 px-6 md:px-8 border-b"
+          >
+            <!-- Slot Duration -->
+            <div class="col-span-3">
+             {{data.from_date | date:'dd MMM, YYYY'}}
+            </div>
+            <div class="col-span-3">
+              <span *ngIf="data.is_fullday">--</span>
+
+              <span *ngIf="!data.is_fullday">  {{data.from_date | date:'hh:mm a'}} to {{data.to_date | date:'hh:mm a'}} </span>
+
+           
+            </div>
+           
+
+            <div class="flex">
+              
+
+              <div class="pr-2">
+                <!-- <mat-icon
+                class="icon-size-5 custom-icon" 
+                (click)="deleteRecord(data.doctorleave_id)"
+                [svgIcon]="'heroicons_solid:trash'"
+                [matTooltip]="'Delete'"
+                [matTooltipPosition]="'above'"
+              >
+              </mat-icon> -->
+              <button mat-stroked-button type="button" (click)="deleteRecord(data.doctorleave_id)">
+                Cancel Leave
+              </button>
+
+               
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="feesList?.length == 0">
+        <div class="
+            p-8
+            sm:p-16
+            border-t
+            text-4xl
+            font-semibold
+            tracking-tight
+            text-center
+          ">
+          There are no Leaves!
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,102 @@
+<div class="h-screen flex flex-col">
+    <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+      <div class="text-2xl font-semibold tracking-tight">Upload file</div>
+      <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+        <mat-icon class="text-current"
+          [svgIcon]="'heroicons_outline:x'">
+        </mat-icon>
+      </button>
+    </div>
+   <form class="pl-6 pr-6 pt-1 mb-auto overflow-y-auto" [formGroup]="reportForm">
+   <div class="grid sm:grid-cols-4 gap-6 w-full">
+      <div class="upload" (click)="SelectUploadFIleType()">
+          <!-- <div class="upload_card">
+            <div class="vertical-center">
+              <div class="ion-text-center">
+                <img src="assets/icons/Icon-feather-upload.svg" alt="" />
+                <p class="upload_file ion-no-margin">Upload</p>
+              </div>
+            </div>
+          </div> -->
+
+          <input id="fileInput"  #fileInput type='file' (change)="onSelectFile($event)">
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <div class="flex items-baseline">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Upload Reports <span>*</span></mat-label> 
+            <input matInput [placeholder]="'Enter'" [formControlName]="'selectedFileType'" readonly>
+            <button *ngIf="mimetype" matSuffix mat-icon-button aria-label="Clear" (click)="clearInput(fileInput)">
+              <mat-icon>close</mat-icon>
+            </button>
+        </mat-form-field>
+        <a mat-stroked-button color="primary" class="rounded-none" (click)="fileInput.click()">Upload</a>
+      
+
+  
+        <!-- <button mat-stroked-button color="primary" class="rounded-none" >Upload</button> -->
+        </div>
+        
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field class="fuse-mat-no-subscript w-full"
+        floatLabel="always">
+        <mat-label>Type of Record<span>*</span></mat-label>
+        <mat-select [placeholder]="'Select'" [formControlName]="'reportType'">
+            <mat-option value="55"> Prescriptions </mat-option>
+            <mat-option value="57"> Lab Reports </mat-option>
+        </mat-select>
+      </mat-form-field>
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field
+        class="fuse-mat-no-subscript w-full"
+        floatLabel="always">
+        <mat-label>Report Date</mat-label>
+        <input
+          matInput
+          [matDatepicker]="recordDate"
+          [max]="maxDate"
+          [placeholder]="'dd,mmm,yyyy'" 
+          (focus)="recordDate.open()"
+          [formControlName]="'recordDate'"/>
+        <mat-datepicker-toggle matPrefix [for]="recordDate">
+        </mat-datepicker-toggle>
+        <mat-datepicker #recordDate></mat-datepicker>
+      </mat-form-field>
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Name of Report</mat-label> 
+            <input matInput [placeholder]="'Enter'" [formControlName]="'fileName'" >
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Additional Notes <span class="optional">(optional)</span></mat-label>
+            <input matInput [placeholder]="'Enter'" [formControlName]="'notes'">
+        </mat-form-field>
+      </div>
+      
+     
+    </div> 
+    <div  class="mt-10 mb-10 border-t"></div> 
+    <div class="flex">
+      <div class="flex ml-auto gap-2">
+          <button  mat-flat-button (click)="dialogRef.close()" [disabled]="!dataChange" class="border-solid border-primary-500 text-primary-500"  >
+              <span class="ml-2 mr-1" >Cancel</span>
+          </button>
+          <button mat-flat-button [color]="'primary'" (click)="saveFile()" [disabled]="reportForm.invalid || !mimetype || isLoadingSpinner">
+              <span class="ml-2 mr-1">Save</span> <mat-progress-spinner
+              *ngIf="isLoadingSpinner"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+          </button>
+      </div> 
+    </div>  
+  </form>
+  
+           
+  
+</div>
+  

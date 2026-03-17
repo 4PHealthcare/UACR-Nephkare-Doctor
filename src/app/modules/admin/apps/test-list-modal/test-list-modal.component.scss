@@ -1,0 +1,58 @@
+.test-list-modal-grid {
+    grid-template-columns: 48px auto 40px;
+  
+    @screen sm {
+      grid-template-columns: 48px auto 112px 72px;
+    }
+  
+    @screen md {
+      grid-template-columns: 48px 112px auto 112px 72px;
+    }
+  
+    @screen lg {
+      grid-template-columns: 5% 23% 25% 32% 10%;
+    }
+  
+    .mat-icon.vitals-active {
+      color: green !important;
+    }
+  }
+  // .heading-css{
+  //   font-family:Poppins-Bold,Poppins;
+  //   font-size:13px !important;
+  //   font-weight: 500;
+
+  // }
+
+table tr td{
+  
+  padding-bottom: 5px;
+}
+.bg-color-sky{
+  background: #d1eef8 !important;
+}
+
+.test-list-modal {
+  border-collapse: collapse;
+
+  td, th {
+    border: 1px solid #e2e8f0;
+    padding: 10px;
+  }
+  th {
+    font-size: 16px !important;
+  }
+}
+
+.strip-noparameter {
+  background-color: lightgray;
+    text-align: center;
+    height: 30px;
+    line-height: 30px;
+    /* vertical-align: middle; */
+    align-items: center;
+    color: red;
+}
+.color{
+  color: #f59e0b;
+}

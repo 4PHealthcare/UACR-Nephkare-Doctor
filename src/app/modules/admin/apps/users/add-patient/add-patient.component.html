@@ -1,0 +1,419 @@
+<div class="flex flex-col w-full overflow-auto bg-card patient-form">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="ml-3 text-2xl font-semibold tracking-tight">
+      Patient Registration
+    </div>
+
+    <button class="ml-auto" mat-icon-button (click)="dismiss()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  <ng-container>
+    <form
+      class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+      [formGroup]="patientRegistrationForm"
+      #patientaRegistrationNGForm="ngForm"
+    >
+    <!-- <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-4 form-group">
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+              <mat-label>UHID</mat-label> 
+              <input
+                matInput
+                [placeholder]="'Enter'"
+                [formControlName]="'hospitalId'"
+              />
+            </mat-form-field>
+          </div>
+    </div> -->
+    <h1 class="mt-8 font-bold mb-4">Personal Details</h1>
+      <div class="grid sm:grid-cols-4 gap-6 w-full">
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>First Name <span>*</span></mat-label>
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'firstName'"
+              (keypress)="letterOnly($event,patientRegistrationForm.get('firstName').value)"
+
+
+
+            />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Last Name <span>*</span></mat-label>
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'lastName'"
+              (keypress)="letterOnly($event,patientRegistrationForm.get('lastName').value)"
+
+
+
+            />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full" 
+            floatLabel="always"
+          >
+            <mat-label>Phone <span>*</span></mat-label> 
+            <mat-label class="clr-black" matPrefix>+91</mat-label>
+            <input
+              placeholder="Enter"
+              [formControlName]="'phone'"
+              matInput
+              [maxLength]=10
+              (blur)='checkMobileExists()'  
+              (keyup)='checkInputEmpty($event)'
+            />
+          </mat-form-field>
+          <span *ngIf="patientRegistrationForm.controls.phone.errors?.required && patientRegistrationForm.controls.phone.touched || patientRegistrationForm.controls.phone.errors?.pattern"
+                    class="text-red-500 text-xs italic">
+                    Please enter a valid phone number
+                </span>
+                <span *ngIf="showRelations"
+                class="text-red-500 text-xs italic" >
+                This phone no already in use with <b>{{main_patient_name}}. </b><a (click)="viewRelations()" class="text-blue-500 cursor-pointer">View</a>.
+            </span>
+            <span  class="text-red-500 text-xs italic" *ngIf="mainPatientAlreadyExist && editMode">
+              This phone no already in use with <b>{{main_patient_name}}</b>
+            </span>
+        </div>
+       
+        <div class="sm:col-span-2 form-group">
+
+            <mat-label>Gender <span>*</span></mat-label>
+            <br />
+
+            <mat-radio-group aria-label="Select an option" [formControlName]="'gender'">
+                <mat-radio-button value="male">Male</mat-radio-button>
+                <mat-radio-button value="female">Female</mat-radio-button>
+                <mat-radio-button value="other">Other</mat-radio-button>
+              </mat-radio-group>
+        </div>
+        <!-- <div class="sm:col-span-2  form-group">
+          <mat-label>Age / Date of Birth</mat-label>
+          <div class="grid grid-cols-2 gap-0 flex">
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+            <input
+            matInput
+            type="number"
+            min="1"
+            max="100"
+            [placeholder]="'Enter'"
+            [formControlName]="'age'"
+          />
+            </mat-form-field>
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+           
+  
+            <mat-icon 
+            matPrefix
+            class="hidden sm:flex icon-size-5"
+            [svgIcon]="'heroicons_solid:calendar'"
+          ></mat-icon>
+          <input
+            matInput
+            [matDatepicker]="birthdayDatepicker"
+            [formControlName]="'patient_dob'"
+            [placeholder]="'dd,mmm,yyyy'"
+            (dateChange)="dateChanged(birthdayDatepicker,$event)" 
+          />
+          <mat-datepicker-toggle matSuffix [for]="birthdayDatepicker">
+          </mat-datepicker-toggle>
+          <mat-datepicker #birthdayDatepicker></mat-datepicker>
+            </mat-form-field>
+           
+          </div>
+        </div> -->
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Age <span>*</span></mat-label>
+            <input
+              matInput
+              type="number"
+              min="1"
+              max="100"
+              [placeholder]="'Enter'"
+              [formControlName]="'age'"
+              (blur)="updateDOB(patientRegistrationForm.get('age').value)"
+            />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Date of Birth </mat-label>
+            
+            <input
+              matInput
+              [matDatepicker]="birthdayDatepicker" 
+              (click)="birthdayDatepicker.open()"
+              (focus)="birthdayDatepicker.open()"
+              [formControlName]="'patient_dob'"
+              [placeholder]="'dd,mmm,yyyy'"
+              (dateChange)="dateChanged(birthdayDatepicker,$event)" 
+            />
+            <mat-datepicker-toggle matSuffix [for]="birthdayDatepicker">
+            </mat-datepicker-toggle>
+            <mat-datepicker #birthdayDatepicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Hospital Registration Number </mat-label>
+            <input
+              matInput   
+              [placeholder]="'Enter'"
+              [formControlName]="'hospitalid'"
+              
+            />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group" *ngIf="isPatientAlreadyExists"> 
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full" 
+            floatLabel="always"
+          >
+            <mat-label>Relationship <span>*</span></mat-label>
+            <mat-select
+              [placeholder]="'Select'"
+              [formControlName]="'relation'"
+            >
+              <mat-option [value]="data.data_name" *ngFor="let data of relationShips">{{data.data_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+          
+        </div>
+
+       
+        
+      </div>
+      
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8" *ngIf="isShown">
+        
+        <div class="sm:col-span-2 form-group flex justify-between" >
+            
+          <mat-form-field
+          class="fuse-mat-no-subscript w-49per"
+          floatLabel="always"
+        >
+        <mat-label>Height </mat-label>
+          <input
+            type="number" 
+            max="9"
+            matInput
+            [placeholder]="'Feet'"
+            [formControlName]="'heightFt'"
+            
+          />
+          <!-- <mat-select
+            [formControlName]="'heightscaleid'"
+            [placeholder]="'Select'"
+            matSuffix
+            (selectionChange)="heightCalculate($event)"
+          >
+            <mat-option
+              [value]="data.masterdata_id" 
+              *ngFor="let data of heightScalesList"
+              >{{ data.data_name }}</mat-option
+            >
+          </mat-select> -->
+        </mat-form-field>
+        <mat-form-field 
+          class="fuse-mat-no-subscript w-49per pt-6"
+          floatLabel="always">
+          <input
+          type="number" 
+          max="12"
+          matInput
+          [placeholder]="'inches'"
+          [formControlName]="'heightIn'" 
+         
+        >
+        </mat-form-field>          
+      </div>
+
+        <div class="sm:col-span-2 form-group">
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+              <mat-label>Weight</mat-label>
+              <input
+                matInput
+                [placeholder]="'Enter'"
+                [formControlName]="'weight'"
+                
+              />
+              <mat-select
+                [formControlName]="'weightscale'"
+                [placeholder]="'Select'"
+                matSuffix
+                (selectionChange)="weightCalculate($event)"
+              > 
+                <mat-option
+                [value]="data.masterdata_id"
+                  *ngFor="let data of weightScalesList"
+                  >{{ data.data_name }}</mat-option
+                >
+              </mat-select>
+            </mat-form-field>
+          </div>
+
+          <div class="sm:col-span-2 form-group">
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+              <mat-label>Blood Group</mat-label>
+              <mat-select placeholder="Select" [formControlName]="'bloodgroupid'">
+                <mat-option *ngFor="let data of bloodGroupList" [value]="data.masterdata_id">{{
+                    data.data_name
+                  }}</mat-option>
+               
+              </mat-select>
+            </mat-form-field>
+          </div>
+          <div class="sm:col-span-2 form-group">
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full" 
+              floatLabel="always"
+            >
+              <mat-label>Email Id </mat-label>
+              <input
+              (input)="onInputChange(patientRegistrationForm.get('email_address').value)"
+                placeholder="Enter"
+                [formControlName]="'email_address'"
+                matInput
+                
+              />
+            </mat-form-field>
+            
+          </div>
+      </div>
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+        <div class="sm:col-span-2 text-blue-500">
+          <a (click)="toggleShow()" class="cursor-pointer" type="checkbox">{{!isShown ? 'Show More' : 'Show Less'}}</a>
+        </div>
+      </div>
+
+      <h1 class="mt-8 font-bold mb-4">Contact Info</h1>
+      <div class="grid sm:grid-cols-4 gap-6 w-full ">
+        <div class="sm:col-span-2">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Patient Address </mat-label>
+        
+            <input matInput #addressInput [placeholder]="'Enter'" ngx-google-places-autocomplete [options]="options"
+              (onAddressChange)="handleAddressChange($event)" [formControlName]="'address'" />
+          </mat-form-field>
+        </div>
+        
+        <div class="sm:col-span-2">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Locality / Village <span></span></mat-label>
+            <input matInput [placeholder]="'Enter'" [formControlName]="'locality'" />
+          </mat-form-field>
+        </div>
+
+        <div class="sm:col-span-2">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>District <span></span></mat-label>
+            <input matInput [placeholder]="'Enter'" [formControlName]="'city'" />
+          </mat-form-field>
+        </div>
+        
+        
+        <div class="sm:col-span-2">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>State <span></span></mat-label>
+            <input matInput [placeholder]="'Enter'" [formControlName]="'state'" />
+          </mat-form-field>
+        </div>
+
+        <div class="sm:col-span-2">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Country <span></span></mat-label>
+            <input matInput [placeholder]="'Enter'" [formControlName]="'country'" />
+          </mat-form-field>
+        </div>
+        
+        <div class="sm:col-span-2">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Pincode</mat-label>
+            <input matInput type="number" [placeholder]="'Enter'" [formControlName]="'pincode'" />
+          </mat-form-field>
+        </div>
+      </div>
+     
+
+      <!-- <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+        <div class="sm:col-span-2 text-blue-500">
+          <a (click)="toggleAddressShow()" class="cursor-pointer" type="checkbox">{{!isShowAddress ? 'Show Address' : 'Hide Address'}}</a>
+        </div>
+      </div> -->
+
+      <!-- <div class="grid sm:grid-cols-6 gap-6 w-full mt-8">
+        <div class="sm:col-span-6 form-group">
+            <mat-label>Medical Histories</mat-label>
+            <ng-select [formControlName]="'medicalCondition'"  class="cursor-pointer mat-profile-select" placeholder="Select" [multiple]="true" (add)="checkData($event)"	>
+                <ng-option *ngFor="let data of medicalMasterData"  [value]="data.data_name">{{data.data_name}}</ng-option>
+             </ng-select>
+          </div>
+      </div> -->
+      <div class="mt-11 mb-10 border-t"></div>
+      
+      <div class="flex items-center justify-end">
+        <button *ngIf="!editMode" [disabled]="editMode || patientRegistrationForm.pristine" class="border-solid border-primary-500 text-primary-500" mat-flat-button type="button" (click)="onReset()">
+          <span class="ml-2 mr-1">Clear</span>
+        </button>
+        <button *ngIf="editMode"  mat-flat-button type="button"  class="border-solid border-primary-500 text-primary-500" (click)="dismiss()" >
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+        <button
+          type="submit"
+          class="ml-2"
+          mat-flat-button
+          [color]="'primary'"
+          (click)="savePatient()"
+          [disabled]="patientRegistrationForm.invalid || isLoading || mainPatientAlreadyExist"
+        >
+          <span class="ml-2 mr-1">{{editMode ? 'Update' : 'Save'}}</span> <mat-progress-spinner *ngIf="isLoading" [diameter]="24" [mode]="'indeterminate'"></mat-progress-spinner>
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</div>

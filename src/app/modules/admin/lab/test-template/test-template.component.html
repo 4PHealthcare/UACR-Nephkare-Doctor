@@ -1,0 +1,153 @@
+<div
+  class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
+>
+  <!-- List -->
+  <div class="flex flex-col flex-auto min-w-0 -mt-px  pb-4 ">
+    <div
+  >
+    <div class="w-full max-w-screen-xl mx-auto px-6">
+      <div
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-6 w-full min-w-0"
+      >
+        <div
+        class="sm:col-span-2 md:col-span-4 flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden"
+        >
+          <div
+            class="flex flex-col sm:flex-row flex-0 sm:items-center sm:justify-between  py-4 px-6 md:px-8  border-b">
+            <div class="text-4xl font-extrabold tracking-tight">Lab Templates</div>
+
+            <div class="tracking-tight">
+              <mat-form-field
+              class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded mr-2 searchbarreportwidth"
+            >
+              <mat-icon
+                class="icon-size-5"
+                matPrefix
+                [svgIcon]="'heroicons_solid:search'"
+              ></mat-icon>
+              <input
+                matInput
+                (input)="filterData($event.target.value)"
+                [autocomplete]="'off'"
+                [placeholder]="'Search for Report Name, Department, Sample Type'"
+              />
+            </mat-form-field>
+            <button
+              class="ml-4"
+              mat-flat-button
+              [color]="'primary'"
+              (click)="openTestTemplateModal()"
+            >
+              <mat-icon [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+              <span class="ml-2 mr-1">Test Template</span>
+            </button>
+            </div>
+           
+          </div>
+
+
+          <!-- Main -->
+          <div class="flex flex-auto overflow-hidden">
+            <!-- Users list -->
+            <div
+              class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto lablst-ht"
+            >
+              <ng-container
+                *ngIf="patients$ | async as patients; else noPatients"
+              >
+                <div class="grid">
+                  <!-- Header -->
+                  <div
+                    class="test-lists-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+                    matSort
+                    (matSortChange)="sortData($event)"
+                  >
+                    <div
+                      class="hidden md:block items-center"
+                      [mat-sort-header]="'first_name'"
+                    >
+                      Report Name
+                    </div>
+                    <div class="hidden md:block items-center">
+                      Department Name
+                    </div>
+
+                    <div
+                      class="hidden md:block items-center"
+                      [mat-sort-header]="'created_on'"
+                    >
+                      Sample Type
+                    </div>
+                   
+                    <div class="hidden md:block items-center">Actions</div>
+                  </div>
+                  <!-- Rows -->
+                  <ng-container *ngIf="patients$ | async as patients">
+                    <!-- use Ng for dynmaic data -->
+                    <ng-container *ngFor="let data of patients; let i = index">
+                      <div
+                        class="test-lists-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                      >
+                        <div class="font-semibold">{{ data.group_name }}</div>
+                        <div>{{ data.department }}</div>
+                        <div>{{ data.sample_type }}</div>
+                       
+                        <div class="flex">
+                          <div class="pr-1">
+                            <button
+                              class="min-w-10 min-h-7 h-7 px-2 mr-2 leading-6"
+                              mat-stroked-button (click)="editReportGroup(data)"
+                            >
+                              <mat-icon
+                                [matTooltip]="'Edit'"
+                                class="icon-size-5"
+                                [svgIcon]="'heroicons_solid:pencil-alt'"
+                              >
+                              </mat-icon>
+                            </button>
+
+                            <button
+                              class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                              mat-stroked-button (click)="delete(data)"
+                            >
+                              <mat-icon
+                                class="icon-size-5"
+                                [matTooltip]="'Delete'"
+                                
+                                [svgIcon]="'heroicons_solid:trash'"
+                              >
+                              </mat-icon>
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </ng-container>
+                  </ng-container>
+                </div>
+
+                <mat-paginator
+                  class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+                  [ngClass]="{ 'pointer-events-none': isLoading }"
+                  [length]="totalRecords$ | async"
+                  [pageIndex]="currentPage"
+                  [pageSize]="pageSize"
+                  [pageSizeOptions]="[10,5]"
+                  [showFirstLastButtons]="true"
+                  (page)="pageEvent = $event; onPageChange($event)"
+                ></mat-paginator>
+              </ng-container>
+
+              <ng-template #noPatients>
+                <div
+                  class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
+                >
+                  No Templates
+                </div>
+              </ng-template>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

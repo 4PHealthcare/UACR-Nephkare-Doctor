@@ -1,0 +1,310 @@
+<div
+  class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
+>
+  
+<div
+class="sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent height-calc"
+>
+<div
+class="relative flex flex-col sm:flex-row flex-0 sm:justify-between sm:items-center py-8 px-6 md:px-8 border-b"
+>
+  
+    <div class="text-4xl font-extrabold tracking-tight">Follow-ups</div>
+ 
+
+    <div class="relative flex flex-col sm:flex-row justify-end flex-0 w-5/6">
+        <mat-form-field
+          class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded sm:w-96"
+          
+        >
+          <mat-icon
+            class="icon-size-5"
+            matPrefix
+            [svgIcon]="'heroicons_solid:search'"
+          >
+          </mat-icon>
+          <input
+            matInput
+            (input)="filterData($event.target.value)"
+            [value]="patientName"
+            [autocomplete]="'off'"
+            [placeholder]="'Search for Patient Name, Phone Number, UHID'"
+          />
+        </mat-form-field>
+       <!-- from and to date -->
+       
+        <form [formGroup]="dateForm" class="inline-flex ml-2.5">
+   
+          <!-- <mat-form-field
+          class="fuse-mat-no-subscript  fuse-mat-rounded mr-2 mh-40"
+        >
+          <input
+            matInput
+            formControlName="fromDate"
+            [matDatepicker]="fromDatepicker"
+            [placeholder]="'From'"
+            (focus)="fromDatepicker.open()"
+            (click)="fromDatepicker.open()"
+           
+          />
+          <mat-datepicker-toggle matSuffix [for]="fromDatepicker">
+          </mat-datepicker-toggle>
+          <mat-datepicker #fromDatepicker></mat-datepicker>
+        </mat-form-field>
+        <mat-form-field
+            class="fuse-mat-no-subscript  fuse-mat-rounded mr-2 mh-40"
+          >
+            <input
+              matInput
+              formControlName="toDate"
+              [matDatepicker]="toDatepicker"
+              [placeholder]="'To'"
+              (click)="toDatepicker.open()"
+              (focus)="toDatepicker.open()"
+            
+            />
+            <mat-datepicker-toggle matSuffix [for]="toDatepicker">
+            </mat-datepicker-toggle>
+            <mat-datepicker #toDatepicker></mat-datepicker>
+          </mat-form-field>  -->
+          <mat-form-field   class="fuse-mat-no-subscript  fuse-mat-rounded mr-2 mh-40 w-68" floatLabel="always">
+          
+            
+            <mat-date-range-input
+            separator="to"
+              [rangePicker]="dateFormpicker"
+              [comparisonStart]="dateForm.value.start"
+              [comparisonEnd]="dateForm.value.end"
+              (click)="dateFormpicker.open()">
+              
+              <input matStartDate placeholder="From date" formControlName="fromDate">
+              <input matEndDate placeholder="To date" formControlName="toDate">
+            </mat-date-range-input>
+            <mat-hint>MM/DD/YYYY to MM/DD/YYYY</mat-hint>
+            <mat-datepicker-toggle matIconSuffix [for]="dateFormpicker"></mat-datepicker-toggle>
+            <mat-date-range-picker #dateFormpicker></mat-date-range-picker>
+          </mat-form-field>
+      </form>
+
+      <mat-form-field
+      *ngIf="(userInfo.role_id ==5 && userInfo.isadmin_account) && (doctors.length > 1) || userInfo.role_id ==474 || userInfo.role_id ==481"
+      class="fuse-mat-dense fuse-mat-no-subscript sm:w-60 fuse-mat-rounded mx-2"
+      floatLabel="always"
+    >
+    
+      <mat-select
+      [placeholder]="(userInfo.role_id===5 && userInfo.isadmin_account)? 'Me':'All Doctors'" 
+      [(value)]="selectedDoctor"
+        (selectionChange)="onDoctorChange($event)"
+        class="dash-select"
+      >
+        <mat-option *ngIf="userInfo.role_id==474" [value]="'all'">All Doctors</mat-option>
+        <mat-option [value]="userInfo.user_id" *ngIf="userInfo.role_id===5 && userInfo.isadmin_account">Me</mat-option>
+        <ng-container *ngFor="let data of doctors">
+          <mat-option [value]="data.doctorid"
+            >{{ data.details }}
+          </mat-option>
+        </ng-container>
+      </mat-select>
+    </mat-form-field>
+      </div>
+      <!-- Search -->
+
+      <!-- Actions -->
+      <!-- <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+        <mat-form-field
+          class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded mx-2 w-44"
+          floatLabel="always"
+        >
+          <mat-select
+            [placeholder]="'All Consultations'"
+            (selectionChange)="onSelectionChange($event)"
+          >
+            <mat-option [value]="0">All Consultations</mat-option>
+            <ng-container *ngFor="let data of visits">
+              <mat-option [value]="data.masterdata_id"
+                >{{ data.data_name }}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field
+          class="fuse-mat-dense fuse-mat-no-subscript sm:w-44 fuse-mat-rounded mx-2"
+          floatLabel="always"
+        >
+          <mat-select
+            [(value)]="selectedStatus"
+            [placeholder]="'All Status'"
+            (selectionChange)="onStatusChange($event)"
+          >
+            <mat-option [value]="0">All</mat-option>
+            <ng-container *ngFor="let data of statusTypes">
+              <mat-option [value]="data.masterdata_id"
+                >{{ data.data_name }}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+
+        <button
+          class="bg-blue-400 text-white"
+          mat-flat-button
+          (click)="bookAppointment()"
+          *ngIf="
+            !(
+              userInfo.admin_account == 3 &&
+              (userInfo.role_id == 5 || userInfo.role_id == 4)
+            )
+          "
+        >
+          <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon>
+          <span class="ml-2 mr-1">Add Appointment</span>
+        </button>
+      </div> -->
+    </div>
+
+    <!-- Main -->
+    <div class="flex flex-auto overflow-hidden">
+      <!-- Users list -->
+      <div
+        class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto"
+      >
+        <ng-container *ngIf="(patients$ | async)?.length > 0; else noPatients">
+          <div class="grid">
+            <!-- Header -->
+            <div
+              class="hospital-follow-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+              matSort
+              (matSortChange)="sortData($event)"
+              
+            >
+              <div
+                class=" md:block items-center"
+                [mat-sort-header]="'first_name'"
+              >
+                Patient Info
+              </div>
+              <div >Doctor Info</div>
+              <div class=" md:block items-center" [mat-sort-header]="'appointment_date'">Follow up Date</div>
+              <div class=" md:block items-center">
+                Last Appointment
+              </div>
+
+              <div class=" md:block items-center">Actions</div>
+            </div>
+            <!-- Rows -->
+            <ng-container *ngIf="patients$ | async as patients">
+              <!-- use Ng for dynmaic data -->
+              <ng-container *ngFor="let data of patients; let i = index">
+                <div
+                  class="grid hospital-follow-grid items-center  gap-4 py-3 px-6 md:px-8 border-b"
+                  
+                >
+                  <div (click)="setDisplayPrescription()">
+                    <span
+                      class="font-semibold capitalize"
+                      [matTooltip]="
+                        data?.patient_full_name.length > 25
+                          ? data?.patient_full_name
+                          : ''
+                      "
+                      >{{
+                        data?.patient_full_name?.length > 25
+                          ? (data?.patient_full_name | slice : 0 : 25 | titlecase) + " ..."
+                          : (data?.patient_full_name.trim() | titlecase )
+                      }}</span
+                    >
+                    <span
+                      >, {{ data?.age }}yrs,
+                      <span class="capitalize">{{ data?.gender }}</span></span
+                    ><br />
+                    <span *ngIf="data.mobile_no" class="text-secondary pt-2"
+                      >{{data?.country_code}} {{ addSpace(data?.mobile_no) }}</span
+                    >
+                  </div>
+                  <div >
+                    <span class="font-semibold capitalize"
+                      >Dr. {{ data?.doctor_name }}</span
+                    ><br />
+                    <span class="text-secondary pt-2">{{
+                      data?.speciality
+                    }}</span>
+                  </div>
+
+                 
+
+                  
+
+                  <div>
+                    <div class="pt-2">
+                      {{ data?.appointment_date | date : "MMM d, y" }}
+                    </div>
+                  </div>
+                  <div>
+                    <div class="pt-2">
+                      {{ data?.last_appointment_date ? (data?.last_appointment_date | date : "MMM d, y | hh:mm a") : '--' }}
+                    </div>
+                  </div>
+
+                  <div class="flex  lg:block items-center">
+                    <div class="pr-2 contents">
+                      <button
+                      class=" px-0 leading-6 "
+                      (click)="appointmentEdit(data,'foloow-ups')" 
+                      [matTooltip]="'Approve'"
+                      
+                    >
+                    <!-- [disabled]="data?.status === 'Cancelled' || data?.status === 'Running' " -->
+                    <mat-icon svgIcon="heroicons_outline:check"></mat-icon>
+
+
+                    </button>
+                      <button
+                        class=" ml-2 leading-6"
+                        (click)="cancelAppointment(data)"
+                        [matTooltip]="'Cancel'"
+                       
+                      >
+                      <mat-icon svgIcon="heroicons_outline:x"></mat-icon>
+
+                      <!--  [disabled]="data?.status === 'Cancelled' || data?.status === 'Running'" -->
+                        <!-- <img
+                        
+                          class="w-5"
+                          src="../../../../../assets/images/clock.svg"
+                        /> -->
+                        <!-- [class]="(data?.status === 'Cancelled' || data?.status === 'Completed' || data?.status === 'Running')? 'opacity-30': ' '" -->
+                      </button>
+
+                     
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+
+          <mat-paginator
+            class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+            [ngClass]="{ 'pointer-events-none': isLoading }"
+            [length]="totalRecords$ | async"
+            [pageIndex]="currentPage"
+            [pageSize]="pageSize"
+            [pageSizeOptions]="[10,5]"
+            [showFirstLastButtons]="true"
+            (page)="pageEvent = $event; onPageChange($event)"
+          ></mat-paginator>
+        </ng-container>
+
+        <ng-template #noPatients>
+          <div
+            class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center"
+          >
+            There are no appointments!
+          </div>
+        </ng-template>
+      </div>
+    </div>
+  </div>
+</div>

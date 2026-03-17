@@ -1,0 +1,140 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div *ngIf="!editMode" class="text-2xl font-semibold tracking-tight">Add Immunisation</div>
+    <div *ngIf="editMode" class="text-2xl font-semibold tracking-tight">Update Immunisation</div>
+    <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  <!-- [formGroup]="cheifComplaintForm" -->
+  <!-- (ngSubmit)="onSubmit()" -->
+  <form
+    class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+    [formGroup]="immunisationForm"
+    #immunisationNGForm="ngForm"
+  >
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8"> 
+      <div class="sm:col-span-2 form-group">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Vaccination <span>*</span></mat-label>
+          <mat-select [placeholder]="'Select'" [formControlName]="'vaccination'" (selectionChange)="selectVaccination($event)">
+            <mat-option value="Hepatitis B">Hepatitis B</mat-option>
+            <mat-option value="Pneumococcal"
+              >Pneumococcal</mat-option
+            >
+            <mat-option value="Influenza">Influenza</mat-option>
+            <mat-option value="DT">DT</mat-option>
+            <mat-option value="M.M.R">M.M.R</mat-option>
+            <mat-option value="Chickenpox">Chickenpox</mat-option>
+
+          </mat-select>
+          
+        
+        </mat-form-field>
+        <!-- <div *ngIf="submitted && f.complaintName.errors" class="invalid-feedback alert alert-danger">
+          <div *ngIf="f.complaintName.errors.required">Cheif Complaint is required</div>
+        </div> -->
+        <!-- <div
+          *ngIf="f.vaccination.touched && f.vaccination.invalid"
+          class="alert alert-danger"
+        >
+          <div
+            *ngIf="f.vaccination.errors && f.vaccination.errors.required"
+          >
+            Vaccination is required.
+          </div>
+        </div> -->
+      </div>
+
+      <div class="sm:col-span-2 form-group">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Date <span>*</span></mat-label>
+          <input
+            matInput
+            [formControlName]="'vaccinationdate'" 
+            [matDatepicker]="date"
+            [placeholder]="'dd, mmm, yyyy'"
+            [max]="maxDate"
+            (click)="date.open()"
+            (focus)="date.open()"
+            
+          />
+          <mat-datepicker-toggle matPrefix [for]="date">
+          </mat-datepicker-toggle>
+          <mat-datepicker #date></mat-datepicker>
+        </mat-form-field>
+ 
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Name </mat-label>
+          <input
+            matInput
+            [formControlName]="'vaccinename'"
+            [placeholder]="'Enter'"
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Values </mat-label>
+          <mat-select [placeholder]="'Select'" [formControlName]="'vaccinevalue'">
+            <ng-container *ngFor="let data of vacinnationValues">
+              <mat-option [value]="data.data_name">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+
+         
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full"  floatLabel="always"> 
+          <mat-label>Dose </mat-label>
+          <mat-select [placeholder]="'Select'" [formControlName]="'dosename'">
+            <ng-container *ngFor="let data of vaccinationDose">
+              <mat-option [value]="data">{{data}} </mat-option>
+            </ng-container>
+          </mat-select>
+        
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+      <button mat-flat-button type="button" (click)="onReset()" class="border-solid border-primary-500 text-primary-500 mr-2" >
+        <span class="ml-2 mr-1">Cancel</span>
+      </button>
+      <button type="submit"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="immunisationForm.invalid || isLoadingSpinner" (click)="onSubmit()"
+       >
+        <span *ngIf="!editMode" class="ml-2 mr-1" >Save</span>
+        <mat-progress-spinner
+              *ngIf="isLoadingSpinner"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+
+
+        <span *ngIf="editMode" class="ml-2 mr-1" >Update</span>
+      </button>
+    </div>
+  </form>
+  
+</div>

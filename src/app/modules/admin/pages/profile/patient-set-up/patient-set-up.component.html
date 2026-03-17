@@ -1,0 +1,63 @@
+<div class="relative flex flex-col p-6 pb-8 flex-auto bg-card border-d3d3d3 rounded-2xl mb-6">
+    <div class="text-blue-500 text-3xl font-semibold mb-2">Set Up</div> 
+    <!-- [formGroup]="myLifeCareForm" 
+    #myLifeCareNGForm="ngForm" -->
+    <form [formGroup]="sosSetUpForm" 
+    #sosSetUpNGForm="ngForm"
+    class="flex-auto">
+    <div class="bg-lt-blue w-98 mx-3 p-4 mt-4">
+      <!-- <h1 class="font-bold mb-4">Add Subscription</h1> -->
+      <div class="grid sm:grid-cols-4 gap-6 w-full">
+        <div class="sm:col-span-1 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Care Coordinator</mat-label>
+            <mat-select [placeholder]="'Select'"  [formControlName]="'careCordinatorId'">
+                <mat-option [value]="data.user_id" *ngFor="let data of ccdDetails">{{data.full_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+       
+        
+      </div>
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+        
+        <div class="sm:col-span-1 form-group">
+            <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+              <mat-label>Hospital Emergancy Number </mat-label>
+              <input
+                matInput
+                [formControlName]="'hospitalEmergancyNo'" 
+                [placeholder]="'Enter'" (keydown)="validateNumericInput($event)"/>
+            </mat-form-field>
+          </div>
+
+          
+        
+      </div>
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+        <div class="sm:col-span-1 form-group">
+            <button class="border-solid border-primary-500 text-primary-500 mr-2" mat-flat-button type="button" (click)="clear()">
+                <span class="ml-2 mr-1">Clear</span>
+              </button> 
+              <button
+          type="submit"
+          class="ml-2"
+          mat-flat-button
+          [color]="'primary'"
+          (click)="saveSetUp()"
+          [disabled]="sosSetUpForm.invalid || sosSetUpForm.pristine"
+        >
+          <span class="ml-2 mr-1">{{(sosSetUpForm.controls.careCordinatorId.value && sosSetUpForm.controls.hospitalEmergancyNo.value) ? 'Update' : 'Save'}}</span> 
+        </button>
+          </div>
+      </div>
+     
+    </div>
+  </form>
+</div>

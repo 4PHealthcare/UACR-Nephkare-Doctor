@@ -1,0 +1,39 @@
+
+.height-calc {
+  height: calc(100vh - 200px);
+}
+.appointment-tab .mat-tab-labels {
+  float: right;
+  background: white;
+  padding: 10px;
+  border-radius: 30px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+.bg-blue{
+  background-color:#066bdb !important;
+}
+.appointment-tab
+  .mat-tab-header
+  .mat-tab-label-container
+  .mat-tab-list
+  .mat-tab-labels
+  .mat-tab-label.mat-tab-label-active {
+    background-color: #0d9488 !important;
+  color: white !important;
+}
+
+.inventory-grid.doctor-profile-grid {
+  grid-template-columns: 20% 15% 30% 15%  17%;
+  @screen sm {
+    grid-template-columns: 20% 15% 30% 15%  17%;  }
+
+  @screen md {
+    grid-template-columns: 20% 15% 30% 15%  17%;  }
+
+  @screen lg {
+    grid-template-columns: 20% 15% 30% 15%  17%;
+  }
+}
+.grid-calc{
+  height:calc(100vh - 200px) !important
+}

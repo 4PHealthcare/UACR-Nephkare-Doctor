@@ -1,0 +1,207 @@
+<div class="flex flex-col w-full overflow-auto bg-card">
+  <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+    <div *ngIf="!isEditMode" class="ml-3 text-2xl font-semibold tracking-tight">
+      Book Appointment - request
+    </div>
+    <div *ngIf="isEditMode" class="ml-3 text-2xl font-semibold tracking-tight">
+      Reschedule Appointment {{patientUrl}}
+    </div>
+
+    <button class="ml-auto" mat-icon-button (click)="dismiss()">
+      <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <ng-container *ngIf="patientUrl; else apptUrl">
+    <form class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-8 lg:pr-8 lg:pt-3"
+      [formGroup]="patientAppointmentForm" #patientaAppointmentNGForm="ngForm">
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+        <div class="sm:col-span-4 form-group">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Search patient </mat-label>
+
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput [matAutocomplete]="auto" (input)="onSearchPatient($event)"
+                [placeholder]="'Search for Patient name'" [value]="selectedPatient$ | async" [disabled]="patientId != 0 || selectedPatientId">
+               
+                <button  *ngIf="patientId == 0 && selectedPatientId"  matSuffix mat-icon-button aria-label="Clear" (click)="clearReports()" >
+                  <mat-icon>close</mat-icon>
+                </button>
+              
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChangePatient($event)">
+                  <mat-option *ngFor="let option of filteredPatientOptions$ | async" [id]="option.patientid" [value]="option.full_name + ' - ' + option.age+'yrs'+ ' - ' +option.gender">
+                    <b>{{option.full_name}} </b> - {{option.age}}yrs - {{option.gender}} 
+                  </mat-option>
+                </mat-autocomplete>
+        </mat-form-field>
+      
+        <div *ngIf="(filteredPatientOptions$ | async)?.length == 0 && inputText" class="pt-1 italic text-blue-500">
+          No Data Found <a class="underline cursor-pointer" (click)="addPatient()"><strong>Add Patient</strong></a>
+        </div>
+
+      </div>
+       
+
+        <div class="sm:col-span-2 form-group" *ngIf="is_field_appear"> 
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Speciality </mat-label>
+            <mat-select [formControlName]="'specialityid'" placeholder="Select" [disabled]="userInfo?.role_id==5" (selectionChange)="
+            changeSpeciality($event.value)">
+              <ng-container *ngFor="let data of specialities">
+                  <mat-option [value]="data.masterdata_id">{{
+                      data.data_name
+                      }}</mat-option>
+              </ng-container>
+          </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group" *ngIf="is_field_appear">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Search doctor </mat-label>
+
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput [matAutocomplete]="doctor" (input)="onSearchTerm($event)" [placeholder]="'Search for Name'"
+              [formControlName]="'doctorId'" />
+              <button  *ngIf="userInfo?.role_id != 5 && selectedDoctor"  matSuffix mat-icon-button aria-label="Clear" (click)="clearDoctorId()" >
+                <mat-icon>close</mat-icon>
+              </button>
+            <mat-autocomplete #doctor="matAutocomplete" (optionSelected)="onSelectionChange($event)">
+              <mat-option *ngFor="let option of filteredOptions$ | async" [id]="option.doctorid"
+                [value]="option.details">
+                {{ option.details }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <div *ngIf="(filteredOptions$ | async)?.length == 0 && doctorText" class="pt-1 italic text-blue-500">
+            No Data Found
+          </div>
+
+        </div>
+        <div class="sm:col-span-2 form-group" >
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Visit type </mat-label>
+
+            <mat-select [placeholder]="'Select'" [formControlName]="'appointmentId'" value="72" >
+              <ng-container >
+                <mat-option value="72">Hospital Visit</mat-option>
+                <!-- <mat-option value="73">Video</mat-option> -->
+                <mat-option value="518">Follow up</mat-option>
+                <mat-option value="519">Walk-In</mat-option> 
+                <!-- <mat-option value="1518">New Appointment</mat-option>  -->
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Schedule date </mat-label>
+            <input matInput [matDatepicker]="scheduleDate" (focus)="scheduleDate.open()" (dateChange)="addFirstEvent( scheduleDate,$event)" [placeholder]="'dd/mmm/yyyy'"
+              [min]="today.format('YYYY-MM-DD')" [formControlName]="'scheduleDate'" />
+            <mat-datepicker-toggle matPrefix [for]="scheduleDate">
+            </mat-datepicker-toggle>
+            <mat-datepicker Search #scheduleDate></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Schedule time </mat-label>
+
+            <mat-select [placeholder]="'Select'" [formControlName]="'scheduleTime'">
+              <ng-container *ngFor="let data of scheduleTimeList">
+                <mat-option [value]="data">{{ data }}
+                </mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+          <div class="text-red-500" *ngIf="scheduleTimeList.length == 0 && !isScheduleTimeListEmpty">No slots available in this day</div>
+        </div>
+       
+      </div>
+
+      <div class="mt-11 mb-10 border-t"></div>
+      <div class="flex items-center justify-end">
+        <button mat-flat-button type="button" (click)="clearFields()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+          <span class="ml-2 mr-1">Clear</span>
+        </button>
+        <button type="submit" mat-flat-button [color]="'primary'" (click)="savePatientSideAppt()"
+          [disabled]="patientAppointmentForm.invalid || !selectedPatientId">
+          <span class="ml-2 mr-1">Save</span>
+        </button>
+      </div>
+    </form>
+   
+  </ng-container>
+
+  <ng-template #apptUrl>
+    <form class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3" [formGroup]="appointmentForm"
+    #appointmentNGForm="ngForm">
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-4 form-group" *ngIf="!isDoctor">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Search doctor <span>*</span></mat-label>
+
+          <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+          <input matInput [matAutocomplete]="auto" (input)="onSearchTerm($event)" [placeholder]="'Search for Name'"
+            [formControlName]="'appId'" />
+          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChange($event)">
+            <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.details"
+              [id]="option.doctorid">
+              {{ option.details }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+      </div>
+
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Schedule date *</mat-label>
+          <input matInput [matDatepicker]="scheduleDate" (focus)="scheduleDate.open()" [placeholder]="'dd, MMM, yyyy'"
+            [min]="today.format('YYYY-MM-DD')" [formControlName]="'scheduleDate'" />
+          <mat-datepicker-toggle matPrefix [for]="scheduleDate">
+          </mat-datepicker-toggle>
+          <mat-datepicker Search #scheduleDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always" >
+          <mat-label>Schedule time <span>*</span></mat-label>
+          <input matInput [value]="appointmentForm.controls.scheduleTime.value | date : 'hh:mm a'" [placeholder]="'Enter'" disabled/>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always" > 
+          <mat-label>Re-Schedule date *</mat-label>
+          <input matInput  (focus)="rescheduleDate.open()" [matDatepicker]="rescheduleDate" [placeholder]="'dd,mmm,yyyy'"
+            [min]="today.format('YYYY-MM-DD')" [formControlName]="'rescheduleDate'" (dateChange)="addEvent( rescheduleDate,$event)"/>
+          <mat-datepicker-toggle matPrefix [for]="rescheduleDate">
+          </mat-datepicker-toggle>
+          <mat-datepicker Search #rescheduleDate></mat-datepicker>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Re-Schedule time *</mat-label>
+          <mat-select [placeholder]="'Select'" [formControlName]="'rescheduleTime'">
+            <ng-container *ngFor="let data of scheduleTimeList">
+              <mat-option [value]="data">{{ data }}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+    </div>
+
+    <div class="mt-11 mb-10 border-t"></div>
+    <div class="flex items-center justify-end">
+      <button mat-flat-button type="button" (click)="dialogRef.close()">
+        <span class="ml-2 mr-1">Cancel</span>
+      </button>
+      <button type="submit" mat-flat-button [color]="'primary'" (click)="saveRescheduleAppt()"
+        [disabled]="appointmentForm.invalid">
+        <span class="ml-2 mr-1">Save</span>
+      </button>
+    </div>
+  </form>
+    
+  </ng-template>
+</div>

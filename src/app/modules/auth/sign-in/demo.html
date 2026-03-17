@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Patient Prescription</title>
+    <style>
+      .page-header,
+      .page-header-space {
+        height: 100px;
+      }
+
+      .page-footer,
+      .page-footer-space {
+        height: 72px;
+      }
+
+      .page-footer {
+        position: fixed;
+        bottom: 0;
+       /* width: 100%;*/
+        border-top: 1px solid black;
+         /* / for demo / */
+        width: 100%;
+           
+            background-size: contain;
+            background-repeat: no-repeat;
+            height: 100%;
+
+      }
+
+        .page-header {
+            position: fixed;
+            top: 0mm;
+            width: 100%;
+
+            background-size: contain;
+            background-repeat: no-repeat;
+            height: 100%;
+        }
+
+      .page {
+        page-break-after: always;
+      }
+
+      @page {
+        margin: 20mm;
+      }
+
+      @media print {
+        thead {
+          display: table-header-group;
+        }
+        tfoot {
+          display: table-footer-group;
+        }
+
+        button {
+          display: none;
+        }
+
+        body {
+          margin: 0;
+        }
+      }
+      .multi_table {
+        width: 100%;
+      }
+
+      .table_title {
+        color: #1a87bc;
+        font-weight: 600;
+        text-align: left;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        margin-top: 20px;
+        font-size: 15px;
+      }
+
+      .main {
+        font-size: 14px;
+         /* margin: 144px 96px 72px 96px;  */
+        color: #040404;
+        font-family: Arial, Helvetica, sans-serif;
+      }
+
+      .label {
+        font-weight: 600;
+      }
+
+      .name-info {
+        font-weight: 600;
+        color: black;
+        font-size: 14px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+
+      .info {
+        font-weight: 600;
+        color: black;
+        font-size: 12px;
+        margin-top: 5px;
+        margin-bottom: 5px;
+      }
+
+      .info p {
+        margin-top: 3px;
+        margin-bottom: 0px;
+        padding-left: 0px;
+        line-height: 1.5;
+      }
+
+      .title_header {
+        padding: 5px;
+        font-weight: 600;
+        background-color: #ddd;
+      }
+
+      .table_body {
+        width: 100%;
+        text-align: left;
+        font-size: 13px;
+        border-collapse: collapse;
+      }
+
+      .table_cells {
+        padding: 7px;
+        border: 0.5px solid #b0a9a9;
+        font-size: 12px;
+      }
+
+      .table_headers {
+        padding: 7px;
+        border: 0.5px solid #b0a9a9;
+        font-size: 13px;
+      }
+
+      .info_br {
+        font-weight: 400;
+        color: gray;
+        font-size: 12px;
+        border-bottom: 1px solid #ddd;
+      }
+
+      hr {
+        margin-bottom: 23px;
+      }
+
+      ul {
+        line-height: 1.5;
+        padding-left: 15px;
+      }
+        table {
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="page-header" style="text-align: center;background-image: url(https://hellokidneydata.s3.ap-south-1.amazonaws.com/Patient/Prescription%20Banner/1230/Group%207270.png);">
+
+
+    </div>
+
+    <div class="page-footer" style="background-image: url(https://hellokidneydata.s3.ap-south-1.amazonaws.com/Patient/Prescription%20Banner/1230/Group%207272.png);">
+    </div>
+
+    <table>
+        <thead>
+            <tr>
+                <td>
+                    <!--place holder for the fixed-position header-->
+                    <div class="page-header-space"></div>
+                </td>
+            </tr>
+        </thead>
+
+        <tbody>
+            <tr>
+                <td>
+                    <!--** CONTENT GOES HERE **-->
+                    <div class="main page">
+                        <hr />
+                        <div class="patient_info">
+                            <div style="width: 100%; display: table">
+                                <div style="display: table-row">
+                                    <div class="name-info" style="display: table-cell">
+                                        Surendar , male, 31 years
+                                    </div>
+                                    <div class="name-info" style="display: table-cell; text-align: end">
+                                        10/08/2022
+                                        <!-- Jul 19, 2022 -->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="
+                  text-align: center;
+                  color: red;
+                  font-weight: 600;
+                  font-size: 13px;
+                  margin-top: 47px;
+                  margin-bottom: 40px;
+                ">
+                            <u>CONSULTAITON SUMMARY</u>
+                        </div>
+
+                        <div style="width: 100%; display: table; height: 70px">
+                            <div style="display: table-row">
+                                <div class="info" style="display: table-cell; width: 60%">
+                                    <span class="table_title">Diagnosis:</span><br />
+                                    <p> Multicystic kidney </p>
+                                    <p>Abdominal actinomycosis</p>
+                                    <p>Abdominal aortic aneurysm, without rupture</p>
+                                </div>
+                                <div class="info" style="display: table-cell; text-align: left">
+                                    <span class="table_title">Medical Condition:</span><br />
+
+                                </div>
+                            </div>
+                        </div>
+                        <div style="width: 100%; display: table; height: 70px">
+                            <div style="display: table-row">
+                                <div class="info" style="display: table-cell; width: 50%">
+                                    <span class="table_title">Symptoms:</span><br />
+                                    <p class="info"></p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="multi_table">
+                            <div class="table_title">
+                                Medication (Rx)</span>
+                            </div>
+                            <table class="table_body" cellspacing="0">
+                                <tr style="background-color: #E5EFF9">
+                                    <th class="table_cells">Medicine</th>
+                                    <th class="table_cells">Dose</th>
+                                    <!-- <th class="table_cells">Frequency</th> -->
+                                    <th class="table_cells">Duration</th>
+                                    <!-- <th class="table_cells">Time</th> -->
+                                    <th class="table_cells">Food</th>
+                                    <th class="table_cells">Note</th>
+                                </tr>
+                                <tr class="info">
+                                    <td class="table_cells">Alprazolam Extended Release - Tab - 2mg</td>
+                                    <td class="table_cells">0 - 1 - 1 - 0</td>
+                                    <!-- <td class="table_cells"></td> -->
+                                    <td class="table_cells">4 days</td>
+                                    <!-- <td class="table_cells"></td> -->
+                                    <td class="table_cells">After Food</td>
+                                    <td class="table_cells"></td>
+                                </tr>
+                                <tr class="info">
+                                    <td class="table_cells">Ace Inhibitor - </td>
+                                    <td class="table_cells">1 - 1 - 0 - 0</td>
+                                    <!-- <td class="table_cells"></td> -->
+                                    <td class="table_cells">2 days</td>
+                                    <!-- <td class="table_cells"></td> -->
+                                    <td class="table_cells">After Food</td>
+                                    <td class="table_cells"></td>
+                                </tr>
+                                <tr class="info">
+                                    <td class="table_cells">Acyclovir -Tab - 10mg/mL</td>
+                                    <td class="table_cells">1 - 1 - 1 - 0</td>
+                                    <!-- <td class="table_cells"></td> -->
+                                    <td class="table_cells">4 days</td>
+                                    <!-- <td class="table_cells"></td> -->
+                                    <td class="table_cells">Before Food</td>
+                                    <td class="table_cells"></td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div>
+                            <div class="table_title">Prescibed Lab Tests:</div>
+                            <ul class="info">
+                                <li>DTPA Scan</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="table_title">Advice:</div>
+                            <ul class="info">
+                                <li>sda</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="table_title">Diet:</div>
+                            <ul class="info">
+                                <li>navbebdb</li>
+                            </ul>
+                        </div>
+                        <div>
+                            <div class="table_title">Next Follow up:</div>
+                            <div class="info"><p>Visit on 17-Aug-2022</p></div>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+
+        <tfoot>
+            <tr>
+                <td>
+                    <!--place holder for the fixed-position footer-->
+                    <div class="page-footer-space"></div>
+                </td>
+            </tr>
+        </tfoot>
+    </table>
+</body>
+</html>

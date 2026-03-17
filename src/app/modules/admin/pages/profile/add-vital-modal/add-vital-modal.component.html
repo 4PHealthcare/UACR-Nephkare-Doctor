@@ -1,0 +1,210 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="text-2xl font-semibold tracking-tight">
+      {{ editMode ? "Update" : "Add" }} Vitals
+    </div>
+    <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  <!-- [formGroup]="vitalForm" -->
+  <!-- (ngSubmit)="onSubmit()" -->
+  <form
+    class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+    [formGroup]="vitalForm"
+    #vitalNGForm="ngForm"
+  >
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-2 form-group">
+        <mat-label>Blood Pressure (mmHg)</mat-label>
+        <div class="grid grid-cols-2 gap-4">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+          <input
+          matInput
+          [formControlName]="'systolicBp'" 
+          [placeholder]="'Systolic'"
+        />
+          </mat-form-field>
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+          <input
+          matInput
+          [formControlName]="'dystolicBp'"
+          [placeholder]="'Diastolic'"
+        />
+          </mat-form-field>
+        </div>
+      </div>
+      <!-- <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Systolic BP (mmHg)</mat-label>
+          <input
+            matInput
+            [formControlName]="'systolicBp'"
+            [placeholder]="'Enter'"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Diastolic BP (mmHg)</mat-label>
+          <input
+            matInput
+            [formControlName]="'dystolicBp'"
+            [placeholder]="'Enter'"
+          />
+        </mat-form-field>
+      </div> -->
+
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Heart Rate (BPM)</mat-label>
+          <input
+            matInput
+            [formControlName]="'heartRate'"
+            [placeholder]="'Enter'"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Temperature (°F)</mat-label>
+          <input
+            matInput
+            [formControlName]="'temperature'"
+            [placeholder]="'Enter'"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Respiratory Rate (CPM)</mat-label>
+          <input
+            matInput
+            [formControlName]="'respiratoryRate'"
+            [placeholder]="'Enter'"
+          />
+        </mat-form-field>
+      </div>
+
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Blood Oxygen (%)</mat-label>
+          <input matInput [formControlName]="'spo2'" [placeholder]="'Enter'" />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Weight (kgs)</mat-label> 
+          <input matInput [formControlName]="'weight'" [placeholder]="'Enter'" />
+        </mat-form-field>
+      </div>
+    </div>
+    <div class="mt-4 font-semibold">Blood Sugar</div>
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-2">
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Fasting (mg/dL)</mat-label> 
+          <input matInput [placeholder]="'Enter'" [formControlName]="'bloodsugar_fasting'" />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Pre Lunch (mg/dL)</mat-label> 
+          <input matInput  [placeholder]="'Enter'" [formControlName]="'bloodsugar_prelunch'" />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Pre Dinner (mg/dL)</mat-label> 
+          <input matInput [placeholder]="'Enter'" [formControlName]="'bloodsugar_predinner'"/>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Random (mg/dL)</mat-label> 
+          <input matInput  [placeholder]="'Enter'" [formControlName]="'bloodsugar_random'"/>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Post Prandial(PPBS)</mat-label> 
+          <input matInput  [placeholder]="'Enter'" [formControlName]="'bloodsugar_postprandial'"/>
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+      <button mat-flat-button type="button" (click)="onReset()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+        <span class="ml-2 mr-1">Cancel</span>
+      </button>
+      <button
+        type="submit"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="vitalForm.invalid || isLoadingSpinner" (click)="onSubmit()"
+      >
+        <span *ngIf="!editMode" class="ml-2 mr-1" 
+          >Save</span><mat-progress-spinner
+          *ngIf="isLoadingSpinner"
+           [diameter]="24"
+           [mode]="'indeterminate'"></mat-progress-spinner>
+
+        <span *ngIf="editMode" class="ml-2 mr-1" 
+          >Update</span
+        >
+      </button>
+    </div>
+  </form>
+</div>

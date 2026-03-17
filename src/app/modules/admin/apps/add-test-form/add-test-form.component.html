@@ -1,0 +1,101 @@
+<div class="flex flex-col w-full overflow-auto bg-card">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="ml-3 text-2xl font-semibold tracking-tight">Add Test</div>
+
+    <button class="ml-auto" mat-icon-button (click)="dismiss()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  <ng-container>
+    <form [formGroup]="addTestForm" #addTestFormNGForm="ngForm"
+      class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-8 lg:pr-8 lg:pt-3"
+    >
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-4 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Test Name <span>*</span></mat-label>
+            <input matInput [formControlName]="'testName'" [placeholder]="'Enter'" />
+          </mat-form-field>
+        </div>
+
+        <div class="sm:col-span-4 form-group">
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Specimen <span>*</span></mat-label>
+          <mat-select
+            [placeholder]="'Select'"
+            [formControlName]="'specimen'"
+          >
+            <mat-option [value]="data.data_name" *ngFor="let data of specimens">{{data.data_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+
+        <div class="sm:col-span-4 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Test Units <span>*</span> </mat-label>
+            <input [formControlName]="'testUnits'" matInput [placeholder]="'Enter'" />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-4 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Test Range Text <span>*</span> </mat-label>
+            <input [formControlName]="'testRange'" placeholder="Enter" matInput />
+          </mat-form-field>
+        </div>
+
+        <div class="sm:col-span-4 form-group">
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Department <span>*</span></mat-label>
+          <mat-select
+            [placeholder]="'Select'"
+            [formControlName]="'department'"
+          >
+            <mat-option [value]="data.data_name" *ngFor="let data of departments">{{data.data_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+        
+
+      </div>
+      <div class="mt-11 mb-10 border-t"></div>
+      <div class="flex items-center justify-end" *ngIf="!isEdit"> 
+        <button mat-flat-button type="button" (click)="Clear()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+          <span class="ml-2 mr-1">Clear</span>
+        </button>
+        <button type="submit" mat-flat-button [color]="'primary'" (click)="addTest()" [disabled]="addTestForm.invalid || isSaveLoading">
+          <mat-progress-spinner *ngIf="isSaveLoading" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+          <span class="ml-2 mr-1">Save</span>
+        </button>
+      </div>
+      <div class="flex items-center justify-end" *ngIf="isEdit"> 
+        <button mat-flat-button type="button" (click)="cancel()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+        <button type="submit" mat-flat-button [color]="'primary'" (click)="UpdateTest()" [disabled]="addTestForm.invalid || isUpdateLoading">
+          <mat-progress-spinner *ngIf="isUpdateLoading" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+          <span class="ml-2 mr-1">Update </span>
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</div>

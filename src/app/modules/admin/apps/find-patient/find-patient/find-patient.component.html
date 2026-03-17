@@ -1,0 +1,92 @@
+<div
+    class="flex justify-center w-full md:h-full py-8 px-4 sm:p-12 md:p-16 md:pt-24 sm:rounded-2xl md:rounded-none sm:shadow md:shadow-none sm:bg-card">
+    <div class="w-full max-w-80 sm:w-80 mx-auto sm:mx-0">
+        <!-- Logo -->
+        <div class="w-5/5">
+            <img src="assets/images/logo/Hellokidney_logo.png">
+        </div>
+        <ng-container *ngIf="showPhoneNoSection">
+            <form class="mt-8" [formGroup]="signInForm">
+
+                <!-- Email field -->
+                <mat-form-field class="w-full" floatLabel="always">
+                    <mat-label>Phone Number</mat-label>
+                    <input id="phone" matInput [placeholder]="'Phone Number'" [formControlName]="'phone'">
+
+                    <mat-error *ngIf="signInForm.get('phone').hasError('phone')">
+                        Please enter a valid phone number
+                    </mat-error>
+                </mat-form-field>
+                <button class="fuse-mat-button-large w-full mt-6" [color]="'primary'" mat-flat-button
+                    (click)="findPatient()" [disabled]="signInForm.invalid">Check
+                </button>
+            </form>
+        </ng-container>
+
+        <!-- patient info -->
+        <ng-container *ngIf="!showPhoneNoSection">
+            <div *ngIf="(patientInfo$ |async) as info" class="mt-8">
+                <div>
+                    <label>Name: </label><span class="font-semibold">{{ info.first_name}} {{ info.last_name}}</span>
+                </div>
+                <div>
+                    <label>Age: </label><span class="font-semibold">{{ info.age}}</span>
+                </div>
+                <div>
+                    <label>Gender: </label><span class="font-semibold">{{ info.gender}}</span>
+                </div>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Speciality</mat-label>
+                    <mat-select (selectionChange)="selectSpeciality($event)" placeholder="Select"
+                        [(ngModel)]="selectedSpeciality">
+                        <ng-container *ngFor="let speciality of specialities">
+                            <mat-option [value]="speciality.masterdata_id">{{speciality.data_name}}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Doctor</mat-label>
+                    <mat-select placeholder="Select" [(ngModel)]="selectedDoctor">
+                        <ng-container *ngFor="let doctor of doctorsList">
+                            <mat-option [value]="doctor.user_id">{{doctor.full_name}}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Available Doctor Slots</mat-label>
+                    <mat-select placeholder="Select" [(ngModel)]="appointmentTime">
+                        <ng-container *ngFor="let slot of doctorSlots">
+                            <mat-option [value]="slot">{{slot}}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <div>
+                    <mat-label>Consulatation Types</mat-label>
+                </div>
+                <mat-radio-group aria-label="Select an option" [(ngModel)]="consultationType">
+                    <mat-radio-button [color]="primary" class="capitalize mr-4" [value]="'newConsultation'">
+                        New Consultation
+                    </mat-radio-button>
+                    <mat-radio-button [color]="primary" [value]="'followUp'" class="capitalize">
+                        Follow Up
+                    </mat-radio-button>
+                </mat-radio-group>
+            </div>
+            <button class="fuse-mat-button-large w-full mt-6" [color]="'primary'"
+               mat-flat-button
+                (click)="submit()">Submit
+            </button>
+        </ng-container>
+    </div>
+</div>
+<router-outlet></router-outlet>
+
+<!-- [disabled]="selectedDoctor === '' || selectedSpeciality === '' || appointmentTime === ''" -->

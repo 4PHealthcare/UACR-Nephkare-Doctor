@@ -1,0 +1,134 @@
+.hoverabletow {
+    img {
+      height: 100%;
+      width: 100%;
+     
+    }
+    position: relative;
+    display: block;
+    cursor: pointer;
+    float: left;
+    height: 150px;
+    border: 1px solid #B7B2B2;
+    
+    
+  }
+  .delete-trash {
+    position: relative;
+    text-align: center;
+    // bottom: 170px;
+    // left: 45px;
+    mat-icon {
+      color: red;
+    }
+  }
+  .hoverabletow .hover-text {
+    position: absolute;
+    display: none;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+    font-size: 10px;
+  }
+  .hoverabletow .background {
+    position: absolute;
+    display: none;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    background-color: rgba(255, 255, 255, 0);
+    pointer-events: none;
+    border-radius: 50%;
+    z-index: 1;
+  }
+  .hoverabletow:hover .hover-text {
+    display: block;
+  }
+  .hoverabletow:hover .background {
+    display: block;
+  }
+  
+  #fileInput {
+    display: none;
+  }
+  mat-label{
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  table{
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 25px;
+    th.mat-header-cell{
+        border-right: 1px solid #e2e8f0;
+        padding-left: 10px;
+        font-size: 14px;
+    color: black;
+    }
+    td.mat-cell{
+        border-right: 1px solid #e2e8f0;
+        padding-left: 10px;
+    }
+    td.mat-cell:last-of-type{
+        padding-right: 0px;
+    }
+}
+.w-fit-content{
+    width: fit-content !important;
+}
+.global-border{
+    border: 1px solid rgba(0,0,0,0.1);
+}
+// .mat-select-placeholder{
+//     -webkit-text-fill-color:black !important;
+//     color: black !important;
+// }
+::ng-deep .ng-select.ng-select-single .ng-select-container {
+    height: 48px;
+}
+::ng-deep.ng-select {
+    border-color: rgba(203, 213, 225, var(--tw-border-opacity)) !important;
+}
+table{
+    width: 100%;
+    
+}
+table th, td {
+    border: 1px solid rgba(0,0,0,0.15);
+    border-collapse: collapse;
+    padding-left: 10px;
+    padding-right: 10px;
+    text-align: left;
+  }
+
+  .table-scrollable{
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+    border: none;
+    border-radius: 0px;
+  }
+  .text-10px{
+      font-size: 12px;
+  }
+  .mat-option-text {
+    font-size: 13px !important;
+    height: 30px !important;
+    line-height: 30px !important;
+  }
+  .pos-abs{
+    position: absolute;
+    left: 210px;
+    margin-left: 5px;
+  }
+  .forward-slash{
+   
+    margin-left: 20px;
+    padding-top: 26px;
+  }
+  .w-20{
+    width: 20%;
+  }
+  

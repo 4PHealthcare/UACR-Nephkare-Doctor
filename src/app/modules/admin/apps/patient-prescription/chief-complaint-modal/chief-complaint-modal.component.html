@@ -1,0 +1,206 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div *ngIf="!editMode" class="text-2xl font-semibold tracking-tight">Chief Complaints & HPI</div>
+    <div *ngIf="editMode" class="text-2xl font-semibold tracking-tight">Update Chief Complaints & HPI</div>
+    <button class="ml-auto" mat-icon-button (click)="dialogRef.close()"> 
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  <form
+    class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+    [formGroup]="cheifComplaintForm"
+    #cheifComplaintNGForm="ngForm"
+  >
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">  
+      <div class="sm:col-span-2 form-group">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Chief Complaint <span>*</span></mat-label>
+          <input
+            matInput
+            [formControlName]="'complaintName'"
+            id="complaintName"
+            [placeholder]="'Enter'"
+            [ngClass]="{ 'is-invalid': submitted && f.complaintName.errors }"
+          />
+        </mat-form-field>
+        <!-- <div *ngIf="submitted && f.complaintName.errors" class="invalid-feedback alert alert-danger">
+          <div *ngIf="f.complaintName.errors.required">Cheif Complaint is required</div>
+        </div> -->
+        <div
+          *ngIf="f.complaintName.touched && f.complaintName.invalid"
+          class="alert alert-danger"
+        >
+          <div
+            *ngIf="f.complaintName.errors && f.complaintName.errors.required"
+          >
+            Cheif Complaint Name is required.
+          </div>
+        </div>
+      </div>
+
+      <div class="sm:col-span-2 form-group"> 
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Date</mat-label>
+          <input
+            matInput
+            [formControlName]="'date'"
+            [matDatepicker]="date"
+            [max]="maxDate"
+            (click)="date.open()"
+            (focus)="date.open()"
+            [placeholder]="'dd,mmm,yyyy'"
+            [ngClass]="{ 'is-invalid': submitted && f.date.errors }"
+          />
+          <mat-datepicker-toggle matPrefix [for]="date">
+          </mat-datepicker-toggle>
+          <mat-datepicker #date></mat-datepicker>
+        </mat-form-field>
+        <div
+          *ngIf="f.date.touched && f.date.invalid"
+          class="alert alert-danger"
+        >
+          <div *ngIf="f.date.errors && f.date.errors.required">
+            Date is required.
+          </div>
+        </div>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Location</mat-label> 
+          <mat-select [placeholder]="'Select'" [formControlName]="'location'">
+            <ng-container *ngFor="let data of locations">
+              <mat-option [value]="data.data_name">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full"  floatLabel="always"> 
+          <mat-label>Duration </mat-label>
+          <input type="number" min="0" matInput [formControlName]="'duration'" [placeholder]="'Enter'"/>
+          <mat-select [placeholder]="'Select'" [formControlName]="'durationType'" matSuffix>
+            <ng-container *ngFor="let data of duration">
+              <mat-option [value]="data.masterdata_id">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Quality (Reaction)</mat-label>
+          
+          <mat-select class="quality-slect" [placeholder]="'Select'" [formControlName]="'quality'">
+            <ng-container *ngFor="let data of qualities">
+              <mat-option [value]="data.masterdata_id">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+          
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Severity</mat-label>
+          
+          <mat-select [placeholder]="'Select'" [formControlName]="'severity'">
+            <ng-container *ngFor="let data of sivearities">
+              <mat-option [value]="data.masterdata_id">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+          
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Timing</mat-label>
+          
+          <mat-select [placeholder]="'Select'" [formControlName]="'timing'">
+            <ng-container *ngFor="let data of timings">
+              <mat-option [value]="data.masterdata_id">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+          
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Context</mat-label>
+          
+          <mat-select [placeholder]="'Select'" [formControlName]="'context'">
+            <ng-container *ngFor="let data of contexts">
+              <mat-option [value]="data.data_name">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+          
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Relieving Factors</mat-label>
+          
+          <mat-select [placeholder]="'Select'" [formControlName]="'modifyingFactor'">
+            <ng-container *ngFor="let data of relievingFactors">
+              <mat-option [value]="data.data_name">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+          
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Aggravating Factors</mat-label>
+          
+          <mat-select [placeholder]="'Select'" [formControlName]="'aggravatingfactor'">
+            <ng-container *ngFor="let data of aggravatingFactors">
+              <mat-option [value]="data.data_name">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+          
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Associated Signs & Symptoms</mat-label>
+          
+          <mat-select [placeholder]="'Select'" [formControlName]="'symptom'">
+            <ng-container *ngFor="let data of associatedSigns">
+              <mat-option [value]="data.data_name">{{data.data_name}} </mat-option>
+            </ng-container>
+          </mat-select>
+          
+        </mat-form-field>
+      </div>
+      
+      
+    </div>
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+      <button mat-flat-button type="button" (click)="onReset()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+        <span class="ml-2 mr-1">Cancel</span>
+      </button>
+      <button type="submit"
+        mat-flat-button (click)="onSubmit()"
+        [color]="'primary'"
+        [disabled]="cheifComplaintForm.invalid">
+        <span *ngIf="!editMode" class="ml-2 mr-1" >Save</span>
+        <span *ngIf="editMode" class="ml-2 mr-1">Update</span>
+      </button>
+    </div>
+  </form>
+  
+</div>

@@ -1,0 +1,313 @@
+
+<div class="flex flex-col h-screen">
+  <header>
+    <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="ml-3 text-2xl font-semibold tracking-tight">Test List</div>
+
+    <button class="ml-auto" mat-icon-button (click)="dismiss()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  </header>
+  <main class="flex-1 overflow-y-auto">
+    <!-- <div *ngIf="!isParametersExist" class="strip-noparameter">
+      
+    </div> -->
+    <fuse-alert [type]="'warning'"  class="py-2.5 px-11" *ngIf="!isParametersExist">
+      <span fuseAlertTitle>Warning alert</span>
+      Some test's doesnt have sample type, department, test unit and test range. Please edit in the below test table.
+  </fuse-alert>
+    <div class="p-5">
+      
+      <form
+        [formGroup]="testListForm"
+        #testListFormNGForm="ngForm"
+        class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-8 lg:pr-8 lg:pt-3"
+      >
+        <div
+          class="flex flex-col flex-auto mt-4 overflow-hidden sm:overflow-y-auto"
+          formArrayName="tests"
+        >
+          <ng-container>
+            <div class="grid">
+              <!-- Header -->
+              <div
+                class="test-list-modal-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md text-font-500 text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+              >
+                <div></div>
+                <div class="hidden md:block items-center">Test Name</div>
+                <div class="hidden md:block items-center">Sample Collection</div>
+                <div class="hidden md:block items-center">Results</div>
+                <div class="hidden md:block items-center">Verification</div>
+                <!-- <div class="hidden md:block items-center pl-2">Action</div> -->
+              </div>
+  
+              <ng-container *ngFor="let data of tests.controls; let i = index">
+                <ng-container [formGroup]="data">
+                  <div
+                    class="test-list-modal-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                  >
+                    <div>
+                      <section class="example-section" *ngIf="!data.value.isHide">
+                        <mat-checkbox
+                          class="example-margin"
+                          formControlName="isChecked"
+                          [color]="'primary'"
+                        ></mat-checkbox>
+                      </section>
+                    </div>
+  
+                    <div class="text-blue-500 flex">
+                      <div>
+                        {{ data.value.name }}
+                      </div>
+                
+                      
+
+                      <button
+                      class="min-w-10 min-h-7 h-7 px-0 leading-6"
+                      *ngIf="data.value.isEditPopupHide"
+                     (click)="openReangeTest(data.value, i)"
+                      [matTooltip]="'Test Setup'"
+                    > 
+                         <mat-icon class="color"  svgIcon="feather:alert-triangle"></mat-icon>
+
+
+                    </button>
+                    </div>
+                    <div>
+                      <mat-form-field class="w-full" *ngIf="!data.value.isHide">
+                        <input
+                          matInput
+                          [ngxMatDatetimePicker]="picker"
+                          placeholder="Date & time"
+                          (focus)="picker.open();updateDate()"
+                          (click)="picker.open();updateDate()"
+                          readonly
+                          formControlName="dateControl"
+                          [max]="maxDate"
+                          [disabled]="disabled"
+                        />
+                        <mat-datepicker-toggle matSuffix [for]="picker" (click)="updateDate()">
+                        </mat-datepicker-toggle>
+                        <ngx-mat-datetime-picker
+                          #picker
+                          [showSpinners]="showSpinners"
+                          [showSeconds]="showSeconds"
+                          [stepHour]="stepHour"
+                          [stepMinute]="stepMinute"
+                          [enableMeridian]="true"
+                          [touchUi]="touchUi"
+                          [color]="color"
+                        >
+                        </ngx-mat-datetime-picker>
+                      </mat-form-field>
+                    </div>
+  
+                    <div>
+                      <mat-form-field
+                        class="fuse-mat-no-subscript mr-2.5"
+                        floatLabel="always"
+                      >
+                        <input
+                          placeholder="Enter"
+                          matInput
+                          formControlName="sample_result"
+                          (input)="enableVerifiation($event.target.value, data, i)"
+                        />
+                      </mat-form-field>
+                      <mat-form-field
+                        class="fuse-mat-no-subscript"
+                        floatLabel="always"
+                      >
+                        <mat-select
+                          (change)="onSelectItem($event, j)"
+                          formControlName="result_type"
+                        >
+                          <ng-container>
+                            <mat-option value="">Select</mat-option>
+                            <mat-option value="normal">Normal</mat-option>
+                            <mat-option value="abnormal">Abnormal</mat-option>
+                          </ng-container>
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="flex"> 
+                      <!-- [disabled]="data.result_type == '' || data.result_type == undefined" -->
+                      <section class="example-section" *ngIf="!data.value.isHide">
+                        <mat-checkbox
+                          class="example-margin"
+                          formControlName="verified"
+                          [color]="'primary'"
+                          
+                          (change)="showOptions($event, data, i)"
+                        ></mat-checkbox>
+                      </section>
+                     
+                    </div>
+  
+                    <!-- <div>
+  
+                      <button
+                          class="min-w-10 min-h-7 h-7 px-0 leading-6"
+                          
+                          (click)="save(data.value)" [disabled]="data.invalid"
+                          [matTooltip]="'Save'"
+                        >
+                         
+                          <mat-icon [color]="'primary'" svgIcon="feather:save"></mat-icon>
+  
+                        </button>
+  
+                      <button
+                          class="min-w-10 min-h-7 h-7 px-0 leading-6"
+                          
+                          [matTooltip]="'Print'"
+                        >
+                          <mat-icon
+                            svgIcon="heroicons_outline:printer"
+                          ></mat-icon>
+                        </button>
+  
+  
+                    </div> -->
+                  </div>
+                </ng-container>
+              </ng-container>
+            </div>
+          </ng-container>
+         
+        </div>
+  
+        <!-- <div class="mt-1 mb-1 border-t"></div> -->
+       
+  
+       
+        <!-- <mat-dialog-actions align="end">
+          <button mat-button mat-dialog-close>Cancel</button>
+          <button mat-button [mat-dialog-close]="true" cdkFocusInitial>Install</button>
+        </mat-dialog-actions> -->
+  
+      </form>
+    </div>
+   
+  </main>
+  <footer>
+    <div
+    class="bg-color-sky flex flex-col sm:flex-row items-end sm:items-center sm:justify-between 
+    py-4 px-4 md:px-4 border-b "
+  >
+    <button
+      #print
+      printTitle="{{printTitle}}"
+      printSectionId="tests-print-section"
+      ngxPrint
+      [useExistingCss]="true"
+      type="button"
+      text-sky
+      
+    >
+    
+    </button>
+  <div class="flex items-end justify-end mr-5">
+    <button
+      type="submit"
+      mat-flat-button
+      [disabled]="saveLoading"
+      [color]="'primary'"
+      (click)="save()"
+    >
+      <mat-progress-spinner *ngIf="saveLoading" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+      <span class="ml-2 mr-1">Save</span>
+    </button>
+
+    <button mat-flat-button type="button" [disabled]="printLoading" [ngClass]="{'bg-orange-300 text-white': !sendPatientLoading,
+    'bg-gray-300 text-black': sendPatientLoading}"
+     class="m-auto ml-2 " (click)="generateBill()">
+     <mat-progress-spinner *ngIf="printLoading" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+
+      <span class="ml-2 mr-1">Print</span>
+    </button>
+
+    <button mat-flat-button type="button" [disabled]="sendPatientLoading"  [ngClass]="{'bg-blue-500 text-white': !sendPatientLoading,
+    'bg-gray-300 text-black': sendPatientLoading}" class="m-auto ml-2" (click)="generateBill(true)">
+      <mat-progress-spinner *ngIf="sendPatientLoading" [diameter]="20" [mode]="'indeterminate'"></mat-progress-spinner>
+      <span class="ml-2 mr-1">Send to Patient</span>
+    </button>
+  </div>
+  </div>
+  </footer>
+</div>
+
+
+<!-- print section -->
+<!-- <div
+  class="absolute inset-0 min-w-0 text-center overflow-auto print:overflow-visible"
+  [hidden]="true"
+  cdkScrollable
+  id="tests-print-section"
+>
+  <div class="inline-block p-6 sm:p-10 text-left print:p-0">
+    <div
+      class="w-240 p-16 rounded-2xl bg-card print:w-auto print:rounded-none print:shadow-none print:bg-transparent"
+    >
+      <div class="flex items-start justify-between">
+        <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+          <div class="font-medium tracking-tight text-secondary">ID</div>
+          <div class="font-medium">
+            : <b>{{ id }}</b>
+          </div>
+          <div class="font-medium tracking-tight text-secondary">Name</div>
+          <div class="font-medium">
+            : <b>{{ name }}</b>
+          </div>
+          <div class="font-medium tracking-tight text-secondary">
+            Referred By
+          </div>
+          <div class="font-medium">: <b>{{this.userInfo.first_name}} {{this.userInfo.last_name}}</b></div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+          <div class="font-medium tracking-tight text-secondary">
+            Sample Collected on
+          </div>
+          <div class="font-medium">: <b>{{sampleDate | date:'dd MMM, YYYY hh:mm a'}}</b></div>
+          <div class="font-medium tracking-tight text-secondary">
+            Report Approved on
+          </div>
+          <div class="font-medium">: <b>{{approvedDate | date:'dd MMM, YYYY hh:mm a'}}</b></div>
+          <div class="font-medium tracking-tight text-secondary">
+            Report Out on
+          </div>
+          <div class="font-medium">: <b>{{currentDate | date:'dd MMM, YYYY hh:mm a'}}</b></div>
+        </div>
+      </div>
+    </div>
+    <div class="col-span-12 my-4 border-b border-gray-200"></div>
+    <div
+      class="w-240 pl-16 pr-16 pt-4 rounded-2xl bg-card print:w-auto print:rounded-none print:shadow-none print:bg-transparent"
+    >
+      <table class="w-full test-list-modal">
+        <tr>
+          <th class="text-left w-5/12">TEST PARAMETER</th>
+          <th class="text-left">RESULT</th>
+          <th class="text-left">UNIT</th>
+          <th class="text-left w-5/12">BIOLOGICAL REF. INTERVAL</th>
+        </tr>
+        <tr *ngFor="let i of selectedServices">
+          <td class="text-base">{{ i.test_name }}</td>
+          <td class="text-base"><span *ngIf="i.result_type=='normal'">{{ i.results }}</span> <span *ngIf="i.result_type != 'normal'"><strong>{{ i.results }}*</strong></span></td>
+          <td class="text-base">{{ i.unit }}</td>
+          <td class="text-base">{{ i.range }}</td>
+        </tr>
+      </table>
+    </div>
+    <div class="text-center p-16">---- END OF REPORT -----</div>
+  </div>
+</div> -->
+

@@ -1,0 +1,29 @@
+
+  .example-section {
+    margin: 10px 0;
+  }
+  
+  .example-margin {
+    margin: 0 10px;
+  }
+  .example-radio-button{
+    margin: 0 10px;
+  }
+  
+  .mat-radio-button ~ .mat-radio-button {
+    margin-left: 10px;
+    padding-left: 10px;
+  }
+  // mat-radio-button {
+  //   padding-right: 10px;
+  // }
+  
+  mat-label {
+    font-weight: 500;
+    --tw-text-opacity: 1 !important;
+    color: rgba(var(--fuse-text-default-rgb), var(--tw-text-opacity)) !important;
+  }
+  ::ng-deep .ng-select.ng-select-single .ng-select-container {
+    height: 48px;
+  }
+  

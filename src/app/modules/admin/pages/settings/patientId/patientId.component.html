@@ -1,0 +1,130 @@
+<div class="w-full max-w-3xl">
+
+    <!-- Form -->
+    <form [formGroup]="accountForm" class="mt-10 ">
+
+        <label id="custom-patient-id">Do you want to use a custom patient ID?
+        </label>
+<mat-radio-group
+  aria-labelledby="custom-patient-id"
+  class="flex mt-1.5"
+  (change)="customIdChange($event)"
+  [disabled]="disableFields"
+  [formControlName]="'iscustomprefix'"
+>
+  <mat-radio-button class="mr-6" [value]="true">
+    Yes
+  </mat-radio-button>
+  <mat-radio-button class="example-radio-button" [value]="false">
+    No <span class="text-secondary">(The patient IDs will start from '1')</span>
+  </mat-radio-button>
+</mat-radio-group>
+
+<ng-container *ngIf="accountForm.controls.iscustomprefix.value == true">
+    <p class="text-secondary mt-10">Add an alphanumeric prefix that does not change and a Numeric suffix from where the patient IDs should start.
+    </p>
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <!-- Current password -->
+        <div class="sm:col-span-2">
+            <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                <mat-label>Alphanumeric Prefix</mat-label>
+               
+                <input
+                    [formControlName]="'prefixpatientid'"
+                    placeholder="Enter"
+                    
+                    matInput>
+            </mat-form-field>
+        </div>
+        <!-- New password -->
+        <div class="sm:col-span-2">
+            <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                <mat-label>Numeric</mat-label>
+                
+                <input
+                    [formControlName]="'prefixstartwith'"
+                    
+                    placeholder="Enter"
+                    matInput>
+            </mat-form-field>
+        </div>
+    </div>
+    <p class="text-secondary mt-10" *ngIf="disableFields">Note: If you want edit Custom Patient Id. Please contact admin.
+    </p>
+</ng-container>
+
+
+
+        <!-- Section -->
+        <!-- <div class="w-full">
+            <div class="text-xl">Change your password</div>
+            <div class="text-secondary">You can only change your password twice within 24 hours!</div>
+        </div> -->
+      
+
+        <!-- Divider -->
+        <div class="my-10 border-t"></div>
+
+        <!-- Section -->
+        <!-- <div class="w-full">
+            <div class="text-xl">Security preferences</div>
+            <div class="text-secondary">Keep your account more secure with following preferences.</div>
+        </div> -->
+        <!-- <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+            <div class="sm:col-span-4 flex items-center justify-between">
+                <div
+                    class="flex-auto cursor-pointer"
+                    (click)="twoStepToggle.toggle()">
+                    <div class="leading-6 font-medium">Enable 2-step authentication</div>
+                    <div class="text-md text-secondary">
+                        Protects you against password theft by requesting an authentication code via SMS on every login.
+                    </div>
+                </div>
+                <mat-slide-toggle
+                    class="ml-4"
+                    [color]="'primary'"
+                    [formControlName]="'twoStep'"
+                    #twoStepToggle>
+                </mat-slide-toggle>
+            </div>
+            <div class="sm:col-span-4 flex items-center justify-between">
+                <div
+                    class="flex-auto cursor-pointer"
+                    (click)="askPasswordChangeToggle.toggle()">
+                    <div class="leading-6 font-medium">Ask to change password on every 6 months</div>
+                    <div class="text-md text-secondary">
+                        A simple but an effective way to be protected against data leaks and password theft.
+                    </div>
+                </div>
+                <mat-slide-toggle
+                    class="ml-4"
+                    [color]="'primary'"
+                    [formControlName]="'askPasswordChange'"
+                    #askPasswordChangeToggle>
+                </mat-slide-toggle>
+            </div>
+        </div> -->
+
+        <!-- Divider -->
+        <!-- <div class="my-10 border-t"></div> -->
+
+        <!-- Actions -->
+        <div class="flex items-center justify-end">
+            <button
+               mat-flat-button
+                [disabled]="!changesFound"
+                type="button" (click)="clearForm()"
+                class="border-solid border-primary-500 text-primary-500 mr-1" >
+                Clear
+            </button>
+            <button
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                [color]="'primary'" [disabled]="!changesFound"
+                (click)="updateprefix()">Update
+            </button>
+        </div>
+    </form>
+
+</div>

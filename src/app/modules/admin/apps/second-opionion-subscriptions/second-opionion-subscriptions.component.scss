@@ -1,0 +1,51 @@
+.lab-list-subscription-grid { 
+    grid-template-columns: 48px auto 40px;
+
+    @screen sm {
+      grid-template-columns: 48px auto 112px 72px;
+    }
+
+    @screen md {
+      grid-template-columns: 160px auto 112px 72px;
+    }
+
+    @screen lg {
+      grid-template-columns: 20% 20% 20% 15% 20% ;
+    }
+  }
+
+  .lab-list-doctor-subscription-grid {
+    grid-template-columns: 48px auto 40px;
+
+    @screen sm {
+      grid-template-columns: 48px auto 112px 72px;
+    }
+
+    @screen md {
+      grid-template-columns: 160px auto 112px 72px;
+    }
+
+    @screen lg {
+      grid-template-columns: 33% 25% 25% 20%;
+    }
+  }
+  .wh-25{
+    width: 25px !important;
+    height: 25px !important;
+  }
+
+  .request-list-grid {
+    grid-template-columns: 48px auto 40px;
+  
+    @screen sm {
+      grid-template-columns: 48px auto 112px 72px;
+    }
+  
+    @screen md {
+      grid-template-columns: 160px auto 112px 72px;
+    }
+  
+    @screen lg {
+      grid-template-columns: 25% 20% 15% 15% 10%;
+    }
+  }

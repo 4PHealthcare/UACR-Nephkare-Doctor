@@ -1,0 +1,182 @@
+<div class="flex flex-col">
+  <!-- [formGroup]="surgicalHistoryForm" -->
+
+  <form
+    class="flex-auto px-6"
+    [formGroup]="surgicalHistoryForm" 
+    #surgicalHistoryNGForm="ngForm"
+  >
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-4 form-group">
+
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Procedure/Surgery Name <span>*</span></mat-label> 
+          <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+          <input
+          matInput
+          [placeholder]="'Search'"
+          [formControlName]="'_procedure_name'"
+          [matAutocomplete]="auto" 
+          (input)="searchHistories($event)"
+          [class.input-invalid]="!_procedure_nameIsValid && surgicalHistoryForm.get('_procedure_name').value.trim() !== ''"
+
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions$ | async" [id]="option.name" [value]="option.name">
+            {{option.name}}
+          </mat-option>
+        </mat-autocomplete>
+        </mat-form-field>
+
+       
+
+        <!-- <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Procedure/Surgery Name <span>*</span></mat-label>
+
+          <mat-select class="form-control" [placeholder]="'Select'" [formControlName]="'_procedure_name'">
+            <mat-option [value]="data.data_name" *ngFor="let data of filteredOptions">{{ data.data_name}}</mat-option>
+          </mat-select>
+
+        </mat-form-field> -->
+        <div
+          *ngIf="f._procedure_name.touched && f._procedure_name.invalid"
+          class="alert alert-danger"
+        >
+          <div
+            *ngIf="f._procedure_name.errors && f._procedure_name.errors.required"
+          >
+          Procedure/Surgery Name is required.
+          </div>
+        </div>
+      </div>
+      
+      <div class="sm:col-span-2 form-group">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>When Procedure Happened <span>*</span></mat-label>
+          <input
+            matInput
+            [formControlName]="'_date'"
+            (click)="_date.open()"
+            (focus)="_date.open()"
+            [max]="maxDate"
+            [matDatepicker]="_date"
+            [placeholder]="'dd,mmm,yyyy'" 
+          />
+          <mat-datepicker-toggle matPrefix [for]="_date">
+          </mat-datepicker-toggle>
+          <mat-datepicker #_date></mat-datepicker>
+        </mat-form-field>
+      </div>
+
+      <div class="sm:col-span-2 form-group">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Body Site</mat-label>
+          <input matInput [formControlName]="'_body_site'" [placeholder]="'Enter'" />
+        </mat-form-field>
+        <div
+          *ngIf="f._body_site.touched && f._body_site.invalid"
+          class="alert alert-danger"
+        >
+          <div
+            *ngIf="f._body_site.errors && f._body_site.errors.required"
+          >
+          Body Site Name is required.
+          </div>
+        </div>
+      </div>
+      
+      <div class="sm:col-span-2 form-group">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Types Of Anesthesia</mat-label>
+          <mat-select [placeholder]="'Select'" [formControlName]="'_types_anesthesia'">
+            <mat-option [value]="data.data_name" *ngFor="let data of typesOfAnesthesias">{{data.data_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="sm:col-span-2 form-group">
+        <label>Total Ischemic Time</label>
+        <div class="grid grid-cols-4 gap-4">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Warm</mat-label>
+
+            <input matInput [placeholder]="'hh'" [formControlName]="'_warm_hh'" />
+          </mat-form-field>
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label></mat-label>
+
+            <input matInput [placeholder]="'mm'" [formControlName]="'_warm_mm'" />
+          </mat-form-field>
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Cold</mat-label>
+
+            <input matInput [placeholder]="'hh'" [formControlName]="'_cold_hh'"  />
+          </mat-form-field>
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label></mat-label>
+
+            <input matInput [placeholder]="'mm'"  [formControlName]="'_cold_mm'" />
+          </mat-form-field>
+        </div>
+      </div>
+      <div class="sm:col-span-4 form-group">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Notes</mat-label>
+          <input matInput [formControlName]="'_note'" [placeholder]="'Enter'" />
+        </mat-form-field>
+      </div>
+    </div>
+     <!-- Divider -->
+     <div class="mt-11 mb-10 border-t"></div>
+     <!-- Actions -->
+     <div class="flex items-center justify-end">
+       <button mat-flat-button class="border-solid border-primary-500 text-primary-500 mr-2"  type="button" (click)="onReset()" [disabled]="surgicalHistoryForm.invalid">
+         <span class="ml-2 mr-1" >Cancel</span>
+       </button>
+       <button
+         type="submit"
+         mat-flat-button
+         [color]="'primary'"
+         [disabled]="surgicalHistoryForm.invalid || isLoadingSpinner || !_procedure_nameIsValid" 
+         (click)="onSubmit();
+         surgicalHistoryNGForm.resetForm()"
+       >
+         <span class="ml-2 mr-1" >{{surgicalHistoryId ? 'Update' : 'Save'}}</span>
+         <mat-progress-spinner
+              *ngIf="isLoadingSpinner"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+       </button>
+     </div>
+  </form>
+</div>

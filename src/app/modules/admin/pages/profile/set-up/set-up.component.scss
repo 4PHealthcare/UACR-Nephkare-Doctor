@@ -1,0 +1,24 @@
+.mat-step-header[aria-labelledby="disabled_af"] {
+    opacity: 0.5;
+}
+
+
+.mat-step-header[aria-labelledby="disabled_af"] .mat-step-label{
+    opacity: 0.5;
+    color: gray !important;
+}
+
+.mat-step-header[aria-labelledby="completed"] .mat-step-icon{
+    background-color: green !important;
+}
+
+.mat-step-header[aria-labelledby="completed"] .mat-step-label{
+    color: green !important;
+}
+
+// .mat-step-header[aria-selected="true"] .mat-step-label{
+//     color: red !important
+// }
+// .mat-step-header[aria-selected="true"] .mat-step-icon{
+//     background-color: red !important;
+// }

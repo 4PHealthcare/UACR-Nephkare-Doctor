@@ -1,0 +1,305 @@
+<div class="w-full">
+  <!-- Form -->
+
+  <!-- <form [formGroup]="feeForm">
+    <table>
+      <tr>
+        <td>
+          <mat-checkbox class="example-margin" [formControlName]="'isEnabledVideoConsultation'" (change)="enableVideo($event.checked)">Video Consultation Fee</mat-checkbox>
+        </td>
+        <td>
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full ml-8"
+          floatLabel="always">
+          <input
+            matInput
+            type="number"
+            [placeholder]="'Enter'"
+            [formControlName]="'videoconsultationfee'"
+          />
+        </mat-form-field>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <mat-checkbox class="example-margin pt-5" [formControlName]="'isEnabledClientConsultaion'" (change)="enableClinic($event.checked)">Hospital Visit Fee</mat-checkbox>
+        </td>
+        <td>
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full ml-8 pt-5"
+          floatLabel="always"
+        >
+        <input
+        matInput
+        type="number"
+        [disabled]=""
+        [placeholder]="'Enter'"
+        [formControlName]="'clientconsultationfee'"
+      />
+          
+
+        </mat-form-field>
+        </td>
+      </tr>
+      
+    </table>
+    <table class="mt-4">
+     
+    
+      <tr>
+        <td>
+         <mat-label>Do you want to display scheduled slots in patient app</mat-label>
+
+        </td>
+        <td >
+          <mat-slide-toggle class="ml-4" [color]="'primary'" [formControlName]="'isslotsdisplay'" (change)="changeStatus()" #slotsToDisplayPatient>
+          </mat-slide-toggle>
+        </td>
+      </tr>
+    </table>
+   
+    <div>
+      <div class="mt-6">
+        <div class="grid sm:grid-cols-4 gap-6 w-full mb-2" *ngIf="errorFound || feeMandatory">
+          <div class="sm:col-span-2 mt-2 text-center">
+            <div class="text-red-500">{{errorFound ? 'Please Enter at least one fee' : 'Please Enter Fee'}}</div>
+          </div>
+        </div>
+       
+        <div class="grid sm:grid-cols-4 gap-6 w-full ">
+          <div class="sm:col-span-2 mt-2 text-center">
+            <button mat-stroked-button type="button" [disabled]="!saveDisable" (click)="enablEdit()">
+              Edit
+            </button>
+    
+            <button
+              class="ml-4"
+              [color]="'primary'"
+              [disabled]="saveDisable"
+              (click)="saveFees()"
+              mat-flat-button
+              type="button"
+            >
+              Update<mat-progress-spinner
+              *ngIf="isLoadingSpinner"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form> -->
+ 
+  <!-- <div class="border-b mt-5"></div> -->
+
+  <form [formGroup]="accountForm">
+ 
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+      <div class="sm:col-span-8">
+        <mat-label class="mb-3">What is your Schedule Days</mat-label>
+        <div class="mt-2">
+        <div
+          class="outer-div"
+          *ngFor="let data of dayMasterData"
+          (click)="setStatus(data)"
+          [ngClass]="{ active: medicalInfoSelected.indexOf(data.name) !== -1 }"
+        >
+          <div class="img-color">
+            <div>
+              <div class="img-text" [innerText]="data.name"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Slot Duration</mat-label>
+          <input
+            matInput
+            [placeholder]="'Enter'"
+            [formControlName]="'slotDuration'"
+            (keypress)="keyPressNumbers($event)"
+          />
+          <span matSuffix>Minutes</span>
+        </mat-form-field>
+      </div>
+
+      <div class="sm:col-span-2">
+        <mat-label
+          >Your Schedule Time</mat-label
+        >
+        <div class="grid grid-cols-2 gap-4">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full pt-3px"
+            floatLabel="always"
+          >
+            <input
+              matInput
+              [placeholder]="'From'"
+              [formControlName]="'fromtime'"
+              aria-label="12hr format"
+              [ngxTimepicker]="fromtime"
+              readonly
+            />
+            <ngx-material-timepicker #fromtime></ngx-material-timepicker>
+            <mat-icon
+              svgIcon="heroicons_solid:clock"
+              (click)="openFromIcon(fromtime)"
+            ></mat-icon>
+          </mat-form-field>
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <input
+              matInput
+              [placeholder]="'To'"
+              [formControlName]="'totime'"
+              aria-label="12hr format"
+              [ngxTimepicker]="totime"
+              readonly
+            />
+            <ngx-material-timepicker #totime></ngx-material-timepicker>
+            <mat-icon
+              svgIcon="heroicons_solid:clock"
+              (click)="openFromIcon(totime)"
+            ></mat-icon>
+          </mat-form-field>
+        </div>
+        <div class="text-red-500" *ngIf="endTimeError">To time should be greater than from time</div>
+      </div>
+    </div>
+
+    
+
+    <!-- Actions -->
+    <div class="flex items-center justify-end mt-8">
+      <button mat-flat-button type="button" *ngIf="!scheduleId" (click)="clear()" [disabled]="!changesFound"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+        Clear
+      </button>
+      <button mat-flat-button  type="button" *ngIf="scheduleId" (click)="clear()"  class="border-solid border-primary-500 text-primary-500 mr-1"  >
+        Cancel
+      </button>
+      <button
+        class="ml-4"
+        [color]="'primary'"
+        (click)="saveDoctorSchedule()"
+        [disabled]="accountForm.invalid || medicalInfoSelected?.length == 0 || !changesFound || isLoadingSpin"
+        mat-flat-button
+        type="button"
+      >
+        {{ scheduleId ? "Update" : "Save" }}<mat-progress-spinner
+        *ngIf="isLoadingSpin"
+         [diameter]="24"
+         [mode]="'indeterminate'"></mat-progress-spinner>
+      </button>
+    </div>
+  </form>
+</div>
+<!-- Divider -->
+<div class="mt-11 mb-10 border-t"></div>
+<!-- {{dataSource}} -->
+<div class="flex flex-auto overflow-hidden">
+
+  <div
+    class="flex flex-col flex-auto sm:mb-18 overflow-hidden sm:overflow-y-auto"
+  >
+    <div class="grid bg-white">
+      <!-- Header -->
+      <div
+        class="schedule-grid z-10 sticky top-0 grid grid-cols-8 gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+      >
+        <!-- <div class="hidden md:block items-center" [mat-sort-header]="'user_id'">Patient Id</div> -->
+        <div class="hidden md:block items-center">Slot Duration</div>
+        <div class="hidden md:block items-center col-span-3">Available Days</div>
+        <div class="hidden md:block items-center col-span-3">Available Timings</div>
+        <div class="hidden lg:block float-right">Actions</div>
+      </div>
+      <!-- Rows -->
+      <ng-container *ngIf="scheduledList?.length !== 0">
+        <!-- use Ng for dynmaic data -->
+        <ng-container
+          *ngFor="let data of scheduledList"
+        >
+          <div
+            class="schedule-grid grid grid-cols-8 gap-4 items-center py-3 px-6 md:px-8 border-b"
+          >
+            <!-- Slot Duration -->
+            <div>
+              {{ data.consultation_duration }} Minutes
+            </div>
+            <div class="col-span-3">
+              {{ (data.weeklist | daySort).join(', ')}}
+            </div>
+            <div class="col-span-3">{{ data.from_time }} - {{ data.to_time }}</div>
+
+            <!-- Status -->
+            <!-- <div><mat-icon (click)="bookAppointment(data)" svgIcon="heroicons_outline:calendar" [matTooltip]="'Create Appointment'"></mat-icon>
+                  <mat-icon [matTooltip]="'reports'" svgIcon="heroicons_outline:folder" [routerLink]="['/reports']" [queryParams]="{ id: data?.user_id }"></mat-icon>
+              </div> -->
+            <div class="flex">
+              <div class="pr-2">
+                <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
+                      (click)="editDoctorSchedule(data)">
+                      <mat-icon class="icon-size-5"  [svgIcon]="'heroicons_solid:pencil-alt'"
+                      [matTooltip]="'Edit'"
+                      [matTooltipPosition]="'above'">
+                      </mat-icon>
+                </button>
+                <!-- <mat-icon
+                    class="icon-size-5 custom-icon"
+                    (click)="editDoctorSchedule(data)"
+                    [svgIcon]="'heroicons_solid:pencil-alt'"
+                    [matTooltip]="'Edit'"
+                    [matTooltipPosition]="'above'"
+                  >
+                  </mat-icon> -->
+
+              </div>
+
+              <div class="pr-2">
+                <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
+                (click)="deleteRecord(data.schedule_id)">
+                <mat-icon class="icon-size-5"   [svgIcon]="'heroicons_solid:trash'"
+                [matTooltip]="'Delete'"
+                [matTooltipPosition]="'above'">
+                </mat-icon>
+                </button>
+                <!-- <mat-icon
+                class="icon-size-5 custom-icon" 
+                (click)="deleteRecord(data.schedule_id)"
+                [svgIcon]="'heroicons_solid:trash'"
+                [matTooltip]="'Delete'"
+                [matTooltipPosition]="'above'"
+              >
+              </mat-icon> -->
+
+               
+              </div>
+            </div>
+          </div>
+        </ng-container>
+      </ng-container>
+      <ng-container *ngIf="scheduledList?.length == 0">
+        <div class="
+            p-8
+            sm:p-16
+            border-t
+            text-4xl
+            font-semibold
+            tracking-tight
+            text-center
+          ">
+          There are no Slots!
+        </div>
+      </ng-container>
+    </div>
+  </div>
+</div>

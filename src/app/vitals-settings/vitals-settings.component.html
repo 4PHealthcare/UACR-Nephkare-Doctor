@@ -1,0 +1,224 @@
+
+<div class="h-screen flex flex-col">
+    <div
+      class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+    >
+      <div class="text-2xl font-semibold tracking-tight">
+        Vitals Alert setup
+      </div>
+      <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+        <mat-icon
+          class="text-current"
+          [svgIcon]="'heroicons_outline:x'"
+        ></mat-icon>
+      </button>
+    </div>
+   
+    <form
+      class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+      [formGroup]="vitalsRegistrationForm"
+      #vitalsRegistrationFormed="ngForm"
+    >
+     
+      <div class="mt-7 mb-4 font-semibold">Blood Sugar</div>
+      <div class="grid sm:grid-cols-8 gap-6 w-140 mt-4">
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Minimum value</mat-label> 
+            <input matInput [placeholder]="'Enter'" [formControlName]="'bloodsugar_fasting'" />
+           
+          </mat-form-field>
+          
+        </div>
+        <div class="sm:col-span-0 mt-10">
+         <span>(mg/dL)</span>
+        </div>
+
+       
+       
+        <div class="sm:col-span-3">
+            <mat-form-field
+              class="fuse-mat-no-subscript w-50"
+              floatLabel="always"
+            >
+              <mat-label>Minimum value</mat-label> 
+              <input matInput [placeholder]="'Enter'" [formControlName]="'bloodsugar_fasting'" />
+              
+            </mat-form-field>
+         
+      </div>
+      <div class="sm:col-span-0 mt-10">
+        <span>(mg/dL)</span>
+       </div>
+       </div>
+      <div class="mt-7 mb-4 font-semibold">Blood Pressure</div>
+      <div class="grid sm:grid-cols-8 gap-6 w-141 mt-4">
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Minimum Systolic</mat-label> 
+            <input matInput [placeholder]="'Enter'" [formControlName]="'bloodpressure_fasting'" />
+         
+          </mat-form-field>
+          <span class="justify-center">/</span>
+          
+        </div>
+       
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Minimum Systolic</mat-label> 
+            <input matInput  [placeholder]="'Enter'" [formControlName]="'bloodpressure_fasting'" />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-0 mt-10">
+            <span>mmHg</span>
+           </div>
+      </div>
+      <div class="grid sm:grid-cols-8 gap-6 w-141 mt-2">
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Maximun value</mat-label> 
+            <input matInput [placeholder]="'Enter'" [formControlName]="'bloodpressure_fasting'" />
+            
+          
+          </mat-form-field>
+         
+          <span class="justify-center">/</span>
+        </div>
+       
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Maximun value</mat-label> 
+            <input matInput  [placeholder]="'Enter'" [formControlName]="'bloodpressure_fasting'" />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-0 mt-10">
+            <span>mmHg</span>
+           </div>
+      </div>
+      <div class="mt-7 mb-4 font-semibold">Heart Rate</div>
+      <div class="grid sm:grid-cols-8 gap-6 w-140">
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Minimum value</mat-label> 
+            <input matInput [placeholder]="'Enter'" [formControlName]="'heart_fasting'" />
+           
+          </mat-form-field>
+          
+        </div>
+        <div class="sm:col-span-1 mt-10">
+            <span>BPM</span>
+           </div>
+      
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Maximun value</mat-label> 
+            <input matInput  [placeholder]="'Enter'" [formControlName]="'heart_fasting'" />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-1 mt-10">
+            <span>BPM</span>
+           </div>
+      </div>
+      <div class="mt-7 mb-4 font-semibold">Temperature</div>
+      <div class="grid sm:grid-cols-8 gap-6 w-140 mt-2">
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Minimum value </mat-label> 
+            <input matInput [placeholder]="'Enter'" [formControlName]="'temperature'" />
+           
+          </mat-form-field>
+          
+        </div>
+        <div class="sm:col-span-1 mt-10">
+            <span>°F</span>
+           </div>
+        <div class="sm:col-span-3">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-50"
+            floatLabel="always"
+          >
+            <mat-label>Maximun value</mat-label> 
+            <input matInput  [placeholder]="'Enter'" [formControlName]="'temperature'" />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-1 mt-10">
+            <span>°F</span>
+           </div>
+      </div>
+      <div class="mt-7 mb-4 font-semibold">Respiratory Rate</div>
+      <div class="grid sm:grid-cols-8 gap-6 w-140 mt-2">
+        <div class="sm:col-span-3">
+            <mat-form-field
+              class="fuse-mat-no-subscript w-50"
+              floatLabel="always"
+            >
+              <mat-label>Minimum value</mat-label> 
+              <input matInput [placeholder]="'Enter'" [formControlName]="'respiratory'" />
+             
+            </mat-form-field>
+            
+          </div>
+          <div class="sm:col-span-1 mt-10">
+              <span>BPM</span>
+             </div>
+             <div class="sm:col-span-3">
+                <mat-form-field
+                  class="fuse-mat-no-subscript w-50"
+                  floatLabel="always"
+                >
+                  <mat-label>Minimum value</mat-label> 
+                  <input matInput [placeholder]="'Enter'" [formControlName]="'respiratory'" />
+                 
+                </mat-form-field>
+                
+              </div>
+              <div class="sm:col-span-1 mt-10">
+                  <span>BPM</span>
+                 </div>
+      </div>
+    
+      <div class="mt-11 mb-10 border-t"></div>
+      <!-- Actions -->
+      <div class="flex items-center justify-end">
+      <button
+          type="submit"
+          mat-flat-button
+          [color]="'primary'"
+          [disabled]=""
+        >
+          <span  class="ml-2 mr-1" 
+            >Save</span>
+        </button>
+        <button mat-flat-button type="button"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+            <span class="ml-2 mr-1">Clear</span>
+          </button>
+      
+      </div>
+      
+    </form>
+  </div>
+  

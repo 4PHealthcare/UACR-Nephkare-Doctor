@@ -1,0 +1,17 @@
+mat-tab-group{
+    border-bottom: none !important;
+}
+
+::ng-deep .history-tabfemale{
+    .mat-tab-label-container {
+       padding: 0px !important;
+       justify-content: left !important;
+   
+   }
+}
+
+::ng-deep .history-tabmale{
+.mat-tab-group .mat-tab-header .mat-tab-label-container .mat-tab-list .mat-tab-labels {
+justify-content: center !important;
+}
+}

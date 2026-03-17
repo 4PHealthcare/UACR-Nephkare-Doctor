@@ -1,0 +1,45 @@
+<div class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent">
+    <div class="relative flex pt-9 px-6 md:px-8">
+      
+      <div class="text-4xl font-extrabold tracking-tight lg:ml-0 sm:ml-10 md:ml-10">Free consultation period</div>
+    </div>
+    <div class="px-6 py-8 md:px-8">
+    <form [formGroup]="freeConsultaionForm">
+      <div class="flex-auto ">
+        <div class="grid sm:grid-cols-4 gap-6 w-full ">  
+            <div class="sm:col-span-1">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Consultation period</mat-label>
+                    <input [formControlName]="'conslultation_period'"  placeholder="Enter"  matInput onlyNumber>
+                    <span matSuffix>Days</span> 
+                </mat-form-field>
+                
+            </div>
+        </div>
+        <!-- Divider -->
+        <div class="mt-11 mb-10 border-t"></div>
+        <!-- Actions -->
+        <div class="flex items-center justify-end"> 
+          <button mat-flat-button type="button" (click)="clearForm()" [disabled]="freeConsultaionForm?.invalid || !changesFound"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+            <span class="ml-2 mr-1">Clear</span>
+          </button>
+          <button
+            type="button"
+            mat-flat-button
+            (click)="save()"
+            [color]="'primary'"  [disabled]="freeConsultaionForm?.invalid || !changesFound || isLoadingSpinner">
+           
+            <span  
+            class="ml-2 mr-1">Save</span>
+            <mat-progress-spinner
+            *ngIf="isLoadingSpinner"
+             [diameter]="24"
+             [mode]="'indeterminate'"></mat-progress-spinner>
+          </button>
+         
+        </div>
+      </div>
+    </form>
+    </div>
+  </div>
+  

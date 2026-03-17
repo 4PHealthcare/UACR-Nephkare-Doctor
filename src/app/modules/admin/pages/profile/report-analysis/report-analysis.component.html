@@ -1,0 +1,691 @@
+<div class="relative flex flex-col flex-auto bg-card border-d3d3d3 mt-6 mb-3 rounded-lg">        
+          <div class=" flex items-center justify-between px-6 py-4 border-b">
+            <div class="fz-25px  font-extrabold tracking-tight leading-none">
+             Reports and Analysis
+            </div>
+            <div>
+              <mat-tab-group class="request-list-tab"  [(selectedIndex)]="selectedTabIndex">
+                <mat-tab label="Analysis" (click)="switchToAnalysisTab()">
+                </mat-tab>
+                <mat-tab label="Reports" (click)="switchToReportsTab()">
+                </mat-tab>
+              </mat-tab-group>
+            </div>
+           </div>
+
+          <ng-container [ngSwitch]="selectedTabIndex">
+            <ng-template  [ngSwitchCase]="0">
+
+              <!-- Chart One [Start] -->
+              <div class="border-blk rounded-xl m-6">
+                <div class="flex items-center justify-between p-4 border-b">
+                    <div class="flex items-center"> 
+                      <span class="text-lg flex items-center w-full font-bold tracking-tight leading-6 truncate">
+                        Serum Creatinine 
+                      </span> 
+                      <span class="pl-1">
+                       <!-- <button mat-icon-button
+                       (click)="addSerumCreatinine()">
+                        <mat-icon
+                          class="icon-size-5 text-green-500"
+                          [svgIcon]="'heroicons_solid:plus-circle'"
+                          [matTooltip]="'Add Serum Creatinine'"
+                        ></mat-icon>
+                      </button> -->
+                    </span> 
+                   </div>
+                  <div class="ml-2">
+                   
+                    <mat-button-toggle-group class="profile-button-group" [(ngModel)]="selectedTimeRangeSC">
+                      <mat-button-toggle [value]="'3months'" (click)="serumCreatinine(3)">Last 3 Months</mat-button-toggle>
+                      <mat-button-toggle [value]="'6months'" (click)="serumCreatinine(6)">Last 6 Months</mat-button-toggle>
+                      <mat-button-toggle [value]="'year'" (click)="serumCreatinine(12)">Year</mat-button-toggle>
+                    </mat-button-toggle-group>
+                                      
+                  </div>
+                </div>
+  
+                    <div class=" p-6 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
+                      <div class="flex flex-col flex-auto">
+                          <!-- <div class="font-medium text-secondary">Chart of Analysis</div> -->
+                          <div class="flex flex-col flex-auto"
+                          [ngClass]="{'items-center justify-center': !chartOptionsSC}">
+                            <div *ngIf="chartOptionsSC">
+                              <apx-chart
+                                [series]="chartOptionsSC.series"
+                                [chart]="chartOptionsSC.chart"
+                                [xaxis]="chartOptionsSC.xaxis"
+                                [yaxis]="chartOptionsSC.yaxis"
+                                [dataLabels]="chartOptionsSC.dataLabels"
+                                [grid]="chartOptionsSC.grid"
+                                [fill]="chartOptionsSC.fill"
+                                [stroke]="chartOptionsSC.stroke"
+                                [title]="chartOptionsSC.title"
+                                [labels]="chartOptionsSC.labels"
+                                [annotations]="chartOptionsSC.annotations"
+                              ></apx-chart>
+                              </div>
+                              <div class="py-20 flex justify-center items-center" *ngIf="!chartOptionsSC">
+                                <!-- No Data -->
+                                <img src="assets/images/chart.svg" alt="" class="w-1/12"> <span class="text-xl pl-4">No Records</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+              <!-- Chart One [End] -->
+  
+                <!-- Chart two [Start] -->
+              <div class="border-blk rounded-xl m-6">
+                <div class="flex items-center justify-between p-4 border-b">
+                    <div class="flex items-center"> 
+                      <span class="text-lg flex items-center w-full font-bold tracking-tight leading-6 truncate">
+                        Urine Protein / Creation Ratio  
+                      </span> 
+                      <span class="pl-1">
+                       <!-- <button mat-icon-button
+                       (click)="addSerumCreatinine()">
+                        <mat-icon
+                          class="icon-size-5 text-green-500"
+                          [svgIcon]="'heroicons_solid:plus-circle'"
+                          [matTooltip]="'Add Serum Creatinine'"
+                        ></mat-icon>
+                      </button> -->
+                    </span> 
+                   </div>
+                  <div class="ml-2">
+                   
+                    <mat-button-toggle-group class="profile-button-group" [(ngModel)]="selectedTimeRangeUP">
+                      <mat-button-toggle [value]="'3months'"  (click)="urineProtein(3)">Last 3 Months</mat-button-toggle>
+                      <mat-button-toggle [value]="'6months'"  (click)="urineProtein(6)">Last 6 Months</mat-button-toggle>
+                      <mat-button-toggle [value]="'12months'"  (click)="urineProtein(12)">Year</mat-button-toggle>
+                    </mat-button-toggle-group>
+                                      
+                  </div>
+                </div>
+  
+                    <div class=" p-6 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
+                      <div class="flex flex-col flex-auto">
+                          <!-- <div class="font-medium text-secondary">Chart of Analysis</div> -->
+                          <div class="flex  flex-col flex-auto"
+                          [ngClass]="{'items-center justify-center': !chartOptionsUP}">
+                            <div *ngIf="chartOptionsUP">
+                              <apx-chart
+                              [series]="chartOptionsUP.series"
+                              [chart]="chartOptionsUP.chart"
+                              [xaxis]="chartOptionsUP.xaxis"
+                              [yaxis]="chartOptionsUP.yaxis"
+                              [dataLabels]="chartOptionsUP.dataLabels"
+                              [grid]="chartOptionsUP.grid"
+                              [stroke]="chartOptionsUP.stroke"
+                              [title]="chartOptionsUP.title"
+                              [labels]="chartOptionsUP.labels"
+                              [annotations]="chartOptionsUP.annotations"
+                            ></apx-chart>
+                              </div>
+                              <div class="py-20 flex justify-center items-center" *ngIf="!chartOptionsSC">
+                                <!-- No Data -->
+                                <img src="assets/images/chart.svg" alt="" class="w-1/12"> <span class="text-xl pl-4">No Records</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+               <!-- Chart two [End] -->
+               
+                <!-- Chart three [Start] -->
+              <div  class="border-blk rounded-xl m-6">
+                <div class="flex items-center justify-between p-4 border-b">
+                    <div class="flex items-center"> 
+                      <span class="text-lg flex items-center w-full font-bold tracking-tight leading-6 truncate">
+                        Hemoglobin
+                      </span> 
+                      <span class="pl-1">
+                       <!-- <button mat-icon-button
+                       (click)="addSerumCreatinine()">
+                        <mat-icon
+                          class="icon-size-5 text-green-500"
+                          [svgIcon]="'heroicons_solid:plus-circle'"
+                          [matTooltip]="'Add Serum Creatinine'"
+                        ></mat-icon>
+                      </button> -->
+                    </span> 
+                   </div>
+                  <div class="ml-2">
+                   
+                    <mat-button-toggle-group class="profile-button-group" [(ngModel)]="selectedTimeRangeHG">
+                      <mat-button-toggle [value]="'3months'"  (click)="hemoglobin(3)">Last 3 Months</mat-button-toggle>
+                      <mat-button-toggle [value]="'6months'"  (click)="hemoglobin(6)">Last 6 Months</mat-button-toggle>
+                      <mat-button-toggle [value]="'12months'"  (click)="hemoglobin(12)">Year</mat-button-toggle>
+                    </mat-button-toggle-group>
+                                      
+                  </div>
+                </div>
+  
+                    <div class=" p-6 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
+                      <div class="flex flex-col flex-auto">
+                          <!-- <div class="font-medium text-secondary">Chart of Analysis</div> -->
+                          <div class="flex flex-col flex-auto"
+                          [ngClass]="{'items-center justify-center': !chartOptionsHG}">
+                            <div *ngIf="chartOptionsHG">
+                              <apx-chart
+                                [series]="chartOptionsHG.series"
+                                [chart]="chartOptionsHG.chart"
+                                [xaxis]="chartOptionsHG.xaxis"
+                                [yaxis]="chartOptionsHG.yaxis"
+                                [dataLabels]="chartOptionsHG.dataLabels"
+                                [grid]="chartOptionsHG.grid"
+                                [stroke]="chartOptionsHG.stroke"
+                                [title]="chartOptionsHG.title"
+                                [labels]="chartOptionsHG.labels"
+                                [annotations]="chartOptionsHG.annotations"
+                              ></apx-chart>
+                              </div>
+                              <div class="py-20 flex justify-center items-center" *ngIf="!chartOptionsSC">
+                                <!-- No Data -->
+                                <img src="assets/images/chart.svg" alt="" class="w-1/12"> <span class="text-xl pl-4">No Records</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+               <!-- Chart three [End] -->
+  
+                <!-- Chart four [Start] -->
+              <div  class="border-blk rounded-xl m-6">
+                <div class="flex items-center justify-between p-4 border-b">
+                    <div class="flex items-center"> 
+                      <span class="text-lg flex items-center w-full font-bold tracking-tight leading-6 truncate">
+                        Serum Albumin 
+                      </span> 
+                      <span class="pl-1">
+                       <!-- <button mat-icon-button
+                       (click)="addSerumCreatinine()">
+                        <mat-icon
+                          class="icon-size-5 text-green-500"
+                          [svgIcon]="'heroicons_solid:plus-circle'"
+                          [matTooltip]="'Add Serum Creatinine'"
+                        ></mat-icon>
+                      </button> -->
+                    </span> 
+                   </div>
+                  <div class="ml-2">
+                   
+                    <mat-button-toggle-group class="profile-button-group" [(ngModel)]="selectedTimeRangeSA">
+                      <mat-button-toggle [value]="'3months'"  (click)="serumAlbumin(3)">Last 3 Months</mat-button-toggle>
+                      <mat-button-toggle [value]="'6months'"  (click)="serumAlbumin(6)">Last 6 Months</mat-button-toggle>
+                      <mat-button-toggle [value]="'12months'"  (click)="serumAlbumin(12)">Year</mat-button-toggle>
+                    </mat-button-toggle-group>
+                                      
+                  </div>
+                </div>
+  
+                    <div class=" p-6 grid-flow-row gap-6 w-full mt-8 sm:mt-4">
+                      <div class="flex flex-col flex-auto">
+                          <!-- <div class="font-medium text-secondary">Chart of Analysis</div> -->
+                          <div class="flex flex-col flex-auto"
+                          [ngClass]="{'items-center justify-center': !chartOptionsSA}">
+                            <div *ngIf="chartOptionsSA">
+                              <apx-chart
+                              [series]="chartOptionsSA.series"
+                              [chart]="chartOptionsSA.chart"
+                              [xaxis]="chartOptionsSA.xaxis"
+                              [yaxis]="chartOptionsSA.yaxis"
+                              [dataLabels]="chartOptionsSA.dataLabels"
+                              [grid]="chartOptionsSA.grid"
+                              [stroke]="chartOptionsSA.stroke"
+                              [title]="chartOptionsSA.title"
+                              [labels]="chartOptionsSA.labels"
+                              [annotations]="chartOptionsSA.annotations"
+                            ></apx-chart>
+                              </div>
+                              <div class="py-20 flex justify-center items-center" *ngIf="!chartOptionsSC">
+                                <!-- No Data -->
+                                <img src="assets/images/chart.svg" alt="" class="w-1/12"> <span class="text-xl pl-4">No Records</span>
+                              </div>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+               <!-- Chart four [End] -->
+              </ng-template>
+
+            <ng-template  [ngSwitchCase]="1">
+              <div class="flex items-center  p-3">
+       
+                <!-- <div class=" text-left" *ngIf="selectedPatient$ | async">
+                  <mat-button-toggle-group
+                    class="profile-button-group bg-white-radius"
+                    value="lab"
+                    [(ngModel)]="toggleGroupType"
+                    #taskDistributionWeekSelector="matButtonToggleGroup"
+                  >
+                    <mat-button-toggle [value]="55" (click)="GetLabpreports()"
+                      >Prescriptions</mat-button-toggle
+                    >
+                    <mat-button-toggle [value]="57" (click)="GetPrescriptionpreports()"
+                      >Lab Reports
+                    </mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div> -->
+      
+                <div>
+                  <mat-form-field 
+                  class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded mx-2 w-40"
+                  floatLabel="always">
+                  <ng-container *ngIf="selectedPatient$ | async as selectedPatient">
+                    <mat-select class="dash-select" [(ngModel)]="toggleGroupType"  value="lab" placeholder="Prescriptions">
+                      <mat-option value="55" (click)="GetLabpreports()">Prescriptions</mat-option>
+                      <mat-option value="57" (click)="GetPrescriptionpreports()">Lab Reports</mat-option>
+                    </mat-select>
+                  </ng-container>
+                </mat-form-field>
+                </div>                            
+                
+                 <!-- <mat-form-field
+                 class="min-w-100 top-5px pl-4 fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded " floatLabel="always"
+               >
+                 <mat-icon
+                   class="icon-size-5"
+                   matPrefix
+                   [svgIcon]="'heroicons_solid:search'"
+                 ></mat-icon>
+                 <input
+                   matInput
+                   [placeholder]="'Search for Prescriptions & Lab Reports'"/>
+               </mat-form-field> -->
+                 <div class="pl-4">
+                    
+                   <button
+                     class=" float-right bg-blue-400"
+                     mat-flat-button
+                     [color]="'primary'"
+                     [disabled]="!selectedPatientId"
+                     (click)="openUpload()"
+                   >
+                     <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+                     <span class="ml-2 mr-1">Upload files</span>
+                   </button>
+                 </div>
+               </div>
+               
+               <div  class="flex flex-col flex-auto p-4 overflow-x-hidden overflow-y-auto  h-400" >
+              <div class="h-full pl-1.5">
+                <div
+                  class="flex flex-wrap -m-2"
+                  *ngIf="isPrescription"
+                >
+                  <ng-container
+                    *ngIf="
+                      investigationReport$ | async as reports;
+                      else noReports
+                    "
+                  >
+                    <ng-container *ngIf="reports.length; else noItems">
+                      <div class="flex flex-wrap w-full">
+                        <div
+                          class="lab-results"
+                          infinite-scroll
+                          [scrollWindow]="false"
+                          [infiniteScrollDistance]="2"
+                          [infiniteScrollThrottle]="500"
+                          (scrolled)="onScrollDownReports($event)"
+                        >
+                          <ng-container *ngFor="let report of reports">
+                            <ng-container
+                              *ngIf="
+                                report.listOfFiles &&
+                                report.listOfFiles.length !== 0 &&
+                                report.listOfFiles[0].mime_type.includes(
+                                  'image'
+                                )
+                              "
+                            >
+                              <a
+                                class="flex flex-col w-38 h-42 m-2 rounded-lg cursor-pointer bg-card bg-no-repeat bg-cover"
+                                [ngStyle]="{
+                                  background:
+                                    'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,.4)),url(\'' +
+                                    report.src +
+                                    '\')'
+                                }"
+                                
+                              >
+                                <div class="aspect-w-11 aspect-h-7-5" (click)="downloadFile(report)"></div>
+                                <div
+                                  class="flex p-2 rounded-b-lg border-2 border-gray-300	 text-left text-sm font-medium bg-white"
+                                >
+                                  <div class="grid">
+                                    <div>
+                                      <!-- <span class="fz-11  font-bold">{{report?.name }}</span><br> -->
+                                      <span class="fz-11  font-bold" [matTooltip]="report?.name"> {{report?.name.length >20 ? 
+                                        (report?.name | slice : 0 : 20 | titlecase) +
+                                        " ..."  : ( report?.name.trim() | titlecase)
+                                      }}</span><br>
+                                  <!-- {{report.from_prescription ? 'Created by' : 'Uploaded by'}}
+                                    {{report.role_name}} - -->
+                                    <!-- <span class= "fz-9" [matTooltip]="report?.created_name"><span *ngIf="report?.role_id==5">Dr.</span>{{report?.created_name?.length > 20 ? 
+                                      (report?.created_name | slice : 0 : 20 | titlecase) +
+                                      " ..."  : ( report?.created_name.trim() | titlecase)
+                                    }}</span> -->
+                                    </div>
+      
+                                    <div>
+                                      <div class="hr-line "></div>
+                                      <span class=" fz-10"> {{ report.created_on | ordinalDate}}</span>
+        
+                                      <button
+                                      *ngIf="report.role_id != 3 && !report.from_prescription"
+                                      mat-icon-button
+                                      class="hover-ht w-6 h-6 float-right hover:bg-white "
+                                      (click)="deleteInvestigationReport(report)"
+                                      [matTooltip]="'Delete'"
+                                    >
+                                      <mat-icon class="icon-display" svgIcon="heroicons_outline:trash"></mat-icon>
+                                    </button>
+                                    <button
+                                    
+                                    mat-icon-button
+                                    class="hover-ht w-6 h-6 float-right hover:bg-white "
+                                    (click)=" downloadPdfFile(report)"
+                                    [matTooltip]="'Download'"
+                                  >
+                                    <mat-icon class="icon-display" svgIcon="heroicons_outline:download"></mat-icon>
+                                
+                                  </button>
+                                    </div>
+      
+                                    <!-- - {{ file.created_on | date: 'dd/MMM/yyyy' }} -->
+                                  </div>
+                                </div>
+                              </a>
+                            </ng-container>
+                            <ng-container
+                              *ngIf="
+                                report.listOfFiles &&
+                                report.listOfFiles.length !== 0 &&
+                                !report.listOfFiles[0].mime_type.includes(
+                                  'image'
+                                )
+                              "
+                            >
+                              <a
+                                class="flex flex-col w-38 h-42 m-2  rounded-lg cursor-pointer bg-card"
+                                (click)="downloadFile(report)"                         
+                              >
+                                <div class="aspect-w-9 ">
+                                  <pdf-viewer
+                                    class="pdf-style"
+                                    [src]="report.src"
+                                    [original-size]="false"
+                                    [render-text]="false"
+                                    [show-all]="false"
+                                    style="
+                                      width: 100%;
+                                      height: 7.75rem;
+                                      border-bottom: 1px solid gray;
+                                      overflow-y: hidden;
+                                      background-color: black;
+                                      border-top-left-radius: 1rem;
+                                      border-top-right-radius: 1rem;
+                                    "
+                                  ></pdf-viewer>
+                                </div>
+                                <div
+                                  class="flex flex-col flex-auto px-1 py-1 rounded-b-lg border-2 border-gray-300 text-left text-sm font-medium bg-white"
+                                >
+                                  <div class="grid">
+                                   <div>
+                                    <!-- <span class="fz-11  font-bold">{{report?.name}}</span><br> -->
+                                    <span class="fz-11  font-bold" [matTooltip]="report?.name"> {{report?.name.length > 20 ? 
+                                      (report?.name | slice : 0 : 20 | titlecase) +
+                                      " ..."  : ( report?.name.trim() | titlecase)
+                                    }}</span><br>
+                                    <!-- {{report.from_prescription ? 'Created by' : 'Uploaded by'}} --> <!-- hide created and upload by for ui changes by manish-->
+                                      <!-- {{report.role_name}} - -->
+                                      <!-- <span class= "fz-9" [matTooltip]="report?.created_name"><span *ngIf="report?.role_id==5">Dr.</span> {{report?.created_name?.length >20 ? 
+                                        (report?.created_name | slice : 0 : 20 | titlecase) +
+                                        " ..."  : ( report?.created_name?.trim() | titlecase)
+                                      }}</span> -->
+                                   </div>
+                                    <div>
+                                      <div class="hr-line "></div>
+                                      <span class=" fz-10"> {{ report.created_on | ordinalDate }}</span>
+                                      
+                                      <button
+                                       *ngIf="report.role_id != 3 && !report.from_prescription"
+                                       mat-icon-button
+                                       class="hover-ht w-6 h-6 float-right hover:bg-white "
+                                       (click)="deleteInvestigationReport(report)"
+                                       [matTooltip]="'Delete'"
+                                       >
+                                      <mat-icon class="icon-display" svgIcon="heroicons_outline:trash"></mat-icon>
+                                     </button>
+                                      <button
+                                   
+                                    mat-icon-button
+                                    class="hover-ht w-6 h-6 float-right hover:bg-white "
+                                     (click)=" downloadPdfFile(report)"
+                                     [matTooltip]="'Download'"
+                                  >
+                                    <mat-icon class="icon-display" svgIcon="heroicons_outline:download"></mat-icon>
+                                
+                                  </button>
+                                    
+                                    </div>
+                                    <!-- - {{ file.created_on | date: 'dd/MMM/yyyy' }} -->
+                                  </div>
+                                </div>
+                              </a>
+                            </ng-container>
+                            <!-- <ng-template #noItems><span class="no-data">No data</span></ng-template> -->
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-template #noItems>
+                      <div class="m-16 pt-5 flex justify-center items-center w-full pb-6">
+                        <span class="no-data text-xl">No data</span>
+                      </div>
+                    </ng-template>
+                  </ng-container>
+                  <ng-template #noReports>
+                    <div class="m-16 pt-5 pb-6 flex justify-center items-center w-full">
+                      <span class="no-data text-xl">No data</span>
+                    </div>
+                  </ng-template>
+                </div>
+      
+                <div
+                  class="flex flex-wrap -m-2  h-full"
+                  *ngIf="isLabReport"
+                >
+                  <ng-container
+                    *ngIf="labReport$ | async as reports; else noReports"
+                  >
+                    <ng-container
+                      *ngIf="reports?.length; else noLabReports"
+                    >
+                      <div class="flex flex-wrap w-full">
+                        <div
+                          class="lab-results"
+                          infinite-scroll
+                          [scrollWindow]="false"
+                          [infiniteScrollDistance]="2"
+                          [infiniteScrollThrottle]="500"
+                          (scrolled)="onScrollDownReports($event)"
+                        >
+                          <ng-container *ngFor="let report of reports">
+                            <ng-container
+                              *ngIf="
+                                report.listOfFiles &&
+                                report.listOfFiles.length !== 0 &&
+                                report.listOfFiles[0].mime_type.includes(
+                                  'image'
+                                )
+                              "
+                            >
+                              <a
+                                class="flex flex-col w-38 h-42 m-2  rounded-lg cursor-pointer bg-card bg-no-repeat bg-cover"
+                                [ngStyle]="{
+                                  background:
+                                    'linear-gradient(rgba(0,0,0,0.4), rgba(0,0,0,.4)),url(\'' +
+                                    report.src +
+                                    '\')'
+                                }"
+                               
+                              >
+                                <div class="aspect-w-11  aspect-h-7-5"  (click)="downloadFile(report)"></div>
+                                <div
+                                  class="flex p-2 rounded-b-lg border-2 border-gray-300 text-left text-sm font-medium bg-white"
+                                >
+                                <div class="grid">
+                                  <div>
+                                   <!-- <span class="fz-11  font-bold">{{report?.name}} </span><br> -->
+                                   <span class="fz-11  font-bold" [matTooltip]="report?.name"> {{report?.name.length > 20 ? 
+                                    (report?.name | slice : 0 : 20 | titlecase) +
+                                    " ..."  : ( report?.name.trim() | titlecase)
+                                  }}</span><br>
+                                   <!-- {{report.from_prescription ? 'Created by' : 'Uploaded by'}} -->
+                                     <!-- {{report.role_name}} - -->
+                                     <!-- <span class="fz-9" [matTooltip]="report?.created_name"><span *ngIf="report?.role_id==5">Dr.</span>{{report?.created_name?.length >20 ? 
+                                      (report?.created_name | slice : 0 : 20 | titlecase) +
+                                      " ..."  : ( report?.created_name?.trim() | titlecase)
+                                    }}</span> -->
+                                  </div>
+                                  <div>
+                                   <div class="hr-line "></div> 
+                                   <span class=" fz-10">{{
+                                    report.created_on |  ordinalDate
+                                  }}</span>
+                                   
+                                    <button
+                                      *ngIf="report.role_id != 3 && !report.from_prescription"
+                                       mat-icon-button
+                                       class="hover-ht w-6 h-6 float-right hover:bg-white"
+                                       (click)="deleteInvestigationReport(report)"
+                                       [matTooltip]="'Delete'"
+                                       >
+                                        <mat-icon class="icon-display" svgIcon="heroicons_outline:trash"></mat-icon>
+                                       </button>
+                                       <button
+                                       
+                                       mat-icon-button
+                                       class="hover-ht w-6 h-6 float-right hover:bg-white "
+                                       (click)=" downloadPdfFile(report)"
+                                       [matTooltip]="'Download'"
+                                     >
+                                       <mat-icon class="icon-display" svgIcon="heroicons_outline:download"></mat-icon>
+                                   
+                                   </button>
+                                 </div>
+                               <!-- - {{ file.created_on | date: 'dd/MMM/yyyy' }} -->
+                             </div>
+                                </div>
+                              </a>
+                            </ng-container>
+                            <ng-container
+                              *ngIf="
+                                report.listOfFiles &&
+                                report.listOfFiles.length !== 0 &&
+                                !report.listOfFiles[0].mime_type.includes(
+                                  'image'
+                                )
+                              "
+                            >
+                              <a
+                                class="flex flex-col w-38 h-42 m-2  rounded-lg cursor-pointer bg-card"
+                                (click)="downloadFile(report)"                          
+                              >
+                                <div class="aspect-w-9">
+                                  <pdf-viewer
+                                    class="pdf-style"
+                                    [src]="report.src"
+                                    [original-size]="false"
+                                    [render-text]="false"
+                                    [show-all]="false"
+                                    style="
+                                      width: 100%;
+                                      height: 7.75rem;
+                                      border-bottom: 1px solid gray;
+                                      overflow-y: hidden;
+                                      background-color: black;
+                                      border-top-left-radius: 1rem;
+                                      border-top-right-radius: 1rem;
+                                    "
+                                  ></pdf-viewer>
+                                </div>
+                                <div
+                                  class="flex flex-col flex-auto px-1 py-1 rounded-b-lg border-2 border-gray-300 text-left text-sm font-medium bg-white"
+                                  
+                                  >
+                                  <div class="grid">
+      
+                                     <div>
+                                      <!-- <span class="fz-11  font-bold">{{report?.name}} </span><br> -->
+                                      <span class="fz-11  font-bold" [matTooltip]="report?.name"> {{report?.name.length >20 ? 
+                                        (report?.name | slice : 0 : 20 | titlecase) +
+                                        " ..."  : ( report?.name.trim() | titlecase)
+                                      }}</span><br>
+                                  <!-- {{report.from_prescription ? 'Created by' : 'Uploaded by'}} -->
+                                    <!-- {{report.role_name}} - -->
+                                    <!-- <span class= "fz-9" [matTooltip]="report?.created_name"><span *ngIf="report?.role_id==5">Dr.</span>{{report?.created_name?.length >20 ? 
+                                      (report?.created_name | slice : 0 : 20 | titlecase) +
+                                      " ..."  : ( report?.created_name?.trim() | titlecase)
+                                    }}</span> -->
+                                     </div>
+      
+                                       <div>
+                                        <div class="hr-line "></div>
+                                        <span class="fz-10">
+                                              {{
+                                                report.created_on | ordinalDate
+                                              }}</span>
+                                              <button
+                                                *ngIf="report.role_id != 3 && !report.from_prescription"
+                                                mat-icon-button
+                                                class="hover-ht w-6 h-6 float-right hover:bg-white "
+                                                (click)="deleteInvestigationReport(report)"
+                                                [matTooltip]="'Delete'"
+                                              >
+                                                <mat-icon class="icon-display" svgIcon="heroicons_outline:trash"></mat-icon>
+                                              </button>
+                                              <button
+                                              
+                                              mat-icon-button
+                                              class="hover-ht w-6 h-6 float-right hover:bg-white "
+                                              (click)=" downloadPdfFile(report)"
+                                              [matTooltip]="'Download'"
+                                            >
+                                              <mat-icon class="icon-display" svgIcon="heroicons_outline:download"></mat-icon>
+                                          
+                                            </button>
+                                       </div>
+                                    <!-- - {{ file.created_on | date: 'dd/MMM/yyyy' }} -->
+                                  </div>
+                                </div>
+                              </a>
+                            </ng-container>
+      
+                            <!-- <ng-template #noItems>No Items!</ng-template> -->
+                          </ng-container>
+                        </div>
+                      </div>
+                    </ng-container>
+                    <ng-template #noLabReports>
+                      <div class="m-16 pt-5 pb-6 flex justify-center items-center w-full">
+                        <span class="no-data text-xl ">No data</span>
+                      </div>
+                    </ng-template>
+                  </ng-container>
+                  <ng-template #noReports>
+                    <div class=" pt-5 m-16 pb-6 items-center flex justify-center w-full">
+                      <span class="no-data text-xl">No data</span>
+                    </div>
+                  </ng-template>
+                </div>
+              </div>
+             </div>
+            </ng-template>
+          </ng-container>       
+      </div>

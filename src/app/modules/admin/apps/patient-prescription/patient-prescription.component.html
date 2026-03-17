@@ -1,0 +1,1215 @@
+<div
+  class="grid grid-cols-5 gap-3 pb-4"
+  [ngClass]="{
+    'grid-cols-1 w-full	':
+      (!patientPrescriptionRunning &&
+        appointmentId) ||
+      !roomURL,
+    'grid-cols-5':
+      roomURL &&
+      !patientPrescriptionRunning &&
+      appointmentId
+  }"
+  
+>
+  <div class="col-span-3">
+    <div class="flex flex-col flex-auto min-w-0">
+      <div class="flex flex-col p-6 sm:p-4">
+        <div class="flex flex-col w-full">
+          <!-- <div class="-ml-4 sm:mt-4">
+            <a mat-button (click)="back()" [color]="'primary'">
+              <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+              <span class="ml-2">Back</span>
+            </a>
+          </div> -->
+          <div class="flex justify-between items-center">
+           
+            <div
+              class="text-4xl font-extrabold tracking-tight leading-tight"
+            >
+            <button mat-flat-button class="bg-transparent	 ml-4 mr-2" type="button" (click)="goBack()">
+              <mat-icon  [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+              <span class="ml-4 mr-2">Back</span>
+            </button>
+              {{ patient?.full_name  | titlecase}} - Prescription
+            </div>
+            <div>
+              <!-- <button class="ml-4" mat-flat-button type="button" [color]="'primary'" 
+              *ngIf="
+              !patientPrescriptionRunning &&
+              appointmentId &&
+              displayPrescriptionContent
+            "
+           
+            (click)="downloadPrescription()">
+              Download Prescription
+              <mat-progress-spinner
+              class="ml-2"
+              *ngIf="downloadAction"
+              [diameter]="24"
+              [mode]="'indeterminate'"></mat-progress-spinner>
+            </button> -->
+              <!-- <button mat-stroked-button type="button" (click)="cancel()" [disabled]="!formChange"
+              *ngIf="
+              !patientPrescriptionRunning &&
+              appointmentId &&
+              !displayPrescriptionContent
+            "
+              >
+                Cancel
+              </button>
+    
+              <button
+                class="ml-4"
+                mat-flat-button
+                *ngIf="
+                !patientPrescriptionRunning &&
+              appointmentId &&
+              !displayPrescriptionContent
+              "
+                type="button"
+                [color]="'primary'"
+                (click)="savePrescription()"
+              >
+                Save
+              </button> -->
+
+              <!-- <button
+                class="ml-4 text-white"
+                mat-flat-button
+                type="button"
+                [ngClass]="{'bg-blue-600':!enableAfterEdit, 'disabled':enableAfterEdit}"
+                (click)="sendPrescription()"
+                [disabled]="enableAfterEdit"
+                *ngIf="
+                  !patientPrescriptionRunning &&
+                  appointmentId &&
+                  prescriptionStatusData?.status === 'Running'
+                "
+              >
+                Download and Complete
+              </button> -->
+            </div>
+          </div>
+          <!-- <ng-container
+            *ngIf="
+              !patientPrescriptionRunning &&
+              appointmentId &&
+              displayPrescriptionContent &&
+              htmlContent
+            "
+          >
+            <div
+              [innerHTML]="htmlContent | noSanitize"
+              id="contentToConvert"
+            ></div>
+          </ng-container> -->
+          <div
+            class="flex flex-col mt-5 overflow-hidden mb-15"
+            *ngIf="
+              
+              appointmentId 
+              
+            "
+          >
+            <!-- Vitals table -->
+
+            <div
+              class="grid grid-cols-1 gap-6 w-full min-w-0"
+              [ngClass]="{
+                'sm:grid-cols-1 md:grid-cols-1': roomURL,
+                'sm:grid-cols-2 md:grid-cols-2': !roomURL
+              }"
+            >
+              <div
+                class="flex flex-col flex-auto pt-6 pb-6 pl-6 pr-6 mt-5 bg-card rounded-2xl overflow-hidden"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold"
+                  >
+                    Diagnosis
+                  </div>
+                </div>
+
+                <div class="flex mt-1 flex-col gt-xs:flex-row">
+                  <mat-form-field
+                    class="example-chip-list w-full lab-radiology"
+                    appearance="fill"
+                  >
+                    <mat-chip-list #chipList3 aria-label="Select">
+                      <mat-chip
+                        *ngFor="let lab of patientDiagnosisData | isActivePipe"
+                        (removed)="removeDiagnosis(lab)"
+                      >
+                        {{ lab.problem_name }}
+                        <button matChipRemove>
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip>
+                      <input
+                        placeholder="Enter"
+                        #diagnosisInput
+                        [formControl]="diagnosisCtrl"
+                        [matAutocomplete]="auto3"
+                        [matChipInputFor]="chipList3"
+                        [matChipInputAddOnBlur]="false"
+                        (blur)="addOnDiagnosisBlur($event)"
+                        (matChipInputTokenEnd)="addDiagnosis($event)"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (input)="searchDiagnosisTerm($event)"
+                      />
+                    </mat-chip-list>
+                    <mat-autocomplete
+                      #auto3="matAutocomplete"
+                      (optionSelected)="selectedDiagnosis($event)"
+                    >
+                      <mat-option
+                        *ngFor="let option of filteredDiagnosisOptions$ | async"
+                        [id]="option.description"
+                        [value]="option.description"
+                      >
+                        {{ option.description }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+              </div>
+
+              <div
+                class="flex flex-col flex-auto pt-6 pl-6 pr-6 mt-5 bg-card rounded-2xl overflow-hidden"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold"
+                  >
+                    Symptoms
+                  </div>
+                </div>
+
+                <div class="flex mt-1 flex-col gt-xs:flex-row">
+                  <mat-form-field
+                    class="example-chip-list w-full lab-radiology"
+                    appearance="fill"
+                  >
+                    <mat-chip-list #chipList2 aria-label="Select">
+                      <mat-chip
+                        *ngFor="let lab of observations"
+                        (removed)="removeObservation(lab.complaint_name)"
+                      >
+                        {{ lab.complaint_name }}
+                        <button matChipRemove>
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip>
+                      <input
+                        placeholder="Enter"
+                        #observationsInput
+                        [formControl]="observationCtrl"
+                        [matAutocomplete]="auto2"
+                        [matChipInputFor]="chipList2"
+                        [matChipInputAddOnBlur]="false"
+                        (blur)="addOnBlur($event)"
+                        (matChipInputTokenEnd)="addObservation($event)"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (input)="searchObservationsTerm($event)"
+                        #trigger="matAutocompleteTrigger" 
+                        (click)="selectionMade($event, trigger)"
+                      />
+                    </mat-chip-list>
+                    <mat-autocomplete
+                      #auto2="matAutocomplete"
+                      (optionSelected)="selectedObervation($event)"
+                    >
+                      <mat-option
+                        *ngFor="
+                          let option of filteredObervationsOptions$ | async
+                        "
+                        [id]="option.name"
+                        [value]="option.name"
+                      >
+                        {{ option.name }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <div
+              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-6 w-full min-w-0"
+            >
+              <div
+                class="flex flex-col flex-auto p-6 mt-5 bg-card rounded-2xl overflow-auto"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold pb-2 overflow-scroll"
+                  >
+                    Vitals
+                  </div>
+                </div>
+                <table class="tab" [ngClass]="{ 'table-scrollable': roomURL }">
+                  <tr class="h-14 tab-head">
+                    <th>Temperature (°F)</th>
+                    <th>Weight (KGS)</th>
+                    <th class="w-20">Blood Pressure (mmHg)</th>
+                    <!-- <th>Diastolic BP (mmHg)</th> -->
+
+                    <th>Heart Rate (BPM)</th>
+
+                    <th>Respiratory Rate (CPM)</th>
+                    <th>Blood Oxygen (%)</th>
+                  </tr>
+                  <tr *ngFor="let vital of vitalData">
+                    <td>
+                      <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pr-3 w-full mt-4"
+                      >
+                        <input
+                          matInput
+                          [(ngModel)]="vital.temperature"
+                          (blur)="onBlurMethod($event, false)"
+                          placeholder="Enter"
+                          (input)="enableFormChanges()"
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pr-3 w-full mt-4"
+                      >
+                        <input
+                          matInput
+                          [(ngModel)]="vital.weight"
+                          (blur)="onBlurMethod($event, false)"
+                          placeholder="Enter"
+                          (input)="enableFormChanges()"
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <div class="flex sm:grid-cols-1 w-full">
+                        <div class="sm:col-span-1">
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="w-auto mt-4"
+                          >
+                            <input
+                              matInput
+                              [(ngModel)]="vital.systolicBp"
+                              (blur)="onBlurMethod($event, true)"
+                              placeholder="Systolic"
+                              (input)="enableFormChanges()"
+                            />
+                          </mat-form-field>
+                        </div>
+                        <span class="forward-slash">/</span>
+                        <div class="sm:col-span-1 ml-5">
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="w-auto mt-4"
+                          >
+                            <input
+                              matInput
+                              [(ngModel)]="vital.dystolicBp"
+                              (blur)="onBlurMethod($event, true)"
+                              placeholder="Diastolic"
+                              (input)="enableFormChanges()"
+                            />
+                          </mat-form-field>
+                        </div>
+                      </div>
+                    </td>
+                    <!-- <td>
+                      
+                    </td> -->
+                    <td>
+                      <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pr-3 w-full mt-4"
+                      >
+                        <input
+                          matInput
+                          [(ngModel)]="vital.heartRate"
+                          (blur)="onBlurMethod($event, true)"
+                          placeholder="Enter"
+                          (input)="enableFormChanges()"
+                        />
+                      </mat-form-field>
+                    </td>
+
+                    <td>
+                      <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pr-3 w-full mt-4"
+                      >
+                        <input
+                          matInput
+                          [(ngModel)]="vital.respiratoryRate"
+                          (blur)="onBlurMethod($event, true)"
+                          placeholder="Enter"
+                          (input)="enableFormChanges()"
+                        />
+                      </mat-form-field>
+                    </td>
+                    <td>
+                      <mat-form-field
+                        [ngClass]="formFieldHelpers"
+                        class="flex-auto gt-xs:pr-3 w-full mt-4"
+                      >
+                        <input
+                          matInput
+                          [(ngModel)]="vital.spo2"
+                          (blur)="onBlurMethod($event, true)"
+                          placeholder="Enter"
+                          (input)="enableFormChanges()"
+                        />
+                      </mat-form-field>
+                    </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
+
+            <!-- dsds -->
+
+            <div
+              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-6 w-full min-w-0"
+            >
+              <div
+                class="flex flex-col flex-auto p-6 mt-5 bg-card rounded-2xl overflow-auto"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold overflow-scroll"
+                  >
+                    Medication
+                  </div>
+
+                  <div class="mt-2">
+                    <div class="example-button-container">
+                      <!-- <button [color]="'primary'" aria-label="Example icon button with a home icon">
+                        <mat-icon svgIcon="heroicons_outline:view-grid-add"></mat-icon>
+                      </button> -->
+                      <!-- <mat-icon
+                             (click)="openPreviousMedicalHistry()"
+                              class="icon-size-5 text-green-500 cursor-pointer"
+                              [svgIcon]="'heroicons_solid:plus-circle'"
+                            ></mat-icon> -->
+                      <span
+                        class="text-blue-600 cursor-pointer"
+                        (click)="openPreviousMedicalHistry()"
+                        >View Last Medication
+                      </span>
+                    </div>
+                  </div>
+                </div>
+                <form [formGroup]="empForm" (ngSubmit)="onSubmit()">
+                  <div formArrayName="employees" class="medication-section">
+                    <table
+                      class="tab"
+                      [ngClass]="{ 'table-scrollable': roomURL }"
+                    >
+                      <tr class="h-14 tab-head">
+                        <th [ngClass]="{ 'w-52	': roomURL, 'w-1/3': !roomURL }">
+                          Medicine
+                        </th>
+                        <th>Dose</th>
+                        <th>Food</th>
+
+                        <th>Duration</th>
+                        <!-- <th>Note (Optional)</th> -->
+                        <th>
+                          <!-- <button type="button" (click)="addEmployee()">Add</button> -->
+                          <div class="text-center">
+                            <mat-icon
+                              (click)="addEmployee(true)"
+                              class="icon-size-5 text-green-500 cursor-pointer"
+                              [svgIcon]="'heroicons_solid:plus-circle'"
+                            ></mat-icon>
+                          </div>
+                        </th>
+                      </tr>
+                      <tr
+                        *ngFor="
+                          let employee of employees().controls;
+                          let empIndex = index
+                        "
+                        [formGroupName]="empIndex"
+                      >
+                        <td [ngClass]="{ 'w-52	': roomURL, 'w-1/3': !roomURL }">
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="flex-auto gt-xs:pr-3 w-full mt-4"
+                            [ngClass]="{ 'w-52	': roomURL, 'w-full': !roomURL }"
+                          >
+                            <input
+                              matInput
+                              formControlName="medicine"
+                              [matAutocomplete]="auto"
+                              (input)="searchDrugsTerm($event)"
+                              placeholder="Search medicine"
+                            />
+                            <mat-autocomplete
+                              #auto="matAutocomplete"
+                              (optionSelected)="
+                                selectedMedication($event, empIndex)
+                              "
+                            >
+                              <mat-option
+                                *ngFor="let option of filteredOptions$ | async"
+                                [id]="option.drugId"
+                                [value]="option.description"
+                              >
+                                {{ option.description }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="flex-auto gt-xs:pr-3 w-full mt-4"
+                          >
+                            <input
+                              matInput
+                              formControlName="dose"
+                              [matAutocomplete]="auto1"
+                              placeholder="Enter"
+                            />
+                            <mat-autocomplete #auto1="matAutocomplete">
+                              <mat-option
+                                *ngFor="let option of doseMedication$ | async"
+                                [matTooltip]="'option.data_name'"
+                                [id]="option.masterdata_id"
+                                [value]="option.data_name"
+                              >
+                                {{ option.data_name }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </td>
+                        <!-- <td>
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="flex-auto gt-xs:pr-3 w-full mt-4"
+                          >
+                            <input
+                              matInput
+                              formControlName="time"
+                              placeholder="Enter"
+                              (input)="enableFormChanges()"
+                            />
+                          </mat-form-field>
+                        </td> -->
+                        <td>
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="flex-auto gt-xs:pr-3 w-full mt-4"
+                          >
+                            <input
+                              matInput
+                              formControlName="food"
+                              [matAutocomplete]="auto2"
+                              placeholder="Enter"
+                            />
+                            <mat-autocomplete #auto2="matAutocomplete">
+                              <mat-option
+                                *ngFor="let option of foodMedication$ | async"
+                                [id]="option.masterdata_id"
+                                [value]="option.data_name"
+                              >
+                                {{ option.data_name }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </td>
+                        <!-- <td>
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="flex-auto gt-xs:pr-3 w-full mt-4"
+                          >
+                            <input
+                              matInput
+                              formControlName="frequency"
+                              [matAutocomplete]="auto3"
+                              placeholder="Enter"
+                            />
+                            <mat-autocomplete class="min-width-200" #auto3="matAutocomplete">
+                              <mat-option
+                                *ngFor="let option of frequencyMedication$ | async"
+                                [matTooltip]="'{{option.data_name}}'"
+                                [id]="option.masterdata_id"
+                                [value]="option.data_name"
+                              >
+                                {{ option.data_name }}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        </td> -->
+                        <td>
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="flex-auto gt-xs:pr-3 w-full mt-4"
+                          >
+                            <input
+                              matInput
+                              formControlName="duration"
+                              placeholder="Enter"
+                              (keydown.Tab)="onKey($event)"
+                              (input)="enableFormChanges()"
+                            />
+                            <span matSuffix>Days</span>
+                          </mat-form-field>
+                        </td>
+                        <!-- <td>
+                          <mat-form-field
+                            [ngClass]="formFieldHelpers"
+                            class="flex-auto gt-xs:pr-3 w-full mt-4"
+                          >
+                            <input
+                              matInput
+                              formControlName="note"
+                              placeholder="Enter"
+                              (keydown.Tab)="onKey($event)"
+                              (input)="enableFormChanges()"
+                            />
+                          </mat-form-field>
+                        </td> -->
+                        <td>
+                          <!-- <button (click)="removeEmployee(empIndex)">Remove</button> -->
+                          <!-- *ngIf="empIndex!=0" -->
+                          <div class="text-center">
+                            <mat-icon
+                              (click)="removeEmployee(empIndex)"
+                              class="icon-size-5 text-red-500 cursor-pointer"
+                              [svgIcon]="'heroicons_solid:minus-circle'"
+                            ></mat-icon>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+            <div
+              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-6 w-full min-w-0"
+            >
+              <div
+                class="flex flex-col flex-auto py-6 pl-6 pr-6 mt-5 bg-card rounded-2xl overflow-hidden"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold"
+                  >
+                    Lab and Radiology Tests
+                  </div>
+                </div>
+
+                <div class="flex mt-1 flex-col gt-xs:flex-row">
+                  <mat-form-field
+                    class="example-chip-list w-full lab-radiology"
+                    appearance="fill"
+                  >
+                    <mat-chip-list #chipList1 aria-label="Select">
+                      <mat-chip
+                        *ngFor="let lab of labs"
+                        (removed)="removeLab(lab.testname)"
+                      >
+                        {{ lab.testname }}
+                        <button matChipRemove>
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip>
+                      <input
+                        placeholder="Enter"
+                        #labInput
+                        [formControl]="labCtrl"
+                        [matAutocomplete]="auto1"
+                        [matChipInputFor]="chipList1"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (input)="searchTestsTerm($event)"
+                      />
+                    </mat-chip-list>
+                    <mat-autocomplete
+                      #auto1="matAutocomplete"
+                      (optionSelected)="selectedLab($event)"
+                    >
+                      <mat-option
+                        *ngFor="let option of filteredTestsOptions$ | async"
+                        [id]="option.name"
+                        [value]="option.name"
+                      >
+                        {{ option.name }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+
+            <!-- <div
+              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-6 w-full min-w-0"
+            >
+              <div
+                class="flex flex-col flex-auto p-6 mt-5 bg-card rounded-2xl overflow-hidden"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold"
+                  >
+                    Procedures
+                  </div>
+                </div>
+                <div class="flex mt-1 flex-col gt-xs:flex-row">
+                  <mat-form-field class="example-chip-list" appearance="fill">
+                    <mat-chip-list #chipList3 aria-label="Fruit selection">
+                      <mat-chip
+                        *ngFor="let procedure of procedures"
+                        (removed)="removeProcedure(procedure.procedurename)"
+                      >
+                        {{ procedure.procedurename }}
+                        <button matChipRemove>
+                          <mat-icon>cancel</mat-icon>
+                        </button>
+                      </mat-chip>
+                      <input
+                        placeholder="Enter"
+                        #proceduresInput
+                        [formControl]="proceduresCtrl"
+                        [matAutocomplete]="auto3"
+                        [matChipInputFor]="chipList3"
+                        [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                        (input)="searchpProcedures($event)"
+                      />
+                    </mat-chip-list>
+                    <mat-autocomplete
+                      #auto3="matAutocomplete"
+                      (optionSelected)="selectedProcedure($event)"
+                    >
+                      <mat-option
+                        *ngFor="let data of filteredProcedures"
+                        [value]="data.data_name"
+                      >
+                        {{ data.data_name }}
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div> -->
+            <!-- <div
+              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-6 w-full min-w-0"
+            >
+              <div
+                class="flex flex-col flex-auto p-6 mt-5 bg-card rounded-2xl overflow-hidden"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold"
+                  >
+                    Vaccination
+                  </div>
+    
+                 
+                </div>
+                <div class="medication-section">
+                  <table class="tab" [ngClass]="{'table-scrollable' : roomURL }">
+                    <tr class="h-14 tab-head">
+                      <th class="w-1/3">Vaccination Name</th>
+                      <th>Date</th>
+                      <th>Name</th>
+                      <th>ROA</th>
+                      <th>Values</th>
+    
+                      <th>Dose</th>
+    
+                      <th>
+                        <div class="text-center">
+                          <mat-icon
+                            (click)="addVaccines()"
+                            class="icon-size-5 text-green-500 cursor-pointer"
+                            [svgIcon]="'heroicons_solid:plus-circle'"
+                          ></mat-icon>
+                        </div>
+                      </th>
+                    </tr>
+                    <tr
+                      *ngFor="let vaccine of vaccineData; let vaccineIndex = index"
+                    >
+                      <td>
+                        <mat-form-field
+                          [ngClass]="formFieldHelpers"
+                          class="flex-auto gt-xs:pr-3 w-full mt-4"
+                        >
+                          <mat-select
+                            [placeholder]="'Select'"
+                            [(ngModel)]="vaccine.vaccination"
+                            (selectionChange)="
+                              selectVaccination($event.value, vaccineIndex)
+                            "
+                          >
+                            <mat-option value="Hepatitis B">Hepatitis B</mat-option>
+                            <mat-option value="Pneumococcal"
+                              >Pneumococcal</mat-option
+                            >
+                            <mat-option value="Influenza">Influenza</mat-option>
+                            <mat-option value="DT">DT</mat-option>
+                            <mat-option value="M.M.R">M.M.R</mat-option>
+                            <mat-option value="Chickenpox">Chickenpox</mat-option>
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field
+                          [ngClass]="formFieldHelpers"
+                          class="flex-auto gt-xs:pr-3 w-full mt-4"
+                        >
+                          <input
+                            matInput
+                            [matDatepicker]="vaccineDate"
+                            [placeholder]="'dd, mmm, yyyy'"
+                            [(ngModel)]="vaccine.date"
+                            (focus)="vaccineDate.open()"
+                          />
+                          <mat-datepicker-toggle matPrefix [for]="vaccineDate">
+                          </mat-datepicker-toggle>
+                          <mat-datepicker #vaccineDate></mat-datepicker>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field
+                          [ngClass]="formFieldHelpers"
+                          class="flex-auto gt-xs:pr-3 w-full mt-4"
+                        >
+                          <input
+                            matInput
+                            [(ngModel)]="vaccine.name"
+                            placeholder="Enter"
+                          />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field
+                          [ngClass]="formFieldHelpers"
+                          class="flex-auto gt-xs:pr-3 w-full mt-4"
+                        >
+                          <input
+                            matInput
+                            [(ngModel)]="vaccine.roa"
+                            placeholder="Enter"
+                          />
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field
+                          [ngClass]="formFieldHelpers"
+                          class="flex-auto gt-xs:pr-3 w-full mt-4"
+                        >
+                          <mat-select
+                            [placeholder]="'Select'"
+                            [(ngModel)]="vaccine.values"
+                          >
+                            <mat-option
+                              [value]="data.data_name"
+                              *ngFor="let data of vaccine.vaccineValues"
+                            >
+                              {{ data.data_name }}</mat-option
+                            >
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+                      <td>
+                        <mat-form-field
+                          [ngClass]="formFieldHelpers"
+                          class="flex-auto gt-xs:pr-3 w-full mt-4"
+                        >
+                          <mat-select
+                            [placeholder]="'Select'"
+                            [(ngModel)]="vaccine.dose"
+                          >
+                            <mat-option
+                              [value]="data"
+                              *ngFor="let data of vaccine.doseValues"
+                              >{{ data }}</mat-option
+                            >
+                          </mat-select>
+                        </mat-form-field>
+                      </td>
+    
+                      <td>
+
+                        <div class="text-center">
+                          <mat-icon
+                            (click)="removeVaccine(vaccineIndex)"
+                            class="icon-size-5 text-red-500 cursor-pointer"
+                            [svgIcon]="'heroicons_solid:minus-circle'"
+                          ></mat-icon>
+                        </div>
+                      </td>
+                    </tr>
+                  </table>
+                </div>
+              </div>
+            </div> -->
+            <div
+              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-6 w-full min-w-0"
+            >
+              <div
+                class="flex flex-col flex-auto py-6 pl-6 pr-6 mt-5 bg-card rounded-2xl overflow-hidden"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold"
+                  >
+                    Advice
+                  </div>
+                </div>
+                <div class="flex mt-1 flex-col gt-xs:flex-row">
+                  <mat-form-field
+                    [ngClass]="formFieldHelpers"
+                    class="flex-auto gt-xs:pr-3"
+                  >
+                    <textarea
+                      class="h-14"
+                      matInput
+                      [(ngModel)]="advice"
+                      (blur)="onBlurMethod($event)"
+                      placeholder="Enter"
+                      (input)="enableFormChanges()"
+                    ></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div
+              class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1 gap-6 w-full min-w-0"
+            >
+              <div
+                class="flex flex-col flex-auto py-6 pl-6 pr-6 mt-5 bg-card rounded-2xl overflow-hidden"
+              >
+                <div class="flex items-start justify-between">
+                  <div
+                    class="text-lg font-medium tracking-tight leading-6 truncate font-extrabold"
+                  >
+                    Diet
+                  </div>
+                </div>
+                <div class="flex mt-1 flex-col gt-xs:flex-row">
+                  <mat-form-field
+                    [ngClass]="formFieldHelpers"
+                    class="flex-auto gt-xs:pr-3"
+                  >
+                    <textarea
+                      matInput
+                      class="h-14"
+                      [(ngModel)]="diet"
+                      (blur)="onBlurMethod($event)"
+                      placeholder="Enter"
+                      (input)="enableFormChanges()"
+                    ></textarea>
+                  </mat-form-field>
+                </div>
+              </div>
+            </div>
+            <div
+              class="mt-5 col-span-2 flex flex-col pl-5 justify-center py-4 px-1 rounded-2xl bg-blue-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400 global-border"
+            >
+              <!-- <div class="mt-1 text-sm sm:text-lg font-medium">
+                Next Visit: {{ appointmentDate | async | date: "dd-MMM-yyyy" }}
+               
+              </div> -->
+              <div
+                class="flex flex-col sm:flex-row items-start sm:items-center sm:justify-between pb-2 dark:bg-transparent"
+              >
+                <div>
+                  <!-- (blur)="updateDOB(next_visist_after)" -->
+                  <div class="flex lex-col sm:grid-cols-3 gap-4">
+                    <div class="sm:col-span-1 form-group">
+                      <mat-form-field
+                        class="fuse-mat-no-subscript w-full"
+                        floatLabel="always"
+                      >
+                        <mat-label>Next visit after </mat-label>
+                        <input
+                          matInput
+                          [placeholder]="'Enter'"
+                          [(ngModel)]="next_visist_after"
+                          (ngModelChange)="updateDOB(next_visist_after)"
+                        />
+                      </mat-form-field>
+                    </div>
+                    <div class="sm:col-span-1 form-group">
+                      <mat-form-field
+                        class="fuse-mat-no-subscript w-full"
+                        floatLabel="always"
+                      >
+                        <mat-label>Frequency</mat-label>
+                        <mat-select
+                          [placeholder]="'Select'"
+                          [(ngModel)]="frequency_value"
+                          (selectionChange)="
+                            changeDate($event.value, next_visist_after)
+                          "
+                        >
+                          <mat-option
+                            [value]="i.name"
+                            *ngFor="let i of frequency_list"
+                            >{{ i.name }}</mat-option
+                          >
+                        </mat-select>
+                      </mat-form-field>
+                    </div>
+                    <div class="sm:col-span-1 form-group mt-9">Or</div>
+
+                    <div class="sm:col-span-1 form-group">
+                      <mat-form-field
+                        class="fuse-mat-no-subscript w-44"
+                        floatLabel="always"
+                      >
+                        <mat-label>Pick a date </mat-label>
+
+                        <input
+                          matInput
+                          [matDatepicker]="birthdayDatepicker"
+                          (click)="birthdayDatepicker.open()"
+                          (focus)="birthdayDatepicker.open()"
+                          [(ngModel)]="pick_date"
+                          [placeholder]="'dd-mmm-yyyy'"
+                          (dateChange)="dateChanged(birthdayDatepicker, $event)"
+                          [min]="today"
+                        />
+                        <mat-datepicker-toggle
+                          matSuffix
+                          [for]="birthdayDatepicker"
+                        >
+                        </mat-datepicker-toggle>
+                        <mat-datepicker #birthdayDatepicker></mat-datepicker>
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+                <!-- <div>
+                  <div class="tracking-tight leading-none">
+                    <div class="grid sm:grid-cols-4 gap-3 w-full mt-0">
+                      <mat-radio-group
+                        class="invisible absolute w-0 h-0 pointer-events-none"
+                        #planRadioGroup="matRadioGroup"
+                      >
+                        <ng-container
+                          *ngFor="let plan of plans; trackBy: trackByFn"
+                        >
+                          <mat-radio-button [value]="plan.value"></mat-radio-button>
+                        </ng-container>
+                      </mat-radio-group>
+                      <ng-container *ngFor="let plan of plans; trackBy: trackByFn">
+                       
+                        <div
+                          class="items-start justify-start p-2 rounded-md shadow cursor-pointer bg-card"
+                          [ngClass]="{
+                            'ring ring-inset ring-primary':
+                              planRadioGroup.value === plan.value
+                          }"
+                          (click)="
+                            planRadioGroup.value = plan.value;
+                            selectApptDate(plan.value)
+                          "
+                        >
+                         
+                          <div class="text-10px font-medium">{{ plan.label }}</div>
+    
+                          <div class="flex-auto"></div>
+                        </div>
+                      </ng-container>
+                    </div>
+                  </div>
+                </div> -->
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="appointmentId === 0 || !appointmentId">
+            <div
+              class="p-8 sm:p-16 text-4xl font-semibold tracking-tight text-center"
+            >
+              There are no appointments!
+            </div>
+          </div>
+
+          
+        </div>
+      </div>
+      <div
+        class="fixed bottom-0 w-full mt-5 justify-center py-4 px-1 bg-green-50 text-indigo-800 dark:bg-white dark:bg-opacity-5 dark:text-indigo-400 global-border"
+      >
+        <!-- <div class="mt-1 text-sm sm:text-lg font-medium">
+            Next Visit: {{ appointmentDate | async | date: "dd-MMM-yyyy" }}
+           
+          </div> -->
+        <div
+          class="flex flex-col sm:flex-row items-end sm:items-center sm:justify-between pb-2 dark:bg-transparent"
+        >
+          <div>
+            <button
+              class="ml-4"
+              mat-flat-button
+              *ngIf="
+                !patientPrescriptionRunning && 
+                appointmentId
+              "
+              type="button"
+              [color]="'primary'"
+              (click)="savePrescription()"
+              [disabled]="isPrescriptionLoading"
+            >
+            
+              Save <mat-progress-spinner
+              *ngIf="isPrescriptionLoading"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+            </button>
+            <button
+            class="ml-4 text-white bg-blue-600"
+            mat-flat-button
+           
+            type="button"
+          
+            (click)="finalizeConfirmPrescription()"
+            [disabled]="isPrescriptionLoading"
+          >
+          
+            Finalize
+          </button>
+          </div>
+          
+          <div class="flex items-end justify-end mr-5">
+            <button
+              class="ml-4 text-white"
+              mat-flat-button
+              [ngClass]="{
+                'bg-blue-600': !formChange && !isDownloadPrescriptionLoading,
+                disabled: enableAfterEdit || isDownloadPrescriptionLoading
+              }"
+              [disabled]="enableAfterEdit || formChange || isDownloadPrescriptionLoading"
+              type="button"
+              (click)="displayPrescription()"
+              *ngIf="
+                !patientPrescriptionRunning &&
+                appointmentId
+               
+              "
+            >
+            <img class="w-5 mr-1" src="assets/icons/download.svg" alt="" />
+              Download <mat-progress-spinner
+              *ngIf="isDownloadPrescriptionLoading"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+            </button>
+
+            <!--  -->
+            <button
+            *ngIf="patient?.mobile_no"
+              class="ml-4 text-black"
+              mat-stroked-button
+              [disabled]="enableAfterEdit || formChange || isWhatsappActionLoading "
+              [ngClass]="{
+                'bg-white': !formChange && !isWhatsappActionLoading,
+                disabled: enableAfterEdit || formChange || isWhatsappActionLoading
+              }"
+              type="button"
+              
+              (click)="sendWhatsapp()"
+            >
+            <img class="w-5 mr-1" [ngClass]="{
+              'gray-filter': enableAfterEdit || formChange || isWhatsappActionLoading
+            }" src="assets/icons/whatsapp.svg" alt="" />
+              Send to WhatsApp <mat-progress-spinner
+              *ngIf="isWhatsappActionLoading"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+               <!-- <mat-icon class="text-green-500" svgIcon="heroicons_solid:check"></mat-icon> -->
+               <img  *ngIf="isWhatsppSent" [ngClass]="{
+                'gray-filter': enableAfterEdit || formChange || isWhatsappActionLoading
+              }" class="w-4 ml-2" src="assets/icons/check.svg" alt="" />
+            </button>
+
+            <button 
+              class="ml-4 text-white"
+              mat-flat-button
+              [color]="'primary'"
+              type="button"
+              [disabled]="enableAfterEdit || formChange || isMailActionLoading "
+              (click)="sendEmail()"
+            >
+            <img class="w-5 mr-1" src="assets/icons/email.svg" alt="" />
+              Send to Email <mat-progress-spinner
+              *ngIf="isMailActionLoading"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+               <img  *ngIf="isEmailSent" [ngClass]="{
+                'gray-filter': enableAfterEdit || formChange || isMailActionLoading
+              }" class="w-4 ml-2" src="assets/icons/check.svg" alt="" />
+            </button>
+            <!-- <div class="absolute bottom-0 mt-2" *ngIf="!isPatientEmailPresent">
+              <span class="text-red-500">No email for patient</span> -
+              <a (click)="openDialogWithoutRef()" class="cursor-pointer"
+                >Add Email</a
+              >
+            </div> -->
+            <ng-template #secondDialog class="email_dialogue">
+              <h2 matDialogTitle>Add patient Email!</h2>
+
+              <div class="sm:col-span-2 form-group w-350px">
+                <mat-dialog-content>
+                  <mat-form-field
+                    class="fuse-mat-no-subscript w-full"
+                    floatLabel="always"
+                  >
+                    <mat-label>Email Id </mat-label>
+                    <input
+                      class="form-control"
+                      #userEmail="ngModel"
+                      name="pat_email"
+                      placeholder="Enter"
+                      [(ngModel)]="pat_email"
+                      matInput
+                      pattern="^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$"
+                      [ngClass]="{
+                        invalid: userEmail.touched && !userEmail?.valid
+                      }"
+                      required
+                      pat_email
+                    />
+                  </mat-form-field>
+                </mat-dialog-content>
+              </div>
+
+              <mat-dialog-actions align="end">
+                <button
+                  mat-button
+                  (click)="addEmail()"
+                  color="primary"
+                  [disabled]="!userEmail?.valid"
+                >
+                  Add & Send
+                </button>
+              </mat-dialog-actions>
+            </ng-template>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="col-span-2" *ngIf="!isVideoLoading && roomURL">
+    <iframe
+      style="width: 100%; height: 100vh"
+      [src]="roomURL"
+      allow="camera; microphone; fullscreen; speaker; display-capture"
+    ></iframe>
+  </div>
+</div>

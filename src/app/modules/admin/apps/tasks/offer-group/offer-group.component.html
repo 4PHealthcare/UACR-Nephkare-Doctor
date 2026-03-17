@@ -1,0 +1,168 @@
+<div class="flex flex-col h-screen w-full">
+  
+    <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+      <div *ngIf="!editMode" class="text-2xl font-semibold tracking-tight"> Create Offer Group </div>
+      <div *ngIf="editMode" class="text-2xl font-semibold tracking-tight"> Edit Offer Group </div>
+      <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+        <mat-icon class="text-current"
+          [svgIcon]="'heroicons_outline:x'"></mat-icon>
+      </button>
+    </div>
+  
+    <div class="p-6 pt-10 sm:p-8 sm:pt-10 overflow-y-auto">
+      <form [formGroup]="taskForm">
+        <div>
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Offer group title</mat-label>
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'promocode_group'">
+          </mat-form-field>
+        </div>
+
+        <div class="flex flex-wrap items-center mt-8">
+            <div>
+              <div class="font-medium">From Date</div>
+              <div
+                class="relative flex items-center mt-1.5 px-4 leading-9 rounded-full cursor-pointer"
+                [ngClass]="{
+                  'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700':
+                    !startDate,
+                  'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500':
+                    startDate && isCorrectdue(),
+                  'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500':
+                    startDate && !isCorrectdue()
+                }"
+                (click)="fromDatePicker.open()"
+              >
+                <mat-icon
+                  class="icon-size-5 text-current"
+                  [svgIcon]="'heroicons_solid:calendar'"
+                ></mat-icon>
+                <span class="ml-2 text-md font-medium">
+                  <ng-container *ngIf="startDate">{{taskForm.get('valid_from').value | date: 'longDate'}}</ng-container>
+                  <ng-container *ngIf="!startDate">Not set</ng-container>
+                </span>
+                <mat-form-field
+                  class="fuse-mat-no-subscript fuse-mat-dense
+                    invisible absolute
+                    inset-0 -mt-2.5
+                    opacity-0 pointer-events-none">
+                  <input
+                    [min] = "today.format('YYYY-MM-DD')"
+                    matInput
+                    [formControlName]="'valid_from'"
+                    [matDatepicker]="fromDatePicker"
+                  />
+                  <mat-datepicker #fromDatePicker>
+                    <mat-datepicker-actions>
+                      <button mat-button (click)="clearDate('valid_from')" matDatepickerCancel  class="border-solid border-primary-500 text-primary-500 mr-1" >
+                        Clear
+                      </button>
+                      <button mat-flat-button [color]="'primary'" (click)="setDate('valid_from')" matDatepickerApply>
+                        Select
+                      </button>
+                    </mat-datepicker-actions>
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+    
+            <div class="ml-6">
+              <div class="font-medium">To Date</div>
+              <div
+                class="
+                  relative flex
+                  items-center
+                  mt-1.5 px-4
+                  leading-9
+                  rounded-full
+                  cursor-pointer"
+                [ngClass]="{
+                  'text-gray-500 bg-gray-100 dark:text-gray-300 dark:bg-gray-700':
+                    !endDate,
+                  'text-green-800 bg-green-200 dark:text-green-100 dark:bg-green-500':
+                    endDate && isCorrectdue(),
+                  'text-red-800 bg-red-200 dark:text-red-100 dark:bg-red-500':
+                    endDate && !isCorrectdue()
+                }"
+                (click)="dueDatePicker.open()"
+              >
+                <mat-icon
+                  class="icon-size-5 text-current"
+                  [svgIcon]="'heroicons_solid:calendar'"
+                ></mat-icon>
+                <span class="ml-2 text-md font-medium">
+                  <ng-container *ngIf="endDate">{{
+                    endDate | date: "longDate"
+                  }}</ng-container>
+                  <ng-container *ngIf="!endDate">Not set</ng-container>
+                </span>
+                <mat-form-field
+                  class="fuse-mat-no-subscript fuse-mat-dense
+                    invisible
+                    absolute
+                    inset-0
+                    -mt-2.5
+                    opacity-0
+                    pointer-events-none">
+                  <input
+                    [min] = "today.format('YYYY-MM-DD')"
+                    matInput
+                    [formControlName]="'valid_to'"
+                    [matDatepicker]="dueDatePicker"
+                  />
+                  <mat-datepicker #dueDatePicker>
+                    <mat-datepicker-actions>
+                      <button mat-button (click)="clearDate('valid_to')" matDatepickerCancel  class="border-solid border-primary-500 text-primary-500 mr-1" >
+                        Clear
+                      </button>
+                      <button mat-flat-button
+                        [color]="'primary'"
+                        (click)="setDate('valid_to')"
+                        matDatepickerApply>
+                        Select
+                      </button>
+                    </mat-datepicker-actions>
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
+            </div>
+          </div>
+    
+  
+        <div class="mt-8">
+          <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full">
+            <mat-label>Notes</mat-label>
+            <textarea
+              matInput
+              [formControlName]="'notes'"
+              [spellcheck]="false"
+              matTextareaAutosize
+            ></textarea>
+          </mat-form-field>
+        </div>
+      </form>
+    </div>
+  
+    <footer class="my-4 mx-4">
+      <div class="flex">
+        <div class="flex ml-auto gap-2">
+          <button mat-flat-button (click)="dialogRef.close()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+            <span class="ml-2 mr-1">Clear</span>
+          </button>
+          <button
+            mat-flat-button
+            [color]="'primary'"
+            (click) = "submit()"
+            [disabled]="taskForm.invalid"
+          >
+            <span *ngIf="!editMode" class="ml-2 mr-1">Save</span>
+            <span *ngIf="editMode" class="ml-2 mr-1">Update</span>
+          </button>
+        </div>
+      </div>
+    </footer>
+  </div>
+  

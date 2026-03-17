@@ -1,0 +1,37 @@
+<div>
+	<div class="chart-title ">{{chartTitle}}</div>
+</div>
+<!-- <div class="newboxes">
+	<div class="">
+		<div class=""> 
+			<svg viewBox="0 0 36 36">
+			  <g *ngFor="let data of chartData;let i=index">
+				<path stroke="#d1d1d1" class='circle' [attr.d]="circleArray[i].vector"
+				 fill="none" [style.stroke]="chartColors[i]" stroke-linecap="round" attr.stroke-width="{{data.Name=='Macro' ? 1.5 : 1}}"  attr.stroke-dasharray="{{dashArray[i]}}, 100"/>
+				</g>
+			</svg>
+		</div>
+	</div>
+</div> -->
+<div id="chart" class="newboxes">
+	<apx-chart
+	  [series]="chartOptions.series"
+	  [chart]="chartOptions.chart"
+	  [plotOptions]="chartOptions.plotOptions"
+	  [labels]="chartOptions.labels"
+	  [colors]="chartOptions.colors"
+	  [stroke]="chartOptions.stroke"
+	></apx-chart>
+  </div>
+<div class="middlebox mt-20">
+	<div class=" s6">
+		<div class="flex mb-5" *ngFor="let data of chartData;let i=index">
+			<div class=" s3 legend-box " [style.backgroundColor]="chartColors[i]"><span class="legend-text"></span></div>
+			<div class=" s3 legend-value ">{{data.Value}}<br>
+				<span class=" s6 legend-labelbox ">{{data.Name}}</span>
+			</div>
+		</div>
+	</div>
+</div> 
+
+

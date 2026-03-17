@@ -1,0 +1,11 @@
+
+.mat-radio-button ~ .mat-radio-button {
+  margin-left: 10px;
+}
+
+mat-label {
+  font-weight: 500;
+  --tw-text-opacity: 1 !important;
+  color: rgba(var(--fuse-text-default-rgb), var(--tw-text-opacity)) !important;
+}
+

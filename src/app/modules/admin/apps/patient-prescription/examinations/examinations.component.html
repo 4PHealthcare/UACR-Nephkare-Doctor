@@ -1,0 +1,605 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div *ngIf="!editMode" class="text-2xl font-semibold tracking-tight">
+      Add Examinations
+    </div>
+    <div *ngIf="editMode" class="text-2xl font-semibold tracking-tight">
+      Update Examinations
+    </div>
+    <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+
+  <form
+    class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+    [formGroup]="examinationForm"
+  >
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-2">
+        <mat-label>General</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'general'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.general.value == 'normal'"
+        >
+          <input
+            [formControlName]="'general_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.general.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'general_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Skin, hair and nails</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'skin_hair_nails'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.skin_hair_nails.value == 'normal'"
+        >
+          <input
+            [formControlName]="'skin_hair_nails_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.skin_hair_nails.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'skin_hair_nails_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Head</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'head'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.head.value == 'normal'"
+        >
+          <input [formControlName]="'head_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.head.value == 'abnormal'"
+        >
+          <input [formControlName]="'head_abnormal_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Eyes</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'eyes'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.eyes.value == 'normal'"
+        >
+          <input [formControlName]="'eyes_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.eyes.value == 'abnormal'"
+        >
+          <input [formControlName]="'eyes_abnomral_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Ears</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'ears'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.ears.value == 'normal'"
+        >
+          <input [formControlName]="'ears_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.ears.value == 'abnormal'"
+        >
+          <input [formControlName]="'ears_abnormal_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Nose</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'nose'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.nose.value == 'normal'"
+        >
+          <input [formControlName]="'nose_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.nose.value == 'abnormal'"
+        >
+          <input [formControlName]="'nose_abnormal_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Mouth/ Throat</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'mouth_throat'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.mouth_throat.value == 'normal'"
+        >
+          <input
+            [formControlName]="'mouth_throat_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.mouth_throat.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'mouth_throat_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Neck</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'neck'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.neck.value == 'normal'"
+        >
+          <input [formControlName]="'neck_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.neck.value == 'abnormal'"
+        >
+          <input [formControlName]="'neck_abnormal_text'" placeholder="Enter" matInput />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Breasts</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'breasts'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.breasts.value == 'normal'"
+        >
+          <input
+            [formControlName]="'breasts_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.breasts.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'breasts_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Lymph nodes</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'lymph_nodes'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.lymph_nodes.value == 'normal'"
+        >
+          <input
+            [formControlName]="'lymph_nodes_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.lymph_nodes.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'lymph_nodes_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Chest</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'chest'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.chest.value == 'normal'"
+        >
+          <input
+            [formControlName]="'chest_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+        class="fuse-mat-no-subscript w-full mt-3"
+        floatLabel="always"
+        *ngIf="examinationForm.controls.chest.value == 'abnormal'"
+      >
+        <input
+          [formControlName]="'chest_abnormal_text'"
+          placeholder="Enter"
+          matInput
+        />
+      </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Lungs</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'lungs'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.lungs.value == 'normal'"
+        >
+          <input
+            [formControlName]="'lungs_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.lungs.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'lungs_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Heart</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'heart'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.heart.value == 'normal'"
+        >
+          <input
+            [formControlName]="'heart_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.heart.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'heart_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Abdomen</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'abdomen'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.abdomen.value == 'normal'"
+        >
+          <input
+            [formControlName]="'abdomen_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.abdomen.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'abdomen_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Genitourinary (M)</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'genitour_male'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.genitour_male.value == 'normal'"
+        >
+          <input
+            [formControlName]="'genitour_male_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.genitour_male.value  == 'abnormal'"
+        >
+          <input
+            [formControlName]="'genitour_male_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Genitourinary (F)</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'genitour_female'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.genitour_female.value  == 'normal'"
+        >
+          <input
+            placeholder="Enter"
+            [formControlName]="'genitour_female_text'"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+        class="fuse-mat-no-subscript w-full mt-3"
+        floatLabel="always"
+        *ngIf="examinationForm.controls.genitour_female.value  == 'abnormal'"
+      >
+        <input
+          placeholder="Enter"
+          [formControlName]="'genitour_female_abnormal_text'"
+          matInput
+        />
+      </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Neurologic</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'neurologic'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.neurologic.value == 'normal'"
+        >
+          <input
+            [formControlName]="'neurologic_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.neurologic.value == 'abnormal'"
+        >
+          <input
+            [formControlName]="'neurologic_abnormal_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2">
+        <mat-label>Psychiatric</mat-label><br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'psychiatric'"
+          (change)="initiatevalue()"
+        >
+          <mat-radio-button value="normal">Normal</mat-radio-button>
+          <mat-radio-button value="abnormal">Abnormal</mat-radio-button>
+        </mat-radio-group>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full mt-3"
+          floatLabel="always"
+          *ngIf="examinationForm.controls.psychiatric.value == 'normal'"
+        >
+          <input
+            [formControlName]="'psychiatric_text'"
+            placeholder="Enter"
+            matInput
+          />
+        </mat-form-field>
+        <mat-form-field
+        class="fuse-mat-no-subscript w-full mt-3"
+        floatLabel="always"
+        *ngIf="examinationForm.controls.psychiatric.value == 'abnormal'"
+      >
+        <input
+          [formControlName]="'psychiatric_abnormal_text'"
+          placeholder="Enter"
+          matInput
+        />
+      </mat-form-field>
+      </div>
+    </div>
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+      <button mat-flat-button type="button" (click)="dialogRef.close()" class="border-solid border-primary-500 text-primary-500 mr-2" >
+        <span class="ml-2 mr-1" >Cancel</span>
+      </button>
+      <button
+        type="submit"
+        mat-flat-button
+        [color]="'primary'"
+        [disabled]="examinationForm.pristine || isLoadingSpinner" (click)="onSubmit()"
+      >
+        <span *ngIf="!editMode" class="ml-2 mr-1" 
+          >Save</span><mat-progress-spinner
+          *ngIf="isLoadingSpinner"
+           [diameter]="24"
+           [mode]="'indeterminate'"></mat-progress-spinner>
+
+
+        <span *ngIf="editMode" class="ml-2 mr-1" 
+          >Update</span
+        >
+      </button>
+    </div>
+  </form>
+</div>

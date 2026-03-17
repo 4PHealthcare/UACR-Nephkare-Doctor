@@ -1,0 +1,70 @@
+<div class="flex flex-col h-screen">
+    <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+        <div class="text-2xl font-semibold tracking-tight">Add Services</div>
+        <button
+            class="ml-auto"
+            mat-icon-button
+            (click)="dialogRef.close()">
+            <mat-icon
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <div class="flex flex-col p-6 mb-auto">
+        <form [formGroup]="serviceForm"> 
+            <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Service Name</mat-label>
+                    <input matInput [placeholder]="'Service Name'" [formControlName]="'name'">
+                </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Price</mat-label>
+                    <input type="number" matInput [placeholder]="'Price'" [formControlName]="'price'">
+                </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Duration(Month)</mat-label>
+                    <mat-select
+                      placeholder="Select"
+                      (selectionChange)="filterByCategory($event)"
+                      [formControlName]="'duration'"
+                    >
+                      <ng-container
+                        *ngFor="let category of durationOfMonths; trackBy: trackByFn"
+                      >
+                        <mat-option [value]="category.name">{{
+                          category.title
+                        }}</mat-option>
+                      </ng-container>
+                    </mat-select>
+                  </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-textarea fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Service Description</mat-label>
+                    <mat-icon matPrefix class="hidden sm:flex icon-size-5" [svgIcon]="'heroicons_solid:menu-alt-2'"></mat-icon>
+                    <textarea matInput [placeholder]="'Description'" [rows]="5" [spellcheck]="false" [formControlName]="'description'"
+                        matTextareaAutosize></textarea>
+                </mat-form-field>
+            </div>
+        </form>
+        
+    </div>
+    <footer class="my-4 mx-4">
+        <div class="flex">
+            <div class="flex ml-auto gap-2">
+                <button  mat-flat-button (click)="addService()" [disabled]="serviceForm.pristine"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+                    <span class="ml-2 mr-1">Clear</span>
+                </button>
+                <button class="mr-8" mat-flat-button [color]="'primary'" (click)="addService()" [disabled]="serviceForm.pristine || serviceForm.invalid">
+                    <span class="ml-2 mr-1">Save</span>
+                </button>
+              <!-- Will grow and shrink as needed without taking initial size into account -->
+            </div>
+          </div>          
+    </footer>
+</div>

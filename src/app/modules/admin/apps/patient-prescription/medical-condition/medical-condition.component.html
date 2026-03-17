@@ -1,0 +1,94 @@
+<div class="flex flex-col">
+    <div
+      class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+    >
+      <div class="text-2xl font-semibold tracking-tight">Add Medical Condition</div>
+      <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+        <mat-icon
+          class="text-current"
+          [svgIcon]="'heroicons_outline:x'"
+        ></mat-icon>
+      </button>
+    </div>
+  
+    <form
+      class="flex-auto px-6"
+      [formGroup]="medicalHistoryForm" #medicalHistoryNGForm="ngForm"
+    >
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8 ">
+        <div class="sm:col-span-4 form-group">
+
+          <ng-select [formControlName]="'condition'"  class="cursor-pointer mat-profile-select" placeholder="Select" [multiple]="true" >
+            <ng-option *ngFor="let language of comorbidConditions"  [value]="language.data_name">{{language.data_name}}</ng-option>
+         </ng-select>
+
+          <!-- <mat-form-field class="example-chip-list w-full" appearance="fill">
+            <mat-chip-list #chipList3 aria-label="Fruit selection">
+              <mat-chip
+                *ngFor="let conditionObj of medicalConditions"
+                (removed)="removeProcedure(conditionObj)"
+              >
+                {{ conditionObj }}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip>
+              <input
+                placeholder="Enter"
+                #proceduresInput
+                [formControl]="condition"
+                [matAutocomplete]="auto3"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                [matChipInputFor]="chipList3"
+                (input)="searchpProcedures($event)"
+              />
+            </mat-chip-list>
+            <mat-autocomplete
+              #auto3="matAutocomplete"
+              (optionSelected)="selectedProcedure($event)"
+            >
+              <mat-option
+                *ngFor="let data of filteredConditions"
+                [value]="data.data_name"
+              >
+                {{ data.data_name }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field> -->
+
+            <!-- <mat-form-field
+              class="fuse-mat-no-subscript w-full"
+              floatLabel="always"
+            >
+              <mat-label>Medical Condition <span>*</span></mat-label>
+              <mat-select class="form-control" [placeholder]="'Select'" [formControlName]="'history_name'">
+                <mat-option [value]="data.data_name" *ngFor="let data of comorbidConditions">{{ data.data_name}}</mat-option>
+              </mat-select>
+
+            </mat-form-field> -->
+         
+          </div>
+    
+       
+        
+      </div>
+      <!-- Divider -->
+     <!-- Divider -->
+     <div class="mt-11 mb-10 border-t"></div>
+     <!-- Actions -->
+     <div class="flex items-center justify-end">
+       <button mat-flat-button type="button"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+         <span class="ml-2 mr-1" (click)="onReset()">Cancel</span>
+       </button>
+       <button
+         type="submit"
+         mat-flat-button
+         [color]="'primary'"
+         [disabled]="medicalHistoryForm.invalid" (click)="onSubmit()"
+       >
+         <span class="ml-2 mr-1" >Save</span>
+       </button>
+     </div>
+    </form>
+  </div>
+  

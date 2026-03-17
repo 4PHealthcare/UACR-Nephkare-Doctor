@@ -1,0 +1,106 @@
+:host {
+    display: flex;
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+}
+::ng-deep .appointment-history .mat-grid-tile-content{
+    text-align: left !important;
+    justify-content: flex-start !important;
+  }
+
+  ::ng-deep .appointment-history mat-grid-tile.last-item .mat-grid-tile-content{
+    justify-content: flex-end !important;
+}
+
+
+  ::ng-deep .fc-time-grid .fc-slats td {
+    height: 4em;
+}
+
+::ng-deep .patient-reg-form .mat-dialog-container {
+  padding: 0px;
+}
+
+::ng-deep .no-padding-popup .mat-dialog-container{
+  padding: 0px;
+}
+::ng-deep .immunisation .mat-dialog-container{
+  padding: 0px;
+}
+
+::ng-deep .profile-tab .mat-tab-header {
+  border-bottom: 1px solid #C1C0C1 !important;
+    padding-bottom: 20px;
+}
+::ng-deep .treatment-plan-tab .mat-tab-header {
+  border-bottom: none !important;
+    padding-bottom: 0px;
+}
+::ng-deep .symptoms-activity-tab .mat-tab-header {
+  border-bottom: none !important;
+    padding-bottom: 0px !important;
+}
+::ng-deep .profile-tab .mat-tab-labels { 
+  float: left;
+  // background: white;
+  padding: 0px 0;
+  border-radius: 30px;
+  
+  // border: 1px solid rgba(0,0,0,0.1);
+}
+
+::ng-deep .profile-tab .mat-tab-labels .mat-tab-label{
+  color: black !important;
+}
+::ng-deep .profile-tab .mat-tab-labels .mat-tab-label.mat-tab-disabled{
+  color: #94a3b8 !important;
+}
+
+::ng-deep .profile-tab .mat-tab-body-content{
+  padding-top: 0 !important;
+  
+}
+::ng-deep .profile-tab
+  .mat-tab-header
+  .mat-tab-label-container
+  .mat-tab-list
+  .mat-tab-labels
+  .mat-tab-label.mat-tab-label-active {
+    background-color: #0d9488 !important;
+  color: white !important;
+  
+}
+::ng-deep .symptoms-activity-tab
+.mat-tab-header
+  .mat-tab-label-container
+  .mat-tab-list
+  .mat-tab-labels
+  .mat-tab-label.mat-tab-label-active {
+    background-color: transparent !important;
+  color: #397EF5 !important;
+  font-weight: 600;
+  
+}
+::ng-deep .symptoms-activity-tab .mat-tab-header .mat-tab-label-container {
+  padding: 10px 0  !important;
+  background: #E4E4E4;
+  border-radius: 10px 10px 0 0;
+}
+::ng-deep .symptoms-activity-tab .mat-tab-body-wrapper {
+  background: white;
+  height: 985px;
+}
+::ng-deep .profile-tab .mat-tab-body-content {
+  // --tw-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05) !important;
+  // box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000), var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow) !important;
+  border-radius: 0 0 10px 10px !important;
+}
+.float-container {
+  border: 3px solid #fff;
+  padding: 20px;
+}
+.float-child {
+  width: 50%;
+  float: left;
+}  

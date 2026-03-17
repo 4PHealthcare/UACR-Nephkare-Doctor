@@ -1,0 +1,144 @@
+<div class="flex flex-col">
+    
+    <!-- [formGroup]="medicalHistoryForm" -->
+  
+    <form
+      class="flex-auto px-6"
+      [formGroup]="medicalHistoryForm" #medicalHistoryNGForm="ngForm" 
+    >
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8 ">
+        <div class="sm:col-span-2 form-group">
+           
+            <!-- <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Comorbid Condition <span>*</span></mat-label> 
+            <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+            <input
+            matInput
+            [placeholder]="'Search'"
+            [formControlName]="'comorbid'"
+            [matAutocomplete]="auto" 
+            (input)="searchComorbid($event)"
+          />
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option *ngFor="let data of newComorbidConditions" [id]="data.data_name" [value]="data.data_name">
+              {{data.data_name}}
+            </mat-option>
+          </mat-autocomplete>
+          </mat-form-field> -->
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Comorbid Condition <span>*</span></mat-label> 
+          <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+          <input
+          matInput
+          [placeholder]="'Search'"
+          [formControlName]="'comorbid'"
+          [matAutocomplete]="auto" 
+          (input)="searchHistories($event)"
+        />
+        <mat-autocomplete #auto="matAutocomplete">
+          <mat-option *ngFor="let option of filteredOptions$ | async" [id]="option.history_name" [value]="option.history_name">
+            {{option.history_name}}
+          </mat-option>
+        </mat-autocomplete>
+        </mat-form-field>
+            <div *ngIf="f.comorbid.touched && f.comorbid.invalid" class="alert alert-danger">
+              <div *ngIf="f.comorbid.errors && f.comorbid.errors.required">
+                Comorbid Condition is required.
+              </div>
+            </div>
+          </div>
+          <div class="sm:col-span-2 form-group">
+            <mat-label>Status <span>*</span></mat-label><br />
+            <mat-radio-group aria-label="Select an option" [formControlName]="'status'">
+              <mat-radio-button
+                class="form-control example-radio-button"
+                *ngFor="let item of status"
+                [value]="item"
+                class="capitalize"
+              >
+                {{ item }}
+              </mat-radio-button>
+            </mat-radio-group>
+            <div *ngIf="f.status.touched && f.status.invalid" class="alert alert-danger">
+              <div *ngIf="f.status.errors && f.status.errors.required">
+                Status is required.
+              </div>
+            </div>
+          </div>
+        <div class="sm:col-span-2">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Onset Date</mat-label>
+            <input
+              matInput
+              [formControlName]="'date'"
+              [matDatepicker]="date"
+              [placeholder]="'dd,mmm,yyyy'"
+              [max]="maxDate"
+              (click)="date.open()"
+              (focus)="date.open()"
+            />
+            <mat-datepicker-toggle matPrefix [for]="date">
+            </mat-datepicker-toggle>
+            <mat-datepicker #date></mat-datepicker>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Duration</mat-label>
+            <input matInput [placeholder]="'Enter'" type="number" [formControlName]="'durationValue'" />
+            <mat-select [formControlName]="'durationId'" [placeholder]="'Select'" matSuffix>
+              <mat-option [value]="data.masterdata_id" *ngFor="let data of durations">{{data.data_name}}</mat-option>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-4">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Notes</mat-label>
+            <input
+              matInput
+              [formControlName]="'note'"
+              [placeholder]="'Enter'"
+            />
+          </mat-form-field>
+        </div>
+        
+      </div>
+      <!-- Divider -->
+     <!-- Divider -->
+     <div class="mt-11 mb-10 border-t"></div>
+     <!-- Actions -->
+     <div class="flex items-center justify-end">
+       <button mat-flat-button type="button " (click)="onReset()" class="border-solid border-primary-500 text-primary-500 mr-2"  [disabled]="medicalHistoryForm.invalid">
+         <span class="ml-2 mr-1" >Cancel</span>
+       </button>
+       <button
+         type="submit"
+         mat-flat-button
+         [color]="'primary'"
+         [disabled]="medicalHistoryForm.invalid"
+         (click)="onSubmit();
+         medicalHistoryNGForm.resetForm()"
+       >
+         <span class="ml-2 mr-1" >{{medicalhistory_id?'Update' : 'Save'}}</span>
+         <mat-progress-spinner
+              *ngIf="isLoadingSpinner"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+       </button>
+     </div>
+    </form>
+    
+  </div>
+  

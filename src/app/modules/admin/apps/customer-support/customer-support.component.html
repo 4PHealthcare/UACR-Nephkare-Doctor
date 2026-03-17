@@ -1,0 +1,204 @@
+<div class="
+    sm:absolute sm:inset-0
+    flex flex-col flex-auto
+    min-w-0
+    sm:overflow-hidden
+    bg-card
+    dark:bg-transparent
+  ">
+  <!-- Header -->
+  <div class="relative flex pt-6 px-6 md:px-8">
+    <!-- Title -->
+    <div class="text-4xl font-extrabold tracking-tight">Customer Support</div>
+  </div>
+
+  <div class="
+      relative
+      flex flex-col
+      sm:flex-row
+      flex-0
+      sm:items-center sm:justify-between
+      py-8
+      px-6
+      md:px-8
+      border-b
+    ">
+
+    <!-- Search -->
+    <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-2/4">
+      <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+      <input matInput (input)="filterData($event.target.value)" [autocomplete]="'off'"
+        [placeholder]="'Search for Name'" />
+    </mat-form-field>
+    <!-- Actions -->
+    <div class="flex flex-shrink-0 items-center mt-6 sm:mt-0 sm:ml-4">
+      <!-- From date picker -->
+      <form [formGroup]="dateForm">
+        <div class="mx-2 w-1.5/4">
+          <mat-form-field class="fuse-mat-no-subscript w-full fuse-mat-rounded">
+            <input matInput formControlName="fromDate" [matDatepicker]="fromDatepicker" [placeholder]="'From'">
+            <mat-datepicker-toggle matSuffix [for]="fromDatepicker">
+            </mat-datepicker-toggle>
+            <mat-datepicker #fromDatepicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <!-- To date picker -->
+      <form [formGroup]="dateForm">
+        <div class="mx-2">
+          <mat-form-field class="fuse-mat-no-subscript w-full fuse-mat-rounded">
+            <input matInput formControlName="toDate" [matDatepicker]="toDatepicker" [placeholder]="'To'">
+            <mat-datepicker-toggle matSuffix [for]="toDatepicker">
+            </mat-datepicker-toggle>
+            <mat-datepicker #toDatepicker></mat-datepicker>
+          </mat-form-field>
+        </div>
+      </form>
+
+      <!-- Add product button -->
+      <button class="ml-4" mat-flat-button [color]="'primary'" (click)="downloadData()">
+        <mat-icon [svgIcon]="'heroicons_outline:download'"></mat-icon>
+        <span class="ml-2 mr-1">Download</span>
+      </button>
+
+      <button class="ml-4" mat-flat-button [color]="'primary'" (click)="openAddUser()">
+        <mat-icon [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+        <span class="ml-2 mr-1">Add</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="flex flex-auto overflow-hidden">
+    <!-- Users list -->
+    <div class="
+        flex flex-col flex-auto
+        sm:mb-18
+        overflow-hidden
+        sm:overflow-y-auto
+      ">
+      <ng-container *ngIf="customerSupportUsers$ | async as users; else noUsers">
+        <div class="grid">
+          <!-- Header -->
+          <div class="
+                inventory-grid
+                customer-support-grid
+                z-10
+                sticky
+                top-0
+                grid
+                gap-4
+                py-4
+                px-6
+                md:px-8
+                shadow
+                text-md
+                font-semibold
+                text-secondary
+                bg-gray-50
+                dark:bg-black dark:bg-opacity-5
+              "matSort (matSortChange)="sortData($event)">
+            <div class="hidden md:block items-center" [mat-sort-header]="'first_name'">Personal Info</div>
+            <div class="hidden md:block items-center" [mat-sort-header]="'mobile_no'">Phone Number</div>
+            <div class="hidden md:block items-center" [mat-sort-header]="'email_address'">Email</div>
+            <div class="hidden md:block items-center" [mat-sort-header]="'created_on'">Reg. Date</div>
+            <div class="hidden lg:block items-center" [mat-sort-header]="'current_statusId'">Status</div>
+            <div class="hidden lg:block items-center">Actions</div>
+          </div>
+          <!-- Rows -->
+          <ng-container *ngIf="customerSupportUsers$ | async as users">
+            <ng-container *ngFor="let data of users">
+              <div class="
+                    inventory-grid
+                    customer-support-grid
+                    grid
+                    items-center
+                    gap-4
+                    py-3
+                    px-6
+                    md:px-8
+                    border-b
+                  ">
+                <!-- User Info -->
+                <div>
+                  <span class="font-semibold">{{data?.first_name}} {{data?.last_name}}</span><br />
+                  <span class="text-secondary">Telecaller</span>
+                </div>
+                <!-- Contact Info -->
+                <div>{{data?.mobile_no}}</div>
+
+                <!-- Number of orders -->
+                <div>{{data?.email_address}}</div>
+
+                <!-- Registration Date -->
+                <div>{{data?.created_on | date :'MMM d, y'}}</div>
+
+                <!-- Status -->
+                <div pr-2>
+                  <mat-slide-toggle [color]="'primary'" [checked]="data.current_statusId == 27 ? true : false"
+                    (change)="changeStatus(data)">
+                  </mat-slide-toggle>
+                </div>
+
+                <!-- Actions -->
+                <div class="flex">
+                  <div class="pr-2">
+                    <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
+                      (click)="viewDetails(data, 'view')">
+                      <mat-icon class="icon-size-5" svgIcon="heroicons_solid:eye"></mat-icon>
+                    </button>
+                  </div>
+                  <div class="pr-2">
+                    <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
+                      (click)="viewDetails(data, 'edit')">
+                      <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:pencil-alt'">
+                      </mat-icon>
+                    </button>
+                  </div>
+
+                  <div class="pr-2">
+                    <button class="min-w-10 min-h-7 h-7 px-2 leading-6" mat-stroked-button
+                      (click)="deleteSelectedCustomer(data)">
+                      <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:trash'">
+                      </mat-icon>
+                    </button>
+                  </div>
+                </div>
+              </div>
+              <div class="grid">
+                <ng-container *ngIf="selectedProduct?.id === data.id">
+                  <ng-container *ngTemplateOutlet="
+                        rowDetailsTemplate;
+                        context: { $implicit: data }
+                      ">
+                  </ng-container>
+                </ng-container>
+              </div>
+            </ng-container>
+          </ng-container>
+        </div>
+
+        <mat-paginator
+          class="sm:absolute sm:inset-x-0 sm:bottom-0 border-b sm:border-t sm:border-b-0 z-10 bg-gray-50 dark:bg-transparent"
+          [ngClass]="{'pointer-events-none': isLoading}" [length]="(totalRecords$ | async)" [pageIndex]="currentPage"
+          [pageSize]="pageSize" [pageSizeOptions]="[10,5]" [showFirstLastButtons]="true"
+          (page)="pageEvent = $event; onPageChange($event)"></mat-paginator>
+      </ng-container>
+
+      <ng-template #noUsers>
+        <div class="
+            p-8
+            sm:p-16
+            border-t
+            text-4xl
+            font-semibold
+            tracking-tight
+            text-center
+          ">
+          There are no users!
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,242 @@
+<div class="flex flex-col w-full overflow-auto bg-card">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="ml-3 text-2xl font-semibold tracking-tight">Daily Plan</div>
+    <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  <div class="flex-auto px-6 pt-9 pb-12 md:pb-12 lg:pl-12 lg:pr-12">
+    <div>
+      <div class="text-right">
+        <span
+          [ngClass]="{ 'text-blue-500': date_type == 'Today' }"
+          class="cursor-pointer font-bold"
+          (click)="sendDateType('Today')"
+          >Today</span
+        >
+        <span class="fsz-10 font-bold px-2">|</span>
+        <span
+          [ngClass]="{ 'text-blue-500': date_type == 'Week' }"
+          class="cursor-pointer font-bold"
+          (click)="sendDateType('Week')"
+          >Week</span
+        >
+        <span class="fsz-10 font-bold px-2">|</span>
+        <span
+          [ngClass]="{ 'text-blue-500': date_type == 'Month' }"
+          class="cursor-pointer font-bold"
+          (click)="sendDateType('Month')"
+          >Month</span
+        >
+      </div>
+      
+      <div *ngIf="neutrition_log_details.length !== 0">
+        
+        <table>
+          <thead>
+            <tr>
+              <th class="w-8pc">Date</th>
+              <th class="w-10pc">Food Type</th>
+              <th class="w-1/6">Food Items</th>
+              <th class="w-1/12">Intake Time</th>
+              <th class="w-1/12">Quantity</th>
+              <th>Micro</th>
+              <th>Macro</th>
+            </tr>
+          </thead>
+          <tbody>
+        <ng-container *ngFor="let dateWiseData of neutrition_log_details; let $index = index"> 
+          <ng-container *ngFor="let foodType of dateWiseData.foodServe_Type; let $index1 = index">
+            <ng-container *ngFor="let data of foodType.food_details; let $index2 = index">
+              <tr>
+                <td  *ngIf="$index1===0 && $index2===0" [attr.rowspan]="dateWiseData.rowSpanCount">{{ dateWiseData.date   | date : "d MMM, y" }}</td>
+                <td  *ngIf="$index2===0" [attr.rowspan]="foodType.food_details.length">
+                  <h4 class="text-blue-500 font-semibold" > {{foodType.serve_type}}</h4>
+                </td>
+                <td >{{data.item_name}}</td>
+                <td >{{data.time_on}}</td>
+                <!-- <td > {{data.no_of_units}}  {{data.quantity}} ({{data.serve_size ? data.serve_size.split(' ')[0]: " "}})</td> -->
+                <td > {{data.no_of_units}}  {{data.quantity}} ({{data.measured_in}})</td>
+
+                <td class="w-12pc">
+                  <div>Sodium : <span class="text-blue-500">{{data.microMacro_TrackonCount[0].micro_sodium ? data.microMacro_TrackonCount[0].micro_sodium : 'NA'}}</span></div>
+                  <div>Potassium : <span class="text-blue-500">{{data.microMacro_TrackonCount[0].micro_potassium ? data.microMacro_TrackonCount[0].micro_potassium : 'NA'}}</span></div>
+                </td>
+                <td class="w-12pc">
+                  <div>Calorie’s : <span class="text-blue-500">{{data.microMacro_TrackonCount[0].macro_calories ? data.microMacro_TrackonCount[0].macro_calories : 'NA'}}</span></div>
+                <div>Carbs : <span class="text-blue-500">{{data.microMacro_TrackonCount[0].macro_totalcarbs ? data.microMacro_TrackonCount[0].macro_totalcarbs : 'NA'}}</span></div>
+                <div>Protein : <span class="text-blue-500">{{data.microMacro_TrackonCount[0].macro_protein ? data.microMacro_TrackonCount[0].macro_protein : 'NA'}}</span></div>
+                <div>Fat : <span class="text-blue-500">{{data.microMacro_TrackonCount[0].macro_totalfat ? data.microMacro_TrackonCount[0].macro_totalfat : 'NA'}}</span></div>
+                <div>Dietary Fiber : <span class="text-blue-500">{{data.microMacro_TrackonCount[0].macro_dietary ? data.microMacro_TrackonCount[0].macro_dietary : 'NA'}}</span></div>
+                </td>
+              </tr>
+            </ng-container>
+          </ng-container>
+        </ng-container>
+      </tbody>
+        </table>
+        
+        <!-- <table>
+          <thead>
+            <tr>
+              <th class="w-8pc">Date</th>
+              <th class="w-10pc">Food Type</th>
+              <th class="w-1/6">Food items</th>
+             
+              <th class="w-1/12">Intake Time</th>
+              <th class="w-1/12">Quantity</th>
+              <th>Micro</th>
+              <th>Macro</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr >
+              <td class="">April 17, 2023</td>
+              
+              <td><h4 class="text-blue-500 font-semibold pt-3">
+                Morning Beverages
+              </h4></td>
+              <td>
+                <div>
+                  <ng-container>
+                    <div class="pb-3">
+                      
+                      <p >Tea</p>
+                    </div>
+                  </ng-container>
+                </div>
+              </td>
+              <td>6:30 AM</td>
+              <td>1 cup</td>
+              <td class="w-12pc">
+                <div >Sodium : <span class="text-blue-500">55 MG</span></div>
+                <div >Potassium : <span class="text-blue-500">210 MG</span></div>
+              </td>
+              
+              <td class="w-12pc">
+                <div >Calorie’s : <span class="text-blue-500">55 MG</span></div>
+                <div >Carbs : <span class="text-blue-500">55 MG</span></div>
+                <div >Protein : <span class="text-blue-500">55 MG</span></div>
+                <div >Fat : <span class="text-blue-500">55 MG</span></div>
+                <div >Dietary Fiber : <span class="text-blue-500">55 MG</span></div>
+              </td>
+             
+            </tr>
+            <tr >
+              <td class=""></td>
+              
+              <td><h4 class="text-blue-500 font-semibold pt-3">
+                
+              </h4></td>
+              <td>
+                <div>
+                  <ng-container>
+                    <div class="pb-3">
+                      
+                      <p >Snacks</p>
+                    </div>
+                  </ng-container>
+                </div>
+              </td>
+              <td>6:30 AM</td>
+              <td>1 cup</td>
+              <td class="w-12pc">
+                <div >Sodium : <span class="text-blue-500">55 MG</span></div>
+                <div >Potassium : <span class="text-blue-500">210 MG</span></div>
+              </td>
+              
+              <td class="w-12pc">
+                <div >Calorie’s : <span class="text-blue-500">55 MG</span></div>
+                <div >Carbs : <span class="text-blue-500">55 MG</span></div>
+                <div >Protein : <span class="text-blue-500">55 MG</span></div>
+                <div >Fat : <span class="text-blue-500">55 MG</span></div>
+                <div >Dietary Fiber : <span class="text-blue-500">55 MG</span></div>
+              </td>
+             
+            </tr>
+            <tr >
+              <td class=""></td>
+              
+              <td><h4 class="text-blue-500 font-semibold pt-3">
+                Lunch
+              </h4></td>
+              <td>
+                <div>
+                  <ng-container>
+                    <div class="pb-3">
+                      
+                      <p ></p>
+                    </div>
+                  </ng-container>
+                </div>
+              </td>
+              <td>6:30 AM</td>
+              <td>1 cup</td>
+              <td class="w-12pc">
+                <div >Sodium : <span class="text-blue-500">55 MG</span></div>
+                <div >Potassium : <span class="text-blue-500">210 MG</span></div>
+              </td>
+              
+              <td class="w-12pc">
+                <div >Calorie’s : <span class="text-blue-500">55 MG</span></div>
+                <div >Carbs : <span class="text-blue-500">55 MG</span></div>
+                <div >Protein : <span class="text-blue-500">55 MG</span></div>
+                <div >Fat : <span class="text-blue-500">55 MG</span></div>
+                <div >Dietary Fiber : <span class="text-blue-500">55 MG</span></div>
+              </td>
+             
+            </tr>
+            <tr >
+              <td class=""></td>
+              
+              <td><h4 class="text-blue-500 font-semibold pt-3">
+                
+              </h4></td>
+              <td>
+                <div>
+                  <ng-container>
+                    <div class="pb-3">
+                      
+                      <p >Snacks</p>
+                    </div>
+                  </ng-container>
+                </div>
+              </td>
+              <td>6:30 AM</td>
+              <td>1 cup</td>
+              <td class="w-12pc">
+                <div >Sodium : <span class="text-blue-500">55 MG</span></div>
+                <div >Potassium : <span class="text-blue-500">210 MG</span></div>
+              </td>
+              
+              <td class="w-12pc">
+                <div >Calorie’s : <span class="text-blue-500">55 MG</span></div>
+                <div >Carbs : <span class="text-blue-500">55 MG</span></div>
+                <div >Protein : <span class="text-blue-500">55 MG</span></div>
+                <div >Fat : <span class="text-blue-500">55 MG</span></div>
+                <div >Dietary Fiber : <span class="text-blue-500">55 MG</span></div>
+              </td>
+             
+            </tr>
+            
+           
+           
+          </tbody>
+        </table> -->
+      </div>
+      <div *ngIf="neutrition_log_details.length == 0">
+        <div
+          class="font-bold py-10 flex items-center justify-center w-full h-full rounded-full text-lg"
+        >
+          No data
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

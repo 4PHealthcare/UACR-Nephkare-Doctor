@@ -1,0 +1,295 @@
+<div class="relative flex flex-col p-6 pb-8 flex-auto bg-card border-d3d3d3 rounded-2xl mb-6">
+    <div class="text-blue-500 text-3xl font-semibold mb-2">Treatment Plan for {{subscriptionObj.planname}}</div> 
+     <form [formGroup]="treatmentForm">
+
+    <!-- doctor consultation start -->
+    <div class="form-border">
+        <div class="sub-header font-semibold">How many Doctor Consultations</div>
+
+        <mat-radio-group aria-label="Select an option" formControlName="doctorConsultation" >
+            <mat-radio-button [value]="3">3</mat-radio-button>
+            <mat-radio-button [value]="6">6</mat-radio-button>
+            <mat-radio-button [value]="12">12</mat-radio-button>
+            <mat-radio-button [value]="-1">No Free Consultation</mat-radio-button>
+        </mat-radio-group>
+
+    </div>
+    <!-- doctor consultation end -->
+
+    <!-- Diagnostic Reports Plan start -->
+    <div class="form-border">
+        <div class="sub-header font-semibold">Diagnostic Reports Plan</div>
+
+        <mat-radio-group aria-label="Select an option" formControlName="diagnosticReportPlan">
+            <ng-container *ngIf="diagnosticReportPlan">
+              <mat-radio-button [value]="'As per request'">As per request</mat-radio-button>
+              <ng-container *ngFor="let option of diagnosticReportPlan">
+                <mat-radio-button *ngIf="option.data_name !== 'As per request'" [value]="option.data_name">{{ option.data_name }}</mat-radio-button>
+              </ng-container>
+            </ng-container>
+          </mat-radio-group>
+          
+
+          
+
+    </div>
+    <!-- Diagnostic Reports Plan end -->
+
+    <!-- Diagnostic Reports Plan start -->
+    <div class="main-vital">Vitals</div>
+    <div class="form-border" formGroupName="vitals">  
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-20 w-full min-w-0">
+
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="bloodSugar">
+                    Blood Sugar
+                </mat-checkbox>
+                <div class="vital-options">
+                    <mat-checkbox color="primary" *ngFor="let bloodSugar of bloodSugarOptions" [checked]="bloodSugar.active" (change)="bloodSugar.active=$event.checked;setBloodSugar()" [disabled]="!this.treatmentForm.value.vitals.bloodSugar">{{bloodSugar.data_name}}</mat-checkbox>
+                    <!-- <mat-radio-group aria-label="Select an option" formControlName="bloodSugarOptions" [disabled]="!this.treatmentForm.value.vitals.bloodSugar">
+                        <mat-radio-button *ngFor="let option of bloodSugarOptions" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+                    </mat-radio-group> -->
+
+                </div>
+            </div>
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="bloodPressure">
+                    Blood pressure
+                </mat-checkbox>
+                <div class="vital-options">
+                    <mat-radio-group aria-label="Select an option" formControlName="bloodPressureOptions" [disabled]="!this.treatmentForm.value.vitals.bloodPressure">
+                        <mat-radio-button *ngFor="let option of bpOptions" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+                    </mat-radio-group>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-20 w-full min-w-0 mt-3">
+
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="temperature">
+                    Temperature 
+                </mat-checkbox>
+                <div class="vital-options">
+                    <mat-radio-group aria-label="Select an option" formControlName="temperatureOptions" [disabled]="!this.treatmentForm.value.vitals.temperature">
+                        <mat-radio-button *ngFor="let option of tmpOptions" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+                    </mat-radio-group>
+
+                </div>
+            </div>
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary"  formControlName="spo2">
+                    Blood Oxygen
+                </mat-checkbox>
+                <div class="vital-options">
+                    <mat-radio-group aria-label="Select an option" formControlName="spo2Options" [disabled]="!this.treatmentForm.value.vitals.spo2">
+                        <mat-radio-button  *ngFor="let option of spo2Options" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+                    </mat-radio-group>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-20 w-full min-w-0 mt-3">
+
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="heartRate">
+                    Heart rate 
+                </mat-checkbox>
+                <div class="vital-options">
+                    <mat-radio-group aria-label="Select an option" formControlName="heartRateOptions" [disabled]="!this.treatmentForm.value.vitals.heartRate">
+                        <mat-radio-button *ngFor="let option of heartRateptions" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+                    </mat-radio-group>
+
+                </div>
+            </div>
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="respirateRate">
+                    Respiratory Rate
+                </mat-checkbox>
+                <div class="vital-options">
+                    <mat-radio-group aria-label="Select an option" formControlName="respirateRateOptions" [disabled]="!this.treatmentForm.value.vitals.respirateRate">
+                        <mat-radio-button *ngFor="let option of respiratoryOptions" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+
+                    </mat-radio-group>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-20 w-full min-w-0 mt-3">
+
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="weight">
+                    Weight
+                </mat-checkbox>
+                <div class="vital-options">
+                    <mat-radio-group aria-label="Select an option" formControlName="weightOptions" [disabled]="!this.treatmentForm.value.vitals.weight">
+                        <mat-radio-button *ngFor="let option of weightOptions" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+
+                    </mat-radio-group>
+
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
+    
+    <div class="main-vital">Activities</div>
+    <div class="form-border" formGroupName="activities">
+        <div class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-2 gap-20 w-full min-w-0">
+
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="water" (change)="CheckedOrNot()">
+                    Water
+                </mat-checkbox>
+                <div class="vital-options">
+                    <div>Daily Water </div>
+                    <mat-form-field
+                    floatLabel="always"
+                    
+                    class="fuse-mat-no-subscript gt-xs:pr-3  mt-2 w-52"> 
+                    <input matInput [placeholder]="'Enter'"  formControlName="dailyWater" />
+                    <!-- <mat-icon class="icon-size-5" matSuffix [svgIcon]="'heroicons_solid:translate'"></mat-icon> -->
+                    <span matSuffix>ml</span> 
+                  </mat-form-field>
+                </div>
+            </div>
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="sleep">
+                    Sleep
+                </mat-checkbox>
+                <div class="vital-options">
+                    <mat-radio-group aria-label="Select an option" [disabled]="!this.treatmentForm.value.activities.sleep" formControlName="sleepOptions">
+                        <mat-radio-button value="Daily">Daily</mat-radio-button>
+
+                    </mat-radio-group>
+
+                </div>
+            </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1  w-full min-w-0 mt-3">
+
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="activity">
+                    Activity (Daily)
+                </mat-checkbox>
+                
+                <div class="vital-options">
+                    <mat-radio-group aria-label="Select an option" formControlName="activityOptions" [disabled]="!this.treatmentForm.value.activities.activity">
+                        <mat-radio-button *ngFor="let option of stepsOptions" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+                    </mat-radio-group>
+
+                </div>
+            </div>
+         
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-1 md:grid-cols-1  w-full min-w-0 mt-3">
+
+            <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                <mat-checkbox color="primary" formControlName="medicine">
+                    Medicine
+                </mat-checkbox>
+               
+            </div>
+            
+        </div>
+
+      
+    </div>
+
+    <div class="main-vital">Nutrition Logs</div>
+    <div class="form-border" formGroupName="nutritionLogs">
+        <div class="question">
+            <div class="sub-header font-semibold"> Diet Plan Recommendation (Daily)</div>
+            <mat-radio-group aria-label="Select an option" formControlName="dietPlan">
+                <mat-radio-button *ngFor="let option of dietPlanOptions" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+            </mat-radio-group>
+        </div>
+        
+        <div>
+            <div  class="sub-header font-semibold"> Daily Diet plan </div>
+            <div class="grid grid-cols-4 sm:grid-cols-4 md:grid-cols-4 gap-10 w-full min-w-0">
+
+                <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                    <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                        <mat-label>Macros</mat-label>
+
+                        <input placeholder="Enter" matInput  formControlName="dailyMacros"/>
+                      </mat-form-field>
+                    
+                </div>
+                <div class="sm:col-span-1 md:col-span-1 lg:col-span-1">
+                   
+                    <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                        <mat-label>Micros</mat-label>
+
+                        <input placeholder="Enter" matInput  formControlName="dailyMicros"/>
+                      </mat-form-field>
+                </div>
+           
+            </div>
+        </div>
+
+          
+
+          
+    </div>
+
+    <!-- <div class="main-vital">Symptoms Activity </div>
+    <div class="form-border">
+        
+
+        <section class="example-section">
+            <mat-radio-group aria-label="Select an option" formControlName="symptomActivity">
+                <mat-radio-button *ngFor="let option of symptoms" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+            </mat-radio-group>
+
+        </section>
+      
+
+          
+    </div> -->
+
+    <div class="main-vital">Patient Preferences for Nutrition</div>
+    <div class="form-border" formGroupName="preferences">
+        <div class="question">
+            <div class="sub-header font-semibold"> Nutrition follow up Timings</div>
+
+            <mat-radio-group aria-label="Select an option" formControlName="nutritionFollowUpTimings">
+                <mat-radio-button *ngFor="let option of nutritionFollowUpTimings" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+            </mat-radio-group>
+
+        </div>
+        <div class="question">
+            <div class="sub-header font-semibold"> Nutrition follow ups</div>
+
+            <mat-radio-group aria-label="Select an option" formControlName="nutritionFollowUp">
+                <mat-radio-button *ngFor="let option of nutritionFollowUp" [value]="option.data_name">{{option.data_name}}</mat-radio-button>
+            </mat-radio-group>
+
+        </div>
+
+        <div class="question">
+            <div class="sub-header font-semibold"> Patient Prefer language</div>
+
+            <section class="example-section"> 
+                <mat-checkbox color="primary" *ngFor="let language of languages" [checked]="language.active" (change)="language.active=$event.checked;setLanguages()">{{language.value}} </mat-checkbox>
+            </section>
+
+        </div>
+        
+       
+
+          
+
+          
+    </div>
+    <!-- Diagnostic Reports Plan end -->
+
+    </form>
+</div>

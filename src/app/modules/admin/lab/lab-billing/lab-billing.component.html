@@ -1,0 +1,315 @@
+<div class="flex flex-col shadow bg-card">
+    <div
+      class="flex flex-col flex-0 lg:flex-row items-center mt-2 w-full mx-auto px-8 lg:h-18 bg-card"
+    >
+      <!-- <a class="pr-3 mr-10" mat-button [color]="'primary'" (click)="goBack()">
+        <mat-icon [svgIcon]="'heroicons_outline:arrow-narrow-left'"></mat-icon>
+        <span>Back</span>
+      </a> -->
+      <ng-container *ngIf="patient">
+        <!-- Avatar -->
+        <div class="flex items-center mt-6 mb-2 lg:mt-0 space-x-6">
+          <mat-icon>person</mat-icon>
+        </div>
+
+        <!-- Details -->
+        <div
+          class="flex flex-col items-center lg:items-start mt-4 lg:mt-0 lg:ml-4"
+        >
+          <div class="text-lg font-bold leading-none">
+            {{ name  }} |
+            {{ age }}yrs,
+            <span class="capitalize">{{ gender }}</span>
+           
+            <!-- <span class="ml-4 text-red-500">High Risk</span> -->
+          </div>
+          <div class="text-lg font-bold  pt-1">{{patient_uniqueid}}</div>
+        </div>
+
+        <!-- Menu -->
+        <div class="flex flex-col items-center mt-8 mb-4  lg:ml-auto space-x-6">
+            
+            <div class="text-md font-bold leading-none">
+                Today's billing status
+            </div>
+            <ng-container *ngIf="servicesAmounts.length!==0">
+                <div class="pt-1 text-green-500" *ngIf="remainingAmount==0 && paidAmounts.length!==0">Payment Clear</div>
+                <div class="text-secondary pt-1 text-red-500" *ngIf="remainingAmount!==0"> {{remainingAmount > 0 ? 'Pending': 'Paid Extra'}} &#8377;{{myMath.abs(remainingAmount)}}</div>
+            </ng-container>
+
+            <ng-container *ngIf="servicesAmounts.length!==0 && paidAmounts.length!==0"> 
+                <div  *ngIf="remainingAmount==0">
+                    <a class="text-blue-500 underline cursor-pointer"  *ngIf="!billLoading" (click)="generateBill()">Download Bill</a>
+                    <mat-progress-spinner
+                    *ngIf="billLoading"
+                    [diameter]="24"
+                    [mode]="'indeterminate'"></mat-progress-spinner>
+                </div>
+
+                <button 
+                #print
+                printTitle="{{printTitle}}"  
+                printSectionId="print-section" ngxPrint
+                [useExistingCss]="true"
+                type="button"
+                class="hidden"
+              >
+                Generate bill
+              </button> 
+
+            </ng-container>
+
+            
+            
+       
+          <!-- <button mat-stroked-button class="text-white rounded-full bg-primary">
+            Start Second Opinion
+          </button> -->
+        </div>
+
+
+      </ng-container>
+      <button class="ml-4" mat-icon-button (click)="dialogRef.close()">
+        <mat-icon
+          class="text-current"
+          [svgIcon]="'heroicons_outline:x'"
+        ></mat-icon>
+      </button>
+    </div>
+  </div>
+<div class="p-5 bg-white  mt-1">
+    <h2 class="pb-3 text-blue-500"><span class="font-medium">Services delivered </span>(Select service to generate bill)</h2>
+
+    <form #billingForm="ngForm">
+        <table class="form-table w-full mb-5">
+            <thead>
+                <tr>
+                 <th class="col-width-30">Service name</th>
+                 <th class="col-width-8">Qty</th>
+                 <th class="col-width-8">Amount</th>
+                 <th class="col-width-12">Discount</th>
+                 <th class="col-width-12">Total amt.</th>
+                </tr>
+            </thead>
+            <tbody>
+           
+                <tr *ngIf="servicesAmounts.length==0">
+                    <td colspan="5" class="text-center">No data</td>
+                </tr>
+                <tr *ngFor="let service of servicesAmounts; let i = index;" class="brd-lr">
+                    <td class="col-width-30">
+                        
+                        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                            <input matInput [placeholder]="'Enter'" [(ngModel)]="service.hospital_service" name="hospital_service{{i}}" type="text" [disabled]="true">
+                        </mat-form-field>
+
+                    </td>
+                    <td class="col-width-8">
+                        <mat-form-field class="fuse-mat-no-subscript w-24" floatLabel="always">
+                            <input matInput [placeholder]="'Enter'" [(ngModel)]="service.quantity" name="quantity{{i}}" type="number" [disabled]="true">
+                        </mat-form-field>
+                    </td>
+                    <td class="col-width-8">
+                                <mat-form-field class="fuse-mat-no-subscript w-24" floatLabel="always" [ngClass]="{'invalid-class': !service.amount }">
+                                    <input matInput [placeholder]="'Enter'" [(ngModel)]="service.amount" name="amount{{i}}" type="number" required (input)="onValueChange($event, service)" [disabled]="paidAmounts.length != 0">
+                                </mat-form-field>
+                    </td>
+                    <td class="col-width-12">
+                        <mat-form-field class="fuse-mat-no-subscript w-full"  floatLabel="always"> 
+                            <input matInput [placeholder]="'Enter'" [(ngModel)]="service.discount_amount" name="discount{{i}}" type="number" (input)="onValueChange($event, service)" [disabled]="paidAmounts.length != 0"/>
+                            <mat-select [placeholder]="'Select'" [(ngModel)]="service.discountType" name="discountType{{i}}" matSuffix   (selectionChange)="onValueChange($event, service)" [disabled]="paidAmounts.length != 0">
+                                <mat-option value="rs"> Rs </mat-option>
+                                <mat-option value="percentage"> % </mat-option>
+                            </mat-select>
+                          </mat-form-field>
+                    </td>
+                    <td class="col-width-12">
+                            {{service.paid_amount}}
+                    </td>
+                    
+                    
+                </tr>
+                <tr *ngIf="servicesAmounts.length !== 0">
+                    <td colspan="4" class="text-right">Total Amount</td>
+                    <td>&#8377;{{myMath.abs(finalAmount)}}</td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+
+   </div>
+
+   <div class="p-5">
+    
+    <form #paidForm="ngForm">
+        <h2 class="pb-3 font-medium text-blue-500">Payments received</h2>
+
+        <table class="form-table w-1/2">
+            <thead>
+                <tr >
+                 <th class="col-30">Amount</th>
+                 <th >Mode</th>
+                 <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr class="brd-lr">
+                    <td class="col-width-30">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                            <input matInput [placeholder]="'Enter'" type="number" [(ngModel)]="paidamount" name="paidamount" required>
+                        </mat-form-field>
+    
+             
+                    </td>
+                    <td class="col-width-8">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                            <mat-select [placeholder]="'Select'"  [(ngModel)]="paidAmountType" name="paidAmountType" required>
+                                <mat-option value="cash"> Cash </mat-option>
+                                <mat-option value="card"> Card </mat-option>
+                                <mat-option value="online"> Online </mat-option>
+                                <mat-option value="other"> Others </mat-option>
+                            </mat-select>
+                            </mat-form-field>
+                          
+                    </td>
+                    <td>
+                        <button mat-stroked-button color="primary" class="rounded-none" (click)="savePayment(paidForm)" [disabled]="!isAllAmountsExist">Pay</button>
+                    </td>
+                  
+                   
+                </tr>
+                <tr *ngIf="paidAmounts.length==0">
+                    <td colspan="3" class="text-center">No data</td>
+                </tr>
+                <tr *ngFor="let payment of paidAmounts" class="brd-lr">
+                    <td>{{payment.amount_paid}}</td>
+                    <td class="capitalize">{{payment.payment_mode}}</td>
+                    <td>
+                        <button mat-icon-button (click)="editPayment(payment)">
+                            <mat-icon [matTooltip]="'Edit'" class="icon-size-4" [svgIcon]="'heroicons_solid:pencil-alt'">
+                            </mat-icon>
+                          </button>
+                          <button mat-icon-button  (click)="deletePayment(payment.paymentreceived_id)">
+                            <mat-icon class="icon-size-4" [matTooltip]="'Delete'" [svgIcon]="'heroicons_solid:trash'">
+                            </mat-icon>
+                          </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+   
+
+</div>
+
+<!-- print section -->
+<div
+    class="absolute inset-0 min-w-0 text-center overflow-auto print:overflow-visible" [hidden]="!visibility" 
+    cdkScrollable
+    id="print-section"
+    >
+
+    <!-- Main -->
+    <div class="inline-block p-6 sm:p-10 text-left print:p-0">
+
+        <!-- Invoice -->
+        <div class="w-240 p-16 rounded-2xl shadow bg-card print:w-auto print:rounded-none print:shadow-none print:bg-transparent">
+
+            <div class="flex items-start justify-between">
+                <div class="grid grid-cols-2 gap-x-4 gap-y-1">
+                    <div class="text-4xl tracking-tight text-secondary">Bill</div>
+                    <div class="text-4xl">#{{billId}}</div>
+                    <div class="font-medium tracking-tight text-secondary">Bill DATE</div>
+                    <div class="font-medium">{{currentDate | date:'dd MMM, y'}}</div>
+                    <!-- <div class="font-medium tracking-tight text-secondary">TOTAL DUE</div>
+                    <div class="font-medium">$235,000.00</div> -->
+                </div>
+                <div class="grid auto-cols-max grid-flow-col gap-x-8 -mr-16 py-6 px-8 rounded-l-2xl" *ngIf="docInfo">
+                    <div class="place-self-center w-24" >
+                        <!-- <img
+                            class="w-24"
+                            src="assets/images/logo/logo.svg"> -->
+
+                            <img
+                            *ngIf="docInfo?.logo_folderpath && docInfo?.logo_filename"
+                            class="w-24"
+                            [src]="'https://hellokidneydata.s3.ap-south-1.amazonaws.com/'+docInfo.logo_folderpath+'/'+docInfo.logo_filename"
+                            alt="Logo image"
+                            >
+                            <img
+                            *ngIf="!(docInfo?.logo_folderpath && docInfo?.logo_filename)"
+                            class="w-24"
+                            src="assets/images/logo/logo.png"
+                            alt="Logo image">
+
+                    </div>
+                    <div class="pl-5 border-l text-md border-gray-200">
+                        <div class="font-medium">{{docInfo?.hospital_name}}</div>
+                        <div>{{docInfo?.hospital_address}}</div>
+                        <div>{{docInfo?.city}}<span *ngIf="docInfo.pincode">, {{docInfo?.pincode}}</span></div>
+                        <div>+91 {{docInfo?.clinic_mobileno}}</div>
+                    </div>
+                </div>
+            </div>
+
+            <ng-container *ngIf="patient">
+              <div class="text-md">
+                <div class="text-xl font-medium"> {{ name }} </div>
+                <div class="capitalize">{{ age }}yrs, {{ gender }}</div>
+                <div>+91 {{ patient.data.mobile_no }}</div>
+            </div>
+            </ng-container>
+           
+
+            <div class="grid grid-cols-12 gap-x-1 mt-12">
+                <!-- Columns -->
+                <div class="col-span-8 font-medium text-md text-secondary">SERVICE</div>
+                <div class="font-medium text-md text-right text-secondary">RATE</div>
+                <div class="font-medium text-md text-right text-secondary">QTY</div>
+                <div class="col-span-2 font-medium text-md text-right text-secondary">TOTAL</div>
+
+                <!-- Divider -->
+                <div class="col-span-12 my-4 border-b border-gray-200"></div>
+                <ng-container *ngFor="let service of servicesAmounts">
+                  <div class="col-span-8 text-lg font-medium">{{service.hospital_service}}</div>
+                  <div class="self-center text-right">&#8377;{{service.amount}}</div>
+                  <div class="self-center text-right">{{service.quantity}}</div>
+                  <div class="col-span-2 self-center text-right">&#8377;{{service.quantity*service.amount}}</div>
+                  <div class="col-span-12 my-4 border-b border-gray-200	"></div>
+                </ng-container>
+                <!-- Item -->
+              
+
+                <!-- Subtotal -->
+                <div class="col-span-10 self-center font-medium tracking-tight text-secondary">SUBTOTAL</div>
+                <div class="col-span-2 text-right text-lg">&#8377;{{subTotalAmount}}</div>
+
+                <!-- Divider -->
+                <div class="col-span-12 my-3 border-b border-gray-200"></div>
+
+                <!-- Tax -->
+                <!-- <div class="col-span-10 self-center font-medium tracking-tight text-secondary">TAX</div>
+                <div class="col-span-2 text-right text-lg">$11,365.75</div> -->
+
+                <!-- Divider -->
+                <!-- <div class="col-span-12 my-3 border-b"></div> -->
+
+                <!-- Discount -->
+                <div class="col-span-10 self-center font-medium tracking-tight text-secondary" *ngIf="discountAmount">DISCOUNT</div>
+                <div class="col-span-2 text-right text-lg" *ngIf="discountAmount">&#8377;{{discountAmount}}</div>
+
+                <!-- Divider -->
+                <div class="col-span-12 my-3 border-b border-gray-200" *ngIf="discountAmount"></div>
+
+                <!-- Total -->
+                <div class="col-span-10 self-center text-2xl font-medium tracking-tight text-secondary">TOTAL</div>
+                <div class="col-span-2 text-right text-2xl font-medium">&#8377;{{finalAmount}}</div>
+            </div>
+
+            
+
+        </div>
+
+    </div>
+
+</div>

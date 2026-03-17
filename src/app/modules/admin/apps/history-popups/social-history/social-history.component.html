@@ -1,0 +1,95 @@
+<div class="flex flex-col">
+  <!-- [formGroup]="cheifComplaintForm" -->
+
+  <form
+    class="flex-auto px-6"
+    [formGroup]="cheifComplaintForm"
+    #cheifComplaintNGForm="ngForm"
+  >
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-4 form-group">
+        <mat-label>Smoking Status</mat-label>
+        <br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'smoking'"
+          name="smoking"
+        >
+          <mat-radio-button
+            [color]="primary"
+            *ngFor="let status of Smoking_Status"
+            [value]="status"
+          >
+            {{ status }}
+          </mat-radio-button> 
+        </mat-radio-group>
+      </div>
+      <div class="sm:col-span-2 form-group" *ngIf="cheifComplaintForm.get('smoking').value === 'Current Smoker' ">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Frequency</mat-label>
+          <mat-select [placeholder]="'Select'" [formControlName]="'_smoking_frequency'">
+            <mat-option [value]="data.masterdata_id" *ngFor="let data of smokingaacholFrequencies">{{data.data_name}}</mat-option>           
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2 form-group" *ngIf="cheifComplaintForm.get('smoking').value === 'Current Smoker' ">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Quantity</mat-label>
+          <input matInput [formControlName]="'_smoking_quantity'" [placeholder]="'Enter'">
+        </mat-form-field>
+      </div>
+      
+      <div class="sm:col-span-4">
+        
+        <mat-label>Alcohol Consumption Status</mat-label>
+        <br />
+        <mat-radio-group
+          aria-label="Select an option"
+          [formControlName]="'alcohol'"
+        >
+          <mat-radio-button
+            *ngFor="let status of alcohol_Status"
+            [value]="status"
+          >
+            {{ status }}
+          </mat-radio-button>
+        </mat-radio-group>
+      </div>
+      <div class="sm:col-span-2 form-group" *ngIf="cheifComplaintForm.get('alcohol').value === 'Current Alcoholic' ">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Frequency</mat-label>
+          <mat-select [placeholder]="'Select'" [formControlName]="'_alcohol_frequency'">
+            <mat-option [value]="data.masterdata_id" *ngFor="let data of smokingaacholFrequencies">{{data.data_name}}</mat-option>           
+          </mat-select>
+        </mat-form-field>
+      </div>
+      <div class="sm:col-span-2 form-group" *ngIf="cheifComplaintForm.get('alcohol').value === 'Current Alcoholic' ">
+        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+          <mat-label>Quantity</mat-label>
+          <input matInput [formControlName]="'_alcohol_quantity'" [placeholder]="'Enter'">
+        </mat-form-field>
+      </div>
+    </div>
+    <!-- Divider -->
+    <div class="mt-11 mb-10 border-t"></div>
+    <!-- Actions -->
+    <div class="flex items-center justify-end">
+      <button mat-flat-button class="border-solid border-primary-500 text-primary-500 mr-1" type="button" [disabled]="!(cheifComplaintForm.get('smoking').value || cheifComplaintForm.get('alcohol').value)">
+        <span class="ml-2 mr-1" (click)="onReset()">{{smoking_historyid || alcohol_historyid  ? 'Cancel' : 'Clear'}}</span>
+      </button>
+      <button
+        type="submit"
+        mat-flat-button
+        [color]="'primary'"
+        (click)="onSubmit()"
+        [disabled]="!(cheifComplaintForm.get('smoking').value || cheifComplaintForm.get('alcohol').value)|| isLoadingSpinner"
+      >
+        <span class="ml-2 mr-1" >{{smoking_historyid || alcohol_historyid ?'Update' : 'Save'}}</span>
+        <mat-progress-spinner
+              *ngIf="isLoadingSpinner"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+      </button>
+    </div>
+  </form>
+</div>

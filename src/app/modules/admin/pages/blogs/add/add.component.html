@@ -1,0 +1,271 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-hidden" *ngIf="!loading">
+  <mat-drawer-container class="flex-auto h-full">
+    <!-- Drawer -->
+    <mat-drawer
+      class="w-90 dark:bg-gray-900"
+      [autoFocus]="false"
+      [mode]="drawerMode"
+      [opened]="drawerOpened"
+      #matDrawer
+    >
+      <div class="flex flex-col items-start p-8 border-b">
+        <!-- Back to courses -->
+        <a
+          class="inline-flex items-center leading-6 text-primary hover:underline"
+          [routerLink]="['..']"
+        >
+          <span class="inline-flex items-center">
+            <mat-icon
+              class="icon-size-5 text-current"
+              [svgIcon]="'heroicons_solid:arrow-sm-left'"
+            ></mat-icon>
+            <span class="ml-1.5 font-medium leading-5">Back to Blogs</span>
+          </span>
+        </a>
+        <!-- Course title & description -->
+      </div>
+
+      <!-- Steps -->
+      <div class="py-2 px-8">
+        <div class="mt-3 text-2xl font-semibold">SEO Best Practises</div>  
+
+        <ol>
+          <ng-container
+            *ngFor="
+              let step of steps;
+              let last = last;
+              let index = index;
+              trackBy: trackByFn
+            "
+          >
+            <li
+              class="relative group py-3"
+              [class.current-step]="step.order === currentStep"
+            >
+              <ng-container *ngIf="!last">
+                <div
+                  class="absolute top-6 left-4 w-0.5 h-full -ml-px"
+                  [ngClass]="{
+                    'bg-primary': step.order < currentStep,
+                    'bg-gray-300 dark:bg-gray-600': step.order >= currentStep
+                  }"
+                ></div>
+              </ng-container>
+              <div class="relative flex items-start cursor-pointer">
+                <div
+                  class="flex flex-0 items-center justify-center w-8 h-8 rounded-full ring-2 ring-inset ring-transparent bg-card dark:bg-default ring-gray-300 dark:ring-gray-600 group-hover:ring-gray-400"
+                >
+                  <!-- Step order, show if the step is the current step -->
+                  <ng-container>
+                    <div
+                      class="text-md font-semibold text-hint group-hover:text-secondary"
+                    >
+                      {{ index + 1 }}
+                    </div>
+                  </ng-container>
+                </div>
+                <div class="ml-4">
+                  <div class="font-medium leading-4">{{ step.name }}</div>
+                  <div class="mt-1.5 text-md leading-4 text-secondary">
+                    Current:{{ step.current }}
+                  </div>
+                </div>
+              </div>
+            </li>
+          </ng-container>
+        </ol>
+      </div>
+    </mat-drawer>
+
+    <!-- Drawer content -->
+    <mat-drawer-content class="flex flex-col overflow-hidden">
+      <!-- Header -->
+      <div
+        class="lg:hidden flex flex-0 items-center py-2 pl-4 pr-6 sm:py-4 md:pl-6 md:pr-8 border-b lg:border-b-0 bg-card dark:bg-transparent"
+      >
+        <!-- Title & Actions -->
+        <button mat-icon-button [routerLink]="['..']">
+          <mat-icon [svgIcon]="'heroicons_outline:arrow-sm-left'"></mat-icon>
+        </button>
+        <h2
+          class="ml-2.5 text-md sm:text-xl font-medium tracking-tight truncate"
+        >
+          {{ blog.title }}
+        </h2>
+      </div>
+      
+      <div class="flex flex-col p-6 border-b bg-card">
+         
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between ">
+            <div class="-ml-2">
+                <!-- Attach file -->
+                <button
+                    class="ml-auto sm:ml-0 bg-blue-400 text-white"
+                    mat-stroked-button
+                    *ngIf="!preview"
+                    (click)="previewDetails()">
+                    Preview
+                </button>
+            </div>
+
+            <div class="flex items-center mt-4 sm:mt-0">
+                <!-- Discard -->
+                <button
+                    class="ml-auto sm:ml-0"
+                    mat-stroked-button
+                    *ngIf="!preview"
+                    (click)="discard()">
+                    Discard
+                </button>
+                <!-- Save as draft -->
+                <button
+                    class="sm:mx-3"
+                    mat-stroked-button
+                    *ngIf="!preview"
+                    [disabled]="composeForm?.invalid"
+                    (click)="send(false)">
+                    Save as draft
+                      <mat-progress-spinner
+                    *ngIf="loadingDrafts"
+                    [diameter]="20"
+                    [mode]="'indeterminate'"></mat-progress-spinner>
+                </button>
+                <!-- Send -->
+                <button
+                    class="order-first sm:order-last"
+                    mat-flat-button
+                    *ngIf="!preview"
+                    [color]="'primary'"
+                    (click)="send(true)"
+                    [disabled]="composeForm?.invalid"
+                >
+                    Publish   <mat-progress-spinner
+                    *ngIf="loadingAction"
+                    [diameter]="20"
+                    [mode]="'indeterminate'"></mat-progress-spinner>
+
+                </button>
+                <!-- Send -->
+                <button
+                    class="order-first sm:order-last"
+                    mat-flat-button
+                    *ngIf="preview"
+                    [color]="'primary'"
+                    (click)="previewDetails()">
+                    Edit
+                </button>
+               
+            </div>
+        </div>
+
+      
+        <!-- Course title & description -->
+      </div>
+
+      <!-- Main -->
+      <div class="flex-auto overflow-y-auto" cdkScrollable>
+          
+         
+        <div
+          class="blog-details prose prose-sm max-w-4xl mx-auto sm:my-2 lg:mt-4 p-6 sm:p-10 sm:py-12 rounded-2xl shadow overflow-hidden bg-card"
+        >
+
+          <!-- Compose form -->
+          <form
+            class="flex flex-col flex-auto p-6 sm:p-8 overflow-y-auto"
+            [formGroup]="composeForm"
+            *ngIf="!preview"
+          >
+            <!-- To -->
+            <mat-form-field floatLabel="always">
+              <mat-label>Blog Title</mat-label>
+              <input matInput [formControlName]="'title_name'" [placeholder]="'Enter title for your post'" />              
+            </mat-form-field>
+
+
+              <mat-form-field
+                  [ngClass]="formFieldHelpers"
+                  class="flex-auto">
+                  <mat-label>Tags</mat-label>
+                  <mat-chip-list #tags>
+
+                    <mat-chip
+                    *ngFor="let selectedtag of selectedTags;let indx=index"
+                    [selectable]="selectable" [removable]="removable" (removed)="remove(selectedtag, indx)" multiple="false"
+                    >
+                    {{selectedtag.category_name}}
+                    <button matChipRemove>
+                      <mat-icon>cancel</mat-icon>
+                    </button>
+                  </mat-chip>
+
+                      <input
+                          #tagInput
+
+                          [placeholder]="'New tag...'"
+                          [formControl]="tagNew"
+                          [matAutocomplete]="auto"
+                          [matChipInputFor]="tags"
+                          matChipInputAddOnBlur="false"
+                          (matChipInputTokenEnd)="add($event)"
+                          (blur)="addOnBlurMethos($event)"
+                    >
+                  </mat-chip-list>
+                  
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                    <mat-option *ngFor="let tag of filteredTags | async" [value]="tag">
+                      {{tag.category_name}}
+                    </mat-option>
+                  </mat-autocomplete>
+                
+              </mat-form-field>
+
+
+              <mat-form-field floatLabel="always">
+                <mat-label>Feature Text</mat-label>
+                <textarea matInput [formControlName]="'feature_text'" cdkTextareaAutosize
+                cdkAutosizeMinRows="3"
+                cdkAutosizeMaxRows="10" [placeholder]="'Enter Feature Text'"></textarea>
+              </mat-form-field>
+
+              
+             <!-- Feature Image -->
+             <mat-label>Feature Image</mat-label>
+             <quill-editor
+             class="mt-2"
+             placeholder ="Upload your Image"
+             [formControlName]="'thumbnail_imag'"
+             [modules]="quillFeatureImageModules"
+           ></quill-editor>
+
+
+           <mat-form-field floatLabel="always" class="mt-4"> 
+            <mat-label>Image Source Name</mat-label>
+            <input matInput [formControlName]="'imgsource_name'" [placeholder]="'Enter Image Source Name'" />              
+          </mat-form-field>
+
+            <!-- Body -->
+            <mat-label class="mt-2">Blog Description</mat-label>
+            <quill-editor
+            
+              class="mt-2 quill-editor-cstm"
+              [formControlName]="'description_name'"
+              [modules]="quillModules"
+            ></quill-editor>
+
+          
+          </form>
+         
+          <div *ngIf="preview">
+                
+                <h1>{{blog?.title_name}}</h1>
+                <img [src]="blog?.img"/>
+                <div [innerHTML]="blog?.description_name"></div>
+                
+          </div>
+
+        </div>
+      </div>
+    </mat-drawer-content>
+  </mat-drawer-container>
+</div>

@@ -1,0 +1,131 @@
+<div class="flex flex-col w-full overflow-auto bg-card">
+    <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+      <div  class="ml-3 text-2xl font-semibold tracking-tight">
+       Add Settings
+      </div>
+      
+  
+      <button class="ml-auto" mat-icon-button (click)="dismiss()">
+        <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+      </button>
+    </div>
+    <ng-container>
+      <form class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-8 lg:pr-8 lg:pt-3" [formGroup]="patientAppointmentForm" #patientaAppointmentNGForm="ngForm"
+        >
+        <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+          <div class="sm:col-span-4 form-group">
+            <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
+              <mat-label>Search Patient </mat-label>
+  
+              <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+              <input matInput [matAutocomplete]="auto" 
+                  [placeholder]="'Search for Patient name'" [value]="selectedPatient$ | async" [disabled]="selectedPatientId">
+                 
+                  <!-- <button  *ngIf="selectedPatientId"  matSuffix mat-icon-button aria-label="Clear" (click)="clearReports()">
+                    <mat-icon>close</mat-icon>
+                  </button> -->
+                
+                  <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChangePatient($event)">
+                    <mat-option *ngFor="let option of filteredPatientOptions$ | async" [id]="option.patientid" [value]="option.full_name + ' - ' + option.age+'yrs'+ ' - ' +option.gender">
+                      <b>{{option.full_name}} </b> - {{option.age}}yrs - {{option.gender}} 
+                    </mat-option>
+                  </mat-autocomplete>
+          </mat-form-field> 
+        
+          <div *ngIf="(filteredPatientOptions$ | async)?.length == 0 && inputText" class="pt-1 italic text-blue-500">
+            No Data Found <a class="underline cursor-pointer" (click)="addPatient()"><strong>Add Patient</strong></a>
+          </div>
+  
+        </div>
+         
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Speciality </mat-label>
+            <mat-select [formControlName]="'specialityid'" placeholder="Select"  (selectionChange)="
+            changeSpeciality($event.value)">
+              <ng-container *ngFor="let data of specialities">
+                  <mat-option [value]="data.masterdata_id">{{
+                      data.data_name
+                      }}</mat-option>
+              </ng-container>
+          </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Search Doctor </mat-label>
+
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput [matAutocomplete]="doctor" (input)="onSearchTerm($event)" [placeholder]="'Search for Name'"
+              [formControlName]="'doctorId'" [disabled]="selectedDoctor || !patientAppointmentForm.controls.specialityid.value"/>
+              <button  *ngIf="selectedDoctor"  matSuffix mat-icon-button aria-label="Clear" (click)="clearDoctorId()" >
+                <mat-icon>close</mat-icon>
+              </button>
+            <mat-autocomplete #doctor="matAutocomplete" (optionSelected)="onSelectionChange($event)">
+              <mat-option *ngFor="let option of filteredOptions$ | async" [id]="option.doctorid"
+                [value]="option.details">
+                {{ option.details }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+
+          <div *ngIf="(filteredOptions$ | async)?.length == 0 && doctorText" class="pt-1 italic text-blue-500">
+            No Data Found
+          </div>
+
+        </div>
+
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Search Carecordinator </mat-label>
+
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput [matAutocomplete]="care" (input)="searchRole(4, $event)" [placeholder]="'Search for Name'"
+              [formControlName]="'careCoordinatorId'" [disabled]="selectedCareId"/>
+              <button  *ngIf="selectedCareId"  matSuffix mat-icon-button aria-label="Clear" (click)="clearCare()" >
+                <mat-icon>close</mat-icon>
+              </button>
+            <mat-autocomplete #care="matAutocomplete" (optionSelected)="onSelectionCareChange($event)">
+              <mat-option *ngFor="let option of filteredCareOptions$ | async" [id]="option.doctorid"
+                [value]="option.details">
+                {{ option.details }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+          <div class="sm:col-span-2 form-group">
+            <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+              <mat-label>Search Coach </mat-label>
+  
+              <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+              <input matInput [matAutocomplete]="coach" (input)="searchRole(80241, $event)" [placeholder]="'Search for Name'"
+                [formControlName]="'coachId'" [disabled]="selectedCoachId"/>
+                <button  *ngIf="selectedCoachId"  matSuffix mat-icon-button aria-label="Clear" (click)="clearCoach()" >
+                  <mat-icon>close</mat-icon>
+                </button>
+              <mat-autocomplete #coach="matAutocomplete" (optionSelected)="onSelectioncoachChange($event)">
+                <mat-option *ngFor="let option of filteredCoachOptions$ | async" [id]="option.doctorid"
+                  [value]="option.details">
+                  {{ option.details }}
+                </mat-option>
+              </mat-autocomplete>
+            </mat-form-field>
+          
+         
+        </div>
+      </div>
+        <div class="mt-11 mb-10 border-t"></div>
+        <div class="flex items-center justify-end">
+          <button mat-flat-button type="button" (click)="clear()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+            <span class="ml-2 mr-1">Clear</span>
+          </button>
+          <button type="submit" mat-flat-button [color]="'primary'" (click)="addSettings()" [disabled]="patientaAppointmentNGForm.invalid" 
+           >
+            <span class="ml-2 mr-1">Save</span>
+          </button>
+        </div>
+      </form>
+    </ng-container>
+  
+ 
+  </div>

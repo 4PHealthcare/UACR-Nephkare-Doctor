@@ -1,0 +1,76 @@
+<div class="h-screen flex flex-col">
+    <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+        <div *ngIf="!editMode" class="text-2xl font-semibold tracking-tight">Add User</div>
+        <div *ngIf="editMode" class="text-2xl font-semibold tracking-tight">Edit User</div>
+        <button
+            class="ml-auto"
+            mat-icon-button
+            (click)="dialogRef.close()">
+            <mat-icon
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <div class="p-6 mb-auto overflow-y-auto">
+        <form [formGroup]="userForm"> 
+            <div>
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>First Name</mat-label>
+                    <input matInput [placeholder]="'Enter First Name'" [formControlName]="'firstName'">
+                </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput [placeholder]="'Enter Last Name'" [formControlName]="'lastName'">
+                </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Email</mat-label>
+                    <input matInput [placeholder]="'Enter Email'" [formControlName]="'email'">
+                </mat-form-field>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Phone</mat-label>
+                    <input matInput [placeholder]="'Enter Phone'" [formControlName]="'mobileNumber'">
+                </mat-form-field>
+                <span *ngIf="userForm.controls.mobileNumber.errors?.required && userForm.controls.mobileNumber.touched || userForm.controls.mobileNumber.errors?.pattern"
+                    class="text-red-500 text-xs italic">
+                    Please enter a valid phone number
+                </span>
+            </div>
+            <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Role</mat-label>
+                    <mat-select [formControlName]="'roleId'">
+                        <ng-container *ngFor="let data of roles">
+                            <mat-option [value]="data.masterdata_id">{{
+                                data.data_name
+                                }}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div>
+        </form>
+    </div>
+
+    <footer class="my-4 mx-4">
+        <div class="flex">
+            <div class="flex ml-auto gap-2">
+                <button  mat-flat-button (click)="dialogRef.close()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+                    <span class="ml-2 mr-1">Cancel</span>
+                </button>
+                <button *ngIf="!editMode"  mat-flat-button [color]="'primary'" (click)="addUser()" [disabled]="userForm.invalid">
+                    <span class="ml-2 mr-1">Save</span>
+                </button>
+                <button *ngIf="editMode"  mat-flat-button [color]="'primary'" (click)="updateUser()" [disabled]="userForm.invalid">
+                    <span class="ml-2 mr-1">Update</span>
+                </button>
+              <!-- Will grow and shrink as needed without taking initial size into account -->
+            </div>
+          </div>          
+    </footer>
+</div>

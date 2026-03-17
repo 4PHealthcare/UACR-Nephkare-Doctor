@@ -1,0 +1,65 @@
+      <div class="flex flex-col w-full overflow-auto bg-card">
+
+      <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary" >
+         <div class="ml-3 text-3xl font-semibold tracking-tight">
+            Add Serum Creatinine 
+        </div>
+      
+         <button class="ml-auto" mat-icon-button (click)="dismiss()">
+            <mat-icon
+                  class="text-current"
+                  [svgIcon]="'heroicons_outline:x'">
+            </mat-icon>
+        </button>
+        </div>
+
+         <div class="flex bg-card p-10">
+           <div class="w-full">
+            <form class="w-full">
+                  <div class="medication-section">
+                    <table class="tab w-full">
+                      <tr class="h-10 w-full tab-head text-left">
+                        <th class="w-1/2 pr-2"> Serum Creatinine </th>
+                        <th class="w-1/2">Dose</th>
+                      </tr>
+                      <tr class="w-full" *ngFor="let row of rows; let i = index">
+                        <td class="w-1/2 pr-2">
+                          <mat-form-field class="flex-auto w-full mt-4">
+                            <input matInput formControlName="medicine" placeholder="Serum Creatinine" />
+                          </mat-form-field>
+                        </td>
+                        <td class="w-1/2 pr-3">
+                          <mat-form-field class="flex-auto w-full mt-4">
+                            <input matInput placeholder="Enter" />
+                          </mat-form-field>
+                        </td>
+                        <td>
+                          <div class="text-center">
+                            <mat-icon
+                              class="icon-size-5 text-red-500 cursor-pointer"
+                              [svgIcon]="'heroicons_solid:minus-circle'"
+                              (click)="removeRow(i)"
+                            ></mat-icon>
+                          </div>
+                        </td>
+                      </tr>
+                      <tr class="no-border-padding border-t">
+                        <td></td>
+                        <td></td>
+                        <td class="add-icon-border pt-3">
+                          <div class="text-center">
+                            <mat-icon
+                              class="icon-size-5 text-green-500 cursor-pointer"
+                              [svgIcon]="'heroicons_solid:plus-circle'"
+                              (click)="addRow()"
+                            ></mat-icon>
+                          </div>
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                </form>
+                
+           </div>
+         </div>
+      </div>

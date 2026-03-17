@@ -1,0 +1,252 @@
+<div class="flex flex-col w-full overflow-auto bg-card">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="ml-3 text-2xl font-semibold tracking-tight">Add Test Range</div>
+
+    <button class="ml-auto" mat-icon-button (click)="dismiss()">
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+  <ng-container>
+    <form [formGroup]="testRangeForm" #testRangeFormNGForm="ngForm"
+      class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-8 lg:pr-8 lg:pt-3"
+    >
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Test Name <span>*</span></mat-label>
+            <input matInput [placeholder]="'Enter'" [formControlName]="'testName'" [readonly]="true"  />
+          </mat-form-field>
+        </div>
+
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Specimen <span>*</span></mat-label>
+          <mat-select
+            [placeholder]="'Select'"
+            [formControlName]="'specimen'"
+          >
+            <mat-option [value]="data.data_name" *ngFor="let data of specimens">{{data.data_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+
+
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Ref-Range <span>*</span></mat-label>
+            <input matInput [formControlName]="'referanceRange'" [placeholder]="'Enter'" />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Test Units <span>*</span></mat-label>
+            <input placeholder="Enter" [formControlName]="'testUnits'" matInput />
+          </mat-form-field>
+        </div>
+
+        <div class="sm:col-span-2 form-group">
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Department<span>*</span></mat-label>
+          <mat-select
+            [placeholder]="'Select'"
+            [formControlName]="'department'"
+          >
+            <mat-option [value]="data.data_name" *ngFor="let data of departments">{{data.data_name}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+        </div>
+
+      </div>
+
+      <div
+        class="flex flex-col flex-auto mt-4 overflow-hidden sm:overflow-y-auto"
+      >
+        <div class="ml-2 text-2xl font-semibold tracking-tight">
+          Range Rule Generator
+        </div>
+        <ng-container>
+          <div class="grid"> 
+            <!-- Header -->
+            <div
+              class="test-range-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md font-semibold text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+            >
+              <div class="hidden md:block items-center">Gender</div>
+              <div class="hidden md:block items-center">Min Age</div>
+              <div class="hidden md:block items-center">Max Age</div>
+              <div class="hidden md:block items-center">Min Value</div>
+              <div class="hidden md:block items-center pl-2">Max Value</div>
+            </div>
+
+            <ng-container>
+              <ng-container>
+                <div
+                  class="test-range-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                >
+                  <div>Neutral</div>
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input [formControlName]="'neutral_min_age'" placeholder="Enter" matInput />
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input placeholder="Enter" [formControlName]="'neutral_max_age'" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input placeholder="Enter" [formControlName]="'neutral_min_value'" matInput />
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <div>
+                      <mat-form-field
+                        class="fuse-mat-no-subscript w-full"
+                        floatLabel="always"
+                      >
+                        <input placeholder="Enter" [formControlName]="'neutral_max_value'" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container>
+                <div
+                  class="test-range-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                >
+                  <div>Male</div>
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input [formControlName]="'male_min_age'" placeholder="Enter" matInput />
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input placeholder="Enter" [formControlName]="'male_max_age'" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input placeholder="Enter" [formControlName]="'male_min_value'" matInput />
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <div>
+                      <mat-form-field
+                        class="fuse-mat-no-subscript w-full"
+                        floatLabel="always"
+                      >
+                        <input placeholder="Enter" [formControlName]="'male_max_value'" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+              <ng-container>
+                <div
+                  class="test-range-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+                >
+                  <div>Female</div>
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input [formControlName]="'female_min_age'" placeholder="Enter" matInput />
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input placeholder="Enter" [formControlName]="'female_max_age'" matInput />
+                    </mat-form-field>
+                  </div>
+                  <div>
+                    <mat-form-field
+                      class="fuse-mat-no-subscript w-full"
+                      floatLabel="always"
+                    >
+                      <input placeholder="Enter" [formControlName]="'female_min_value'" matInput />
+                    </mat-form-field>
+                  </div>
+
+                  <div>
+                    <div>
+                      <mat-form-field
+                        class="fuse-mat-no-subscript w-full"
+                        floatLabel="always"
+                      >
+                        <input placeholder="Enter" [formControlName]="'female_max_value'" matInput />
+                      </mat-form-field>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </ng-container>
+          </div>
+        </ng-container>
+      </div>
+
+      <div class="mt-11 mb-10 border-t"></div>
+      <div class="flex items-center justify-end">
+        <button mat-flat-button type="button" (click)="clear()"
+        class="border-solid border-primary-500 text-primary-500 mr-1" 
+
+
+
+>
+          <span class="ml-2 mr-1">Clear</span>
+        </button>
+        
+        <button type="submit" mat-flat-button [color]="'primary'" (click)="save()" [disabled]="testRangeForm.invalid"> 
+          <span class="ml-2 mr-1">Save</span>
+        </button>
+      </div>
+    </form>
+  </ng-container>
+</div>

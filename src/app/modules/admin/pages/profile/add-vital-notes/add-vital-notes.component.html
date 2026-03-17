@@ -1,0 +1,105 @@
+<div class="h-screen flex flex-col">
+    <div
+      class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+    >
+      <div class="text-2xl font-semibold tracking-tight">
+        Add Notes
+      </div>
+      <button class="ml-auto" mat-icon-button (click)="dialogRef.close()">
+        <mat-icon
+          class="text-current"
+          [svgIcon]="'heroicons_outline:x'"
+        ></mat-icon>
+      </button>
+    </div>
+    <!-- [formGroup]="vitalForm" -->
+    <!-- (ngSubmit)="onSubmit()" -->
+    <form
+      class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+      [formGroup]="notesForm"
+    >
+    <div class="mt-8 mb-4">
+      <mat-form-field
+      class="fuse-mat-no-subscript w-full"
+      floatLabel="always"
+    >
+    <mat-label>Date <span>*</span></mat-label>
+    <input
+    matInput
+    [formControlName]="'date'"
+    [ngxMatDatetimePicker]="picker"
+    [max]="today"
+    placeholder="Date & time"
+    (focus)="picker.open()"
+    
+  />
+  <mat-datepicker-toggle matSuffix [for]="picker">
+  </mat-datepicker-toggle>
+  <ngx-mat-datetime-picker
+    #picker
+    [showSpinners]="showSpinners"
+    [showSeconds]="showSeconds"
+    [stepHour]="stepHour"
+    [stepMinute]="stepMinute"
+    [enableMeridian]="true"
+    [color]="color"
+  
+  >
+  </ngx-mat-datetime-picker>
+
+    </mat-form-field>
+    </div>
+    <div>
+      <mat-label class="mb-1">Notes <span>*</span></mat-label>
+      <quill-editor
+      class="mt-2"
+      [formControlName]="'notes'"
+      placeholder ="Enter"
+      [modules]="quillModules"
+    ></quill-editor>
+    </div>
+      <!-- <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-4">
+          
+          </div>
+    
+          <div class="sm:col-span-4">
+
+            <mat-label>Notes</mat-label>
+            <quill-editor
+            class="mt-2"
+            placeholder ="Enter"
+            [modules]="quillModules"
+          ></quill-editor>
+
+          </div>
+       
+  
+      </div> -->
+      <!-- Divider -->
+      <div class="mt-15 mb-10 border-t"></div>
+      <!-- Actions -->
+      <div class="flex items-center justify-end">
+        <button mat-flat-button type="button" (click)="dialogRef.close()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+        <button
+          type="submit"
+          mat-flat-button
+          [color]="'primary'"
+          [disabled]="notesForm.invalid || isLoadingSpinner"
+          (click)="saveNotes()"
+        >
+          <span  class="ml-2 mr-1" 
+            >Save</span
+          >
+          <mat-progress-spinner
+              *ngIf="isLoadingSpinner"
+               [diameter]="24"
+               [mode]="'indeterminate'"></mat-progress-spinner>
+
+         </button>
+      </div>
+    </form>
+  </div>
+  

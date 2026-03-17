@@ -1,0 +1,112 @@
+<div class="relative flex flex-col w-full h-full">
+  <div
+    class="flex flex-col sm:flex-row flex-auto items-center sm:items-start pt-2 pb-6 sm:pb-8"
+  >
+    <div
+      class="flex flex-0 items-center justify-center w-10 h-10 sm:mr-4 rounded-full text-warn-600 bg-warn-100 dark:text-warn-50 dark:bg-warn-600"
+     
+     
+    >
+      <mat-icon
+        role="img"
+        class="mat-icon notranslate text-current mat-icon-no-color"
+        aria-hidden="true"
+        ng-reflect-svg-icon="heroicons_outline:exclamation"
+        data-mat-icon-type="svg"
+        data-mat-icon-name="exclamation"
+        data-mat-icon-namespace="heroicons_outline"
+        ><svg
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor"
+          fit=""
+          height="100%"
+          width="100%"
+          preserveAspectRatio="xMidYMid meet"
+          focusable="false"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg></mat-icon>
+    </div>
+    <div
+      class="flex flex-col items-center sm:items-start mt-4 sm:mt-0 sm:pr-8 space-y-1 text-center sm:text-left "
+      
+    >
+      <div class="text-xl leading-6 font-medium ">
+        Cancel Appointment
+      </div>
+      <div class="text-secondary ">
+        Are you sure you want to cancel this appointment? This action cannot be
+        undone!
+      </div>
+    </div>
+  </div>
+  <form [formGroup]="reasonForm">
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-12">
+
+        <mat-form-field
+        class="fuse-mat-no-subscript w-full"
+        floatLabel="always"
+      >
+        <mat-label>Reason for cancel appointment</mat-label>
+        <input
+          matInput
+          [placeholder]="'Enter'"
+          [formControlName]="'reason'"
+        />
+      </mat-form-field>
+
+        <!-- <mat-form-field class="fuse-mat-no-subscript w-full h-32">
+          <mat-label>Reason for cacel appointment</mat-label>
+          <input>
+
+          <textarea class="min-h-26" [formControlName]="'reason'" matInput></textarea>
+        </mat-form-field> -->
+      </div>
+    </div>
+
+    <div class="mt-11 mb-5 border-t"></div>
+  </form>
+  <div
+    class="flex items-center justify-center sm:justify-end px-6 py-4 space-x-3  ng-star-inserted"
+    
+  >
+    <button
+      (click)="dismiss()"
+      class="mat-focus-indicator mat-stroked-button mat-button-base "
+     
+      type="button"
+    >
+      <span class="mat-button-wrapper"> Close </span
+      ><span
+        matripple=""
+        class="mat-ripple mat-button-ripple"
+        ng-reflect-disabled="false"
+        ng-reflect-centered="false"
+        ng-reflect-trigger="[object HTMLButtonElement]"
+      ></span
+      ><span class="mat-button-focus-overlay"></span>
+    </button>
+
+    <button
+     (click)="deleteAppointment()"
+      class="mat-focus-indicator mat-flat-button mat-button-base mat-warn"
+      ng-reflect-color="warn"
+      ng-reflect-_mat-dialog-close="confirmed"
+      type="button"
+    >
+      <span class="mat-button-wrapper"> Cancel </span
+      ><span
+        matripple=""
+        class="mat-ripple mat-button-ripple"
+       
+      ></span
+      ><span class="mat-button-focus-overlay"></span>
+    </button>
+  </div>
+</div>

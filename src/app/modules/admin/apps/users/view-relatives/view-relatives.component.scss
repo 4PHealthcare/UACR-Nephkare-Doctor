@@ -1,0 +1,33 @@
+.test-list-modal-grid {
+    grid-template-columns: 48px auto 40px;
+  
+    @screen sm {
+      grid-template-columns: 48px auto 112px 72px;
+    }
+  
+    @screen md {
+      grid-template-columns: 48px 112px auto 112px 72px;
+    }
+  
+    @screen lg {
+      grid-template-columns:  20% 20% 20% 10% 10% 20%;
+    }
+  
+    .mat-icon.vitals-active {
+      color: green !important;
+    }
+  }
+  // .heading-css{
+  //   font-family:Poppins-Bold,Poppins;
+  //   font-size:13px !important;
+  //   font-weight: 500;
+
+  // }
+
+table tr td{
+  
+  padding-bottom: 5px;
+}
+.bg-color-sky{
+  background: #d1eef8 !important;
+}

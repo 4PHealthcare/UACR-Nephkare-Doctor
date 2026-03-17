@@ -1,0 +1,148 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="text-2xl font-semibold tracking-tight">
+      {{ this.data && this.data.accountInfo ? "Edit" : "Add" }} Primary
+      Physician
+    </div>
+    <button
+      class="ml-auto"
+      mat-icon-button
+      [matTooltip]="'Close'"
+      (click)="close()"
+    >
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+
+  <div class="p-6 mb-auto overflow-y-auto">
+    <form [formGroup]="userForm" class="userForm-ht">
+      <div class="mt-4" *ngIf="userInfo.isadmin_account">
+        <mat-label>Doctor</mat-label>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-select [formControlName]="'doctorId'" placeholder="Select" [compareWith]="compareDoctorId">
+            <ng-container *ngFor="let data of doctors">
+              <mat-option [value]="data.user_id"
+                >{{
+                  data.isadmin_account ? data.contactperson_name + " - " + data.speciality
+                    : data.full_name + " - " + data.speciality
+                }}
+              </mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+      </div>
+
+      <div class="mt-4">
+        <mat-label>Full Name</mat-label>
+
+        <div>
+          <span class="padding-blank">
+            <mat-form-field class="fuse-mat-no-subscript w-13">
+              <input class="bg-gray-400" matInput [formControlName]="'Dr'" />
+            </mat-form-field>
+          </span>
+          <mat-form-field
+            class="fuse-mat-no-subscript w-70 ml-1"
+            floatLabel="always"
+          >
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'name'"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="mt-4">
+        <mat-label>Email</mat-label>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <input
+            matInput
+            [placeholder]="'Sample@domain.com'"
+            [formControlName]="'email'"
+          />
+        </mat-form-field>
+      </div>
+      <div class="mt-4">
+        <mat-label>Phone</mat-label>
+        <div class="wrapper">
+          <ngx-intl-tel-input
+            [cssClass]="'custom'"
+            [preferredCountries]="preferredCountries"
+            [enableAutoCountrySelect]="true"
+            [enablePlaceholder]="true"
+            [searchCountryFlag]="true"
+            [searchCountryField]="[
+              SearchCountryField.Iso2,
+              SearchCountryField.Name
+            ]"
+            [selectFirstCountry]="false"
+            [selectedCountryISO]="selectedCountryISO"
+            [maxLength]="15"
+            [phoneValidation]="true"
+            [separateDialCode]="separateDialCode"
+            [numberFormat]="PhoneNumberFormat.National"
+            name="mobileNumber"
+            formControlName="mobileNumber"
+          >
+          </ngx-intl-tel-input>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  <footer class="my-4 mx-4">
+    <div class="flex">
+      <div class="flex ml-auto gap-2">
+        <button
+          mat-flat-button
+          *ngIf="this.data && this.data.accountInfo"
+          [disabled]="userForm.pristine"
+          (click)="close()"
+          class="border-solid border-primary-500 text-primary-500 mr-1"
+        >
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+        <button
+          mat-flat-button
+          *ngIf="!(this.data && this.data.accountInfo)"
+          [disabled]="userForm.pristine"
+          (click)="userForm.reset()"
+          class="border-solid border-primary-500 text-primary-500 mr-1"
+        >
+          <span class="ml-2 mr-1">Clear</span>
+        </button>
+        <!-- [disabled]="userForm.invalid || userForm.pristine ||  userActionLoading" -->
+        <button
+          mat-flat-button
+          [color]="'primary'"
+          (click)="addUser()"
+          [disabled]="
+            userForm.invalid || userForm.pristine || userActionLoading
+          "
+        >
+          <span class="ml-2 mr-1">{{
+            this.data && this.data.accountInfo ? "Update" : "Save"
+          }}</span>
+          <mat-progress-spinner
+            *ngIf="userActionLoading"
+            [diameter]="24"
+            [mode]="'indeterminate'"
+          ></mat-progress-spinner>
+        </button>
+      </div>
+    </div>
+  </footer>
+</div>

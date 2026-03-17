@@ -1,0 +1,120 @@
+<!-- Button -->
+<div class="flex items-center gap-2" [matMenuTriggerFor]="userActions">
+
+  <!-- Avatar Button -->
+  <button
+    mat-icon-button
+    disableRipple
+    
+  >
+    <img
+      class="w-10 h-10 rounded-full"
+      [src]="photo ? photo : 'assets/images/avatars/img_avatar.png'"
+    />
+  </button>
+
+  <!-- User Text -->
+  <div class="flex flex-col leading-tight">
+
+    <span *ngIf="user && user.admin_account != 3 && user.isadmin_account">
+      {{
+        user.contactperson_name?.length > 25
+          ? (user.contactperson_name | slice: 0 : 25) + " ..."
+          : user.contactperson_name?.trim()
+      }}
+    </span>
+
+    <span *ngIf="user && (!user.isadmin_account || user.admin_account == 3)">
+      <span *ngIf="user?.role_id == 5">Dr. </span>
+      {{
+        user.full_name?.length > 25
+          ? (user.full_name | slice: 0 : 25) + " ..."
+          : user.full_name?.trim()
+      }}
+    </span>
+
+    <span class="text-md font-bold" *ngIf="user">
+      {{
+        user.admin_account != 3 && user.isadmin_account
+          ? "Admin"
+          : user?.role_name
+      }}
+    </span>
+
+  </div>
+
+</div>
+
+<mat-menu class="custom-mat-menu" [xPosition]="'before'" #userActions="matMenu">
+  <button mat-menu-item>
+    <span class="flex flex-col leading-none">
+      <span *ngIf="user && user.admin_account != 3 && user.isadmin_account">
+        <span *ngIf="user?.role_id == 5"> </span
+        >{{
+          user.contactperson_name?.length > 25
+            ? (user.contactperson_name | slice: 0 : 25) + " ..."
+            : user.contactperson_name?.trim()
+        }}
+      </span>
+      <span *ngIf="user && (!user.isadmin_account || user.admin_account == 3)">
+        <span *ngIf="user?.role_id == 5">Dr. </span
+        >{{
+          user.full_name?.length > 25
+            ? (user.full_name | slice: 0 : 25) + " ..."
+            : user.full_name?.trim()
+        }}
+      </span>
+      <span class="mt-1.5 text-md font-bold" *ngIf="user">{{
+        user.admin_account != 3 && user.isadmin_account
+          ? "Admin"
+          : user?.role_name
+      }}</span>
+    </span>
+  </button>
+  <mat-divider class="my-2"></mat-divider>
+  <button mat-menu-item (click)="goToProfile()">
+    <mat-icon [svgIcon]="'heroicons_outline:user-circle'"></mat-icon>
+    <span>Profile</span>
+  </button>
+  <button
+    mat-menu-item
+    (click)="goToSettings('clinicsettings')"
+    *ngIf="user.isadmin_account || user.role_id == 82580 || user.role_id == 5"
+  >
+    <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
+    <span>Settings</span>
+  </button>
+  <!-- <button mat-menu-item (click)="goToActivities()" *ngIf="user.admin_account != 3 && user.isadmin_account">
+        <mat-icon [svgIcon]="'heroicons_outline:menu-alt-2'"></mat-icon>
+        <span>Activities</span>
+    </button> -->
+  <!-- <button
+        mat-menu-item (click)="goToActivities()">
+        <mat-icon [svgIcon]="'heroicons_outline:dots-circle-horizontal'"></mat-icon>
+        <span>Activities</span>
+    </button> -->
+  <mat-divider class="my-2"></mat-divider>
+  <button mat-menu-item (click)="signOut()">
+    <mat-icon [svgIcon]="'heroicons_outline:logout'"></mat-icon>
+    <span>Sign out</span>
+  </button>
+</mat-menu>
+
+<mat-menu class="user-status-menu" #userStatus="matMenu">
+  <button mat-menu-item (click)="updateUserStatus('online')">
+    <span class="w-4 h-4 mr-3 rounded-full bg-green-500"></span>
+    <span>Online</span>
+  </button>
+  <button mat-menu-item (click)="updateUserStatus('away')">
+    <span class="w-4 h-4 mr-3 rounded-full bg-amber-500"></span>
+    <span>Away</span>
+  </button>
+  <button mat-menu-item (click)="updateUserStatus('busy')">
+    <span class="w-4 h-4 mr-3 rounded-full bg-red-500"></span>
+    <span>Busy</span>
+  </button>
+  <button mat-menu-item (click)="updateUserStatus('not-visible')">
+    <span class="w-4 h-4 mr-3 rounded-full bg-gray-400"></span>
+    <span>Invisible</span>
+  </button>
+</mat-menu>

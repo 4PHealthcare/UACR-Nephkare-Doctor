@@ -1,0 +1,166 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="text-2xl font-semibold tracking-tight">
+      {{ this.data && this.data.accountInfo ? "Update" : "Add" }} Doctor
+    </div>
+    <button
+      class="ml-auto"
+      mat-icon-button
+      [matTooltip]="'Close'"
+      (click)="dialogRef.close()"
+    >
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+
+  <div class="p-6 mb-auto overflow-y-auto">
+    <form [formGroup]="userForm" class="userForm-ht">
+      <mat-label>Doctor Full Name</mat-label>
+
+      <div>
+        <span class="padding-blank">
+          <mat-form-field class="fuse-mat-no-subscript w-13">
+            <input class="bg-gray-400" matInput [formControlName]="'Dr'" />
+          </mat-form-field>
+        </span>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-70 ml-1"
+          floatLabel="always"
+        >
+          <input matInput [placeholder]="'Enter'" [formControlName]="'name'" />
+        </mat-form-field>
+      </div>
+      <!-- <div class="mt-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Last Name</mat-label>
+                    <input matInput [placeholder]="'Last Name'" [formControlName]="'lastName'">
+                </mat-form-field>
+            </div> -->
+      <!-- <div class="mt-4">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Clinic / Hospitals</mat-label>
+                    <mat-select [formControlName]="'clinicId'" placeholder="Select">
+                        <ng-container *ngFor="let data of hospitals">
+                            <mat-option [value]="data.clinicid">{{
+                                data.clinic_name
+                                }}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div> -->
+      <!-- <div class="mt-4">
+                <mat-label>Speciality</mat-label>
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+
+                    <mat-select [formControlName]="'specialityid'" placeholder="Select">
+                        <ng-container *ngFor="let data of specialities">
+                            <mat-option [value]="data.speciality_id">{{
+                                data.speciality_name
+                                }}</mat-option> 
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div> -->
+      <div class="mt-4">
+        <mat-label>Email</mat-label>
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <input
+            matInput
+            [placeholder]="'Sample@domain.com'"
+            [formControlName]="'email'"
+          />
+        </mat-form-field>
+      </div>
+      <div class="mt-4">
+        <mat-label>Phone</mat-label>
+
+        <!-- <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label class="clr-black" matPrefix>+91</mat-label>
+                    <input matInput [placeholder]="'Enter'" [formControlName]="'mobileNumber'">
+                </mat-form-field> -->
+        <div class="wrapper">
+          <ngx-intl-tel-input
+            [cssClass]="'custom'"
+            [preferredCountries]="preferredCountries"
+            [enableAutoCountrySelect]="true"
+            [enablePlaceholder]="true"
+            [searchCountryFlag]="true"
+            [searchCountryField]="[
+              SearchCountryField.Iso2,
+              SearchCountryField.Name
+            ]"
+            [selectFirstCountry]="false"
+            [selectedCountryISO]="selectedCountryISO"
+            [maxLength]="15"
+            [phoneValidation]="true"
+            [separateDialCode]="separateDialCode"
+            [numberFormat]="PhoneNumberFormat.National"
+            name="mobileNumber"
+            formControlName="mobileNumber"
+          >
+          </ngx-intl-tel-input>
+        </div>
+        <span
+          *ngIf="
+            (userForm.controls.mobileNumber.errors?.required &&
+              userForm.controls.mobileNumber.touched) ||
+            userForm.controls.mobileNumber.errors?.pattern
+          "
+          class="text-red-500 text-xs italic"
+        >
+          Please enter a valid phone number
+        </span>
+      </div>
+    </form>
+  </div>
+
+  <footer class="my-4 mx-4">
+    <div class="flex">
+      <div class="flex ml-auto gap-2">
+        <button
+          mat-flat-button
+          (click)="dialogRef.close()"
+          [disabled]="userForm.pristine"
+          *ngIf="this.data && this.data.accountInfo"
+          class="border-solid border-primary-500 text-primary-500 mr-1"
+        >
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+        <button
+          mat-flat-button
+          (click)="clear()"
+          [disabled]="userForm.pristine"
+          *ngIf="!(this.data && this.data.accountInfo)"
+          class="border-solid border-primary-500 text-primary-500 mr-1"
+        >
+          <span class="ml-2 mr-1">Clear</span>
+        </button>
+        <button
+          mat-flat-button
+          [color]="'primary'"
+          (click)="addUser()"
+          [disabled]="
+            userForm.invalid || userForm.pristine || userActionLoading
+          "
+        >
+          <span class="ml-2 mr-1">{{
+            this.data && this.data.accountInfo ? "Update" : "Save"
+          }}</span>
+          <mat-progress-spinner
+            *ngIf="userActionLoading"
+            [diameter]="24"
+            [mode]="'indeterminate'"
+          ></mat-progress-spinner>
+        </button>
+      </div>
+    </div>
+  </footer>
+</div>

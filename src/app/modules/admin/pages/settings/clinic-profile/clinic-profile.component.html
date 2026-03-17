@@ -1,0 +1,269 @@
+  <div 
+    class="clinic-profile sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
+  >
+    <div class="relative flex pt-9 px-6 md:px-8">
+      <div class="text-4xl font-extrabold tracking-tight lg:ml-0 sm:ml-10 md:ml-10">Profile</div>
+    </div>
+       <div class="w-full">
+            <div
+              class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-8 sm:mt-10 px-12"
+            >
+              <!-- <div
+                class="flex flex-col items-center justify-center rounded-lg cursor-pointer border-2 border-gray-300 border-dashed hover:bg-hover transition-colors duration-150 ease-in-out"
+                (click)="addSubClinic()"
+              >
+                <mat-icon
+                  class="icon-size-12 text-hint"
+                  [svgIcon]="'heroicons_outline:plus'"
+                ></mat-icon>
+                <div class="mt-4 text-2xl text-blue-800 font-medium">
+                  Add Clinic \ Hospital
+                </div>
+              </div> -->
+              <ng-container *ngIf="accountInfo$ | async as accountInfo">
+                <div
+                  class="flex flex-col shadow bg-gray-100 rounded-2xl overflow-hidden bg-card border-2 border-gray-300 border-dashed hover:bg-hover transition-colors duration-150 ease-in-out"
+                >
+                  <div class="flex flex-col items-center pb-0 p-6">
+                    <div class="flex items-center justify-between  rounded-full">
+                      <img
+                        [src]="
+                          photo ? photo : 'assets/images/avatars/img_avatar.png'
+                        "
+                        alt="Hospital Brand"
+                        class="w-32 h-32 rounded-full"
+                      />
+                    </div>
+
+                    <div
+                      class="text-2xl font-semibold leading-tight text-center mt-8"
+                    >
+                      {{ accountInfo?.full_name }}
+                    </div>
+
+                    <div class="text-secondary leading-tight text-center mt-1">
+                      {{ accountInfo?.city }}
+                    </div>
+
+                    <div
+                      class="flex items-center leading-5 text-md text-secondary mt-3"
+                    >
+                      <mat-icon
+                        class="icon-size-5 text-hint"
+                        [svgIcon]="'heroicons_solid:clock'"
+                      ></mat-icon>
+                      <div class="ml-1.5">
+                        {{ accountInfo?.created_on | date: "longDate" }}
+                      </div>
+                    </div>
+                    <div class="w-full h-1 mt-6 border-t-2"></div>
+
+                    <div class="text-end">
+                      <a
+                        mat-button=""
+                        class="mat-focus-indicator px-3 mr-1 mat-button mat-button-base mat-primary"
+                        aria-disabled="false"
+                        (click)="editHospitalLicense(accountInfo)"
+                        ><span class="mat-button-wrapper"> Edit </span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+
+              <ng-container *ngIf="subClinic$ | async as subClinics">
+                <div
+                  class="flex flex-col shadow rounded-2xl overflow-hidden bg-card"
+                  *ngFor="let clinic of subClinics"
+                >
+                  <div class="flex flex-col items-center pb-0 p-6">
+                    <div class="flex items-center justify-between">
+                      <img
+                        [src]="
+                          clinic.photo_folderpath && clinic.photo_filename
+                            ? host +
+                              clinic.photo_folderpath +
+                              '/' +
+                              clinic.photo_filename
+                            : 'assets/images/avatars/img_avatar.png'
+                        "
+                        alt="Hospital Brand"
+                        class="w-32 h-32 rounded-full"
+                      />
+                    </div>
+
+                    <div
+                      class="text-2xl font-semibold leading-tight text-center mt-8"
+                    >
+                      {{ clinic.clinic_name }}
+                    </div>
+
+                    <div class="text-secondary leading-tight text-center mt-1">
+                      {{ clinic.city }}
+                    </div>
+
+                    <div
+                      class="flex items-center leading-5 text-md text-secondary mt-3"
+                    >
+                      <mat-icon
+                        class="icon-size-5 text-hint"
+                        [svgIcon]="'heroicons_solid:clock'"
+                      ></mat-icon>
+                      <div class="ml-1.5">
+                        {{ clinic.created_On | date: "longDate" }}
+                      </div>
+                    </div>
+                    <div class="w-full h-1 mt-6 border-t-2"></div>
+
+                    <div class="text-end">
+                      <a
+                        mat-button=""
+                        class="mat-focus-indicator px-3 mr-1 mat-button mat-button-base mat-primary"
+                        aria-disabled="false"
+                        (click)="addSubClinic(clinic)"
+                        ><span class="mat-button-wrapper"> Edit </span>
+                      </a>
+                      <a
+                        mat-button=""
+                        class="mat-focus-indicator px-3 mat-button mat-button-base text-red-500"
+                        aria-disabled="false"
+                        (click)="deleteClinic(clinic)"
+                        ><span class="mat-button-wrapper"> Delete </span>
+                      </a>
+                    </div>
+                  </div>
+                </div>
+              </ng-container>
+            </div>
+          </div>
+        
+      <!-- <mat-tab class="clinic-profile-tab" label="Custom Patient Id">
+        <ng-template matTabContent class="content">
+          <settings-patientId></settings-patientId>
+        </ng-template>
+      </mat-tab>
+      <mat-tab class="clinic-profile-tab" label="Prescription">
+        <ng-template matTabContent class="content">
+          <form>
+            <div class="grid sm:grid-cols-4 gap-6 w-full mt-8 px-12">
+              <div class="sm:col-span-4">
+                <mat-grid-list cols="2">
+                  <mat-grid-tile
+                    ><mat-label>Header Image: </mat-label></mat-grid-tile
+                  >
+                 
+                </mat-grid-list>
+
+                <div class="mt-2 ">
+                  <label
+                    class="no-border hoverable header-size"
+                    for="fileInput"
+                    (mouseenter)="onMouseEnter()"
+                  >
+                    <img class="border-0" [src]="header ? header : 'assets/images/avatars/white-bg.png'"  />
+
+                    <div class="background"></div>
+                    <mat-grid-list cols="2">
+                      <mat-grid-tile
+                        ><mat-label
+                          >i.e: width:800px, Height: 144px; File
+                          Size: 50kb</mat-label
+                        ></mat-grid-tile
+                      >
+                      <mat-grid-tile
+                        ><div
+                          (mouseenter)="onMouseEnter()"
+                          class="flex justify-center"
+                        >
+                          <div class="absolute"></div>
+                          <div
+                            class="bg-gy mt-2 py-0.5 px-3 rounded-full text-sm font-semibold text-pink-800 bg-gray-100 dark:text-pink-50 dark:bg-gray-500 ng-star-inserted"
+                          >
+                            Update Image
+                          </div>
+                          <div class="flex items-center"></div>
+                        </div>
+                      </mat-grid-tile>
+                    </mat-grid-list>
+                  </label>
+
+                  <br />
+                  <input
+                    id="fileInput"
+                    type="file"
+                    (change)="onSelectFile($event)"
+                  />
+                  <div class="delete-trash"></div>
+                </div>
+              </div>
+              <div class="sm:col-span-4 mt-4">
+                <mat-grid-list cols="2">
+                  <mat-grid-tile
+                    ><mat-label>Footer Upload: </mat-label></mat-grid-tile
+                  >
+                 
+                </mat-grid-list>
+
+                <mat-label></mat-label>
+                <div class="mt-2">
+                  <label
+                    class="no-border hoverable header-size"
+                    for="footerFileInput"
+                    (mouseenter)="onFooterSelectFile()"
+                  >
+                    <img class="border-0" [src]="footer ? footer : 'assets/images/avatars/white-bg.png'" />
+
+                    <div class="background"></div>
+                    <mat-grid-list cols="2">
+                      <mat-grid-tile
+                        ><mat-label
+                          >i.e: width:800px, Height: 72px; File Size:
+                          50kb</mat-label
+                        ></mat-grid-tile
+                      >
+                      <mat-grid-tile>
+                        <div
+                          (mouseenter)="onFooterSelectFile()"
+                          class="flex justify-center"
+                        >
+                          <div class="absolute"></div>
+                          <div
+                            class="mt-2 bg-gy py-0.5 px-3 rounded-full text-sm font-semibold text-pink-800 bg-gray-100 dark:text-pink-50 dark:bg-gray-500 ng-star-inserted"
+                          >
+                            Update Image
+                          </div>
+                          <div class="flex items-center">
+
+                          </div>
+                        </div>
+                      </mat-grid-tile>
+                    </mat-grid-list>
+                  </label>
+
+                  <br />
+                  <input
+                    id="footerFileInput"
+                    type="file"
+                    (change)="onFooterSelectFile($event)"
+                  />
+                  <div class="delete-trash"></div>
+                </div>
+              </div>
+            </div>
+            <div class="flex items-center justify-end mt-10">
+              <button mat-stroked-button type="button">Clear</button>
+              <button
+                class="ml-4"
+                mat-flat-button
+                type="button"
+                [color]="'primary'"
+                (click)="saveHeaderFooter()"
+              >
+                Save
+              </button>
+            </div>
+          </form>
+        </ng-template>
+      </mat-tab> -->
+   
+  </div>

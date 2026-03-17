@@ -1,0 +1,104 @@
+<div class="h-screen flex flex-col">
+    <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+        <div class="text-2xl font-semibold tracking-tight">{{this.data && this.data.service ? 'Update' : 'Add'}} Service</div>
+        <button
+            class="ml-auto"
+            mat-icon-button
+            [matTooltip]="'Close'"
+            (click)="dialogRef.close()">
+            <mat-icon
+                class="text-current"
+                [svgIcon]="'heroicons_outline:x'"></mat-icon>
+        </button>
+    </div>
+
+    <div class="p-6 mb-auto overflow-y-auto">
+        <form [formGroup]="serviceForm">
+            <div *ngIf="type !== 'IP'">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Service name</mat-label>
+
+                    <mat-icon *ngIf="type=='lab'" svgIcon="heroicons_outline:search"></mat-icon>
+                    <input matInput [placeholder]="'Search / Enter service name'" [formControlName]="'service'"
+                        [matAutocomplete]="auto" (input)="type=='lab' && searchDrugsTerm($event)" />
+                    <button *ngIf="isSampleExcists " matSuffix mat-icon-button aria-label="Clear" (click)="clearReports()"
+                    >
+                        <mat-icon>close</mat-icon>
+                    </button>
+                   
+                    
+                    <mat-autocomplete #auto="matAutocomplete">
+                        <mat-option class="py-0 px-6 text-md pointer-events-none text-secondary bg-transparent"
+                            *ngIf="(filteredOptions$ | async)?.length == 0">
+                            No results found!
+                        </mat-option>
+                        <mat-option *ngFor="let option of filteredOptions$ | async" [id]="option.icdCodeId"
+                            [value]="option.hospital_test_name" (onSelectionChange)="setActivity(option)">
+                            {{option.hospital_test_name}}
+                        </mat-option>
+                    </mat-autocomplete>
+                </mat-form-field>
+            </div>
+            <!-- <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                            <mat-label>Last Name</mat-label>
+                            <input matInput [placeholder]="'Last Name'" [formControlName]="'lastName'">
+                        </mat-form-field>
+                    </div> -->
+            <!-- <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                            <mat-label>Clinic / Hospitals</mat-label>
+                            <mat-select [formControlName]="'clinicId'" placeholder="Select">
+                                <ng-container *ngFor="let data of hospitals">
+                                    <mat-option [value]="data.clinicid">{{
+                                        data.clinic_name
+                                        }}</mat-option>
+                                </ng-container>
+                            </mat-select>
+                        </mat-form-field>
+                    </div> -->
+                    <div class="mt-4" *ngIf="type === 'IP'">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                            <mat-label>Service name</mat-label>
+                            <input matInput type="text" [placeholder]="'Enter service name'" [formControlName]="'service'" />
+                        </mat-form-field>
+                    </div>
+                    <div class="mt-4">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                            <mat-label>Price</mat-label>
+                            <input matInput type="number" [placeholder]="'Enter'" [formControlName]="'fee'" />
+                        </mat-form-field>
+                    </div>
+                    
+                    <div class="mt-4" *ngIf="type === 'IP'">
+                        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                            <mat-label>Description</mat-label>
+                            <input matInput type="text" [placeholder]="'Description'" [formControlName]="'description'" />
+                        </mat-form-field>
+                    </div>
+        
+        </form>
+    </div>
+
+    <footer class="my-4 mx-4">
+        <div class="flex">
+            <div class="flex ml-auto gap-2">
+                <button  mat-flat-button (click)="dialogRef.close()" [disabled]="serviceForm.pristine" *ngIf="data && data.service"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+                    <span class="ml-2 mr-1">Cancel</span>
+                </button>
+                <button  mat-flat-button (click)="clear()" [disabled]="serviceForm.pristine"  *ngIf="!(data && data.service) "  class="border-solid border-primary-500 text-primary-500 mr-1" >
+                    <span class="ml-2 mr-1">Clear</span>
+                </button>
+                <button mat-flat-button [color]="'primary'"   (click)="saveDoctorSchedule()" [disabled]=" serviceForm.pristine || serviceForm.invalid || isLoadingSpinner">
+                    <span class="ml-2 mr-1">{{data && data.service ? 'Update' : 'Save'}}</span>
+                    <mat-progress-spinner
+          *ngIf="isLoadingSpinner"
+           [diameter]="24"
+           [mode]="'indeterminate'"></mat-progress-spinner>
+       
+                    
+                </button>
+            </div>
+          </div>          
+    </footer>
+</div>

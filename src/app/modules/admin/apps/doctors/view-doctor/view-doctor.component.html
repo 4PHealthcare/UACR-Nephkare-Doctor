@@ -1,0 +1,418 @@
+<div class="flex flex-col w-full">
+    <!-- View mode -->
+    <ng-container *ngIf="!editMode">
+      <!-- Header -->
+      <div
+        class="relative w-full h-40 sm:h-48 px-8 sm:px-12 dark dark:bg-accent-700"
+      >
+        <!-- Close button -->
+        <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+          <button mat-icon-button [matTooltip]="'Close'" (click)="dialogRef.close()">
+            <mat-icon
+              class="text-white"
+              [svgIcon]="'heroicons_outline:x'"
+            ></mat-icon>
+          </button>
+        </div>
+      </div>
+  
+      <!-- Contact -->
+      <div
+        class="
+          relative
+          flex flex-col flex-auto
+          items-center
+          p-6
+          pt-0
+          sm:p-12 sm:pt-0
+        "
+      >
+        <div class="w-full max-w-3xl">
+          <!-- Avatar and actions -->
+          <div class="flex flex-auto items-end -mt-16">
+            <!-- Avatar -->
+            <div
+              class="
+                flex
+                items-center
+                justify-center
+                w-32
+                h-32
+                rounded-full
+                overflow-hidden
+                ring-4 ring-bg-card
+              "
+            >
+              <img
+                class="object-cover w-full h-full"
+                *ngIf="doctor.avatar"
+                [src]="doctor.avatar"
+              />
+              <div
+                class="
+                  flex
+                  items-center
+                  justify-center
+                  w-full
+                  h-full
+                  rounded
+                  overflow-hidden
+                  uppercase
+                  text-8xl
+                  font-bold
+                  leading-none
+                  bg-gray-200
+                  text-gray-600
+                  dark:bg-gray-700 dark:text-gray-200
+                "
+                *ngIf="!doctor.avatar"
+              >
+                {{ doctor.name.charAt(0) }}
+              </div>
+            </div>
+            <!-- Actions -->
+            <div class="flex items-center ml-auto mb-1">
+              <button mat-stroked-button (click)="toggleEditMode(true)">
+                <mat-icon
+                  class="icon-size-5"
+                  [svgIcon]="'heroicons_solid:pencil-alt'"
+                ></mat-icon>
+                <span class="ml-2">Edit</span>
+              </button>
+            </div>
+          </div>
+  
+          <div class="flex flex-auto items-end mt-3">
+            <!-- Avatar -->
+            <div class="flex items-center justify-center overflow-hidden">
+              <div class="text-4xl font-bold truncate">{{ doctor.name }}</div>
+            </div>
+            <!-- Actions -->
+  
+            <div class="flex items-center ml-auto mb-1">
+              <div class="flex-0 w-4 h-4 rounded-full bg-green-800"></div>
+              <span class="ml-1 text-green-800 capitalize">{{
+                doctor.status
+              }}</span>
+            </div>
+          </div>
+  
+          <!-- Role -->
+          <ng-container>
+            <div class="flex flex-wrap items-center mt-2">
+              <!-- Tag -->
+              <ng-container>
+                <div
+                  class="
+                    flex
+                    items-center
+                    justify-center
+                    py-1
+                    px-3
+                    mr-3
+                    mb-3
+                    rounded-full
+                    leading-normal
+                    text-gray-500
+                    bg-gray-100
+                    dark:text-gray-300 dark:bg-gray-700
+                  "
+                >
+                  <span class="text-sm font-medium whitespace-nowrap capitalize"
+                    >{{ doctor.role }}
+                  </span>
+                </div>
+              </ng-container>
+            </div>
+          </ng-container>
+  
+          <div class="flex flex-col mt-4 pt-6 space-y-8">
+            <!-- Phone -->
+            <ng-container *ngIf="doctor.mobileNumber">
+              <div class="flex">
+                <mat-icon [svgIcon]="'heroicons_outline:phone'"></mat-icon>
+                <div class="min-w-0 ml-6 space-y-1">
+                  <ng-container>
+                    <div class="flex items-center leading-6">
+                      <div
+                        class="hidden sm:flex w-6 h-4 overflow-hidden"
+                        [matTooltip]="getCountryByIso(doctor.country).name"
+                        [style.background]="
+                          'url(\'/assets/images/apps/contacts/flags.png\') no-repeat 0 0'
+                        "
+                        [style.backgroundSize]="'24px 3876px'"
+                        [style.backgroundPosition]="
+                          getCountryByIso(doctor.country).flagImagePos
+                        "
+                      ></div>
+  
+                      <div class="ml-2.5 font-mono">
+                        +91 {{ doctor.mobileNumber }}
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+  
+            <!-- Email -->
+            <ng-container *ngIf="doctor.email">
+              <div class="flex">
+                <mat-icon [svgIcon]="'heroicons_outline:mail'"></mat-icon>
+                <div class="min-w-0 ml-6 space-y-1">
+                  <ng-container>
+                    <div class="flex items-center leading-6">
+                      <div *ngIf="doctor.email">
+                        <span class="leading-6">{{ doctor.email }}</span>
+                      </div>
+                    </div>
+                  </ng-container>
+                </div>
+              </div>
+            </ng-container>
+  
+            <!-- Address -->
+            <ng-container *ngIf="doctor.address">
+              <div class="flex sm:items-center">
+                <mat-icon
+                  [svgIcon]="'heroicons_outline:location-marker'"
+                ></mat-icon>
+                <div class="ml-6 leading-6">{{ doctor.address }}</div>
+              </div>
+            </ng-container>
+  
+            <!-- Date -->
+            <ng-container *ngIf="doctor.date">
+              <div class="flex sm:items-center">
+                <ion-icon name="calendar-outline"></ion-icon>
+                <mat-icon [svgIcon]="'heroicons_outline:calendar'"></mat-icon>
+                <div class="ml-6 leading-6">
+                  {{ doctor.date | date: "longDate" }}
+                </div>
+              </div>
+            </ng-container>
+          </div>
+        </div>
+      </div>
+    </ng-container>
+  
+    <!-- Edit mode -->
+  
+    <ng-container *ngIf="editMode">
+      <!-- Header -->
+      <div
+        class="relative w-full h-40 sm:h-48 px-8 sm:px-12 dark dark:bg-accent-700"
+      >
+        <!-- Close button -->
+        <div class="flex items-center justify-end w-full max-w-3xl mx-auto pt-6">
+          <button mat-icon-button [matTooltip]="'Close'" (click)="dialogRef.close()">
+            <mat-icon
+              class="text-white"
+              [svgIcon]="'heroicons_outline:x'"
+            ></mat-icon>
+          </button>
+        </div>
+      </div>
+  
+      <!-- Contact form -->
+      <div class="relative flex flex-col flex-auto items-center px-6 sm:px-12">
+        <div class="w-full max-w-3xl">
+          <form [formGroup]="doctorForm">
+            <!-- Avatar -->
+            <div class="flex flex-auto items-end -mt-16">
+              <div
+                class="
+                  relative
+                  flex
+                  items-center
+                  justify-center
+                  w-32
+                  h-32
+                  rounded-full
+                  overflow-hidden
+                  ring-4 ring-bg-card
+                "
+              >
+                <!-- Upload / Remove avatar -->
+                <div class="absolute inset-0 bg-opacity-50 z-10"></div>
+  
+                <!-- Image/Letter -->
+                <img
+                  class="object-cover w-full h-full"
+                  *ngIf="doctor.avatar"
+                  [src]="doctor.avatar"
+                />
+                <div
+                  class="
+                    flex
+                    items-center
+                    justify-center
+                    w-full
+                    h-full
+                    rounded
+                    overflow-hidden
+                    uppercase
+                    text-8xl
+                    font-bold
+                    leading-none
+                    bg-gray-200
+                    text-gray-600
+                    dark:bg-gray-700 dark:text-gray-200
+                  "
+                  *ngIf="!doctor.avatar"
+                >
+                  {{ doctor.name.charAt(0) }}
+                </div>
+              </div>
+            </div>
+  
+            <!-- Name -->
+            <div class="mt-8">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Name</mat-label>
+                <mat-icon
+                  matPrefix
+                  class="hidden sm:flex icon-size-5"
+                  [svgIcon]="'heroicons_solid:user-circle'"
+                ></mat-icon>
+                <input
+                  matInput
+                  [formControlName]="'name'"
+                  [placeholder]="'Name'"
+                  [spellcheck]="false"
+                />
+              </mat-form-field>
+            </div>
+  
+            <!-- Title -->
+            <div class="mt-8">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Role</mat-label>
+                <mat-icon
+                  matPrefix
+                  class="hidden sm:flex icon-size-5"
+                  [svgIcon]="'heroicons_solid:briefcase'"
+                ></mat-icon>
+                <select
+                  matNativeControl
+                  [formControlName]="'role'"
+                  id="mySelectId"
+                >
+                  <option value="researcher" selected>Researcher</option>
+                </select>
+  
+                <!-- <input
+                  matInput
+                  [formControlName]="'role'"
+                  [placeholder]="'Job title'"
+                /> -->
+              </mat-form-field>
+            </div>
+  
+            <!-- Phone numbers -->
+            <div class="mt-8">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Phone</mat-label>
+                <input
+                  matInput
+                  [formControlName]="'mobileNumber'"
+                  [placeholder]="'Phone'"
+                />
+                <span matPrefix>+91&nbsp;</span>
+              </mat-form-field>
+            </div>
+  
+            <!-- Emails -->
+            <div class="mt-8">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Email</mat-label>
+                <mat-icon
+                  matPrefix
+                  class="hidden sm:flex icon-size-5"
+                  [svgIcon]="'heroicons_solid:mail'"
+                ></mat-icon>
+                <input
+                  matInput
+                  [formControlName]="'email'"
+                  [placeholder]="'Email address'"
+                  [spellcheck]="false"
+                />
+              </mat-form-field>
+            </div>
+  
+            <!-- Birthday -->
+            <!-- <div class="mt-8">
+              <mat-form-field class="fuse-mat-no-subscript w-full">
+                <mat-label>Reg. Date</mat-label>
+                <mat-icon
+                  matPrefix
+                  class="hidden sm:flex icon-size-5"
+                  [svgIcon]="'heroicons_solid:calendar'"
+                ></mat-icon>
+                <input
+                  matInput
+                  [matDatepicker]="birthdayDatepicker"
+                  [formControlName]="'date'"
+                  [placeholder]="'Birthday'"
+                />
+                <mat-datepicker-toggle matSuffix [for]="birthdayDatepicker">
+                </mat-datepicker-toggle>
+                <mat-datepicker #birthdayDatepicker></mat-datepicker>
+              </mat-form-field>
+            </div> -->
+  
+            <!-- Actions -->
+            <div
+              class="
+                flex
+                items-center
+                mt-10
+                -mx-6
+                sm:-mx-12
+                py-4
+                pr-4
+                pl-1
+                sm:pr-12 sm:pl-7
+                border-t
+                bg-gray-50
+                dark:bg-transparent
+              "
+            >
+              <!-- Delete -->
+              <!-- <button
+                mat-button
+                [color]="'warn'"
+                [matTooltip]="'Delete'"
+                (click)="dialogRef.close()"
+  
+              >
+                Delete
+              </button> -->
+              <!-- Cancel -->
+              <button
+                class="ml-auto"
+                mat-button
+                [matTooltip]="'Cancel'"
+                (click)="toggleEditMode(false)"
+              >
+                Cancel
+              </button>
+              <!-- Save -->
+              <button
+                class="ml-2"
+                mat-flat-button
+                [color]="'primary'"
+                [disabled]="doctorForm.invalid"
+                [matTooltip]="'Save'"
+                (click)="updateUser()"
+  
+              >
+                Update
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </ng-container>
+  </div>
+  

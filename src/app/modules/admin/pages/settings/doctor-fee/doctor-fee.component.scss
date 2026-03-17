@@ -1,0 +1,29 @@
+mat-table {
+    box-shadow: none !important;
+    mat-header-row{
+      min-height: 51px !important;
+      background-color: rgba(var(--fuse-bg-card-rgb), var(--tw-bg-opacity)) !important;
+    }
+    mat-header-cell {
+      font-weight: 600 !important;
+      font-size: 0.8125rem !important;
+      padding-top: 1rem !important;
+      padding-bottom: 1rem !important;
+      --tw-bg-opacity: 1 !important;
+      background-color: rgba(248, 250, 252, var(--tw-bg-opacity)) !important;
+    }
+  }
+.mat-column-from_date {
+  flex: 0 0 33% !important;
+  width: 33% !important;
+}
+.mat-column-to_date {
+  flex: 0 0 33% !important;
+  width: 33% !important;
+}
+.mat-column-action {
+  flex: 0 0 33% !important;
+  width: 33% !important;
+}
+
+

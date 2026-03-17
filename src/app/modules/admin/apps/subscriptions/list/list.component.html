@@ -1,0 +1,171 @@
+<div class="absolute inset-0 flex flex-col min-w-0 overflow-y-auto" cdkScrollable>
+  <!-- Header -->
+  <div class="relative flex-0 py-8 px-4 sm:p-16 overflow-hidden bg-gray-800 dark">
+    <!-- Background - @formatter:off -->
+    <!-- Rings -->
+    <svg class="absolute inset-0 pointer-events-none" viewBox="0 0 960 540" width="100%" height="100%"
+      preserveAspectRatio="xMidYMax slice" xmlns="http://www.w3.org/2000/svg">
+      <g class="text-gray-700 opacity-25" fill="none" stroke="currentColor" stroke-width="100">
+        <circle r="234" cx="196" cy="23"></circle>
+        <circle r="234" cx="790" cy="491"></circle>
+      </g>
+    </svg>
+    <!-- @formatter:on -->
+    <div class="z-10 relative flex flex-col">
+      <h2 class="text-xl font-semibold">Service / Subscription Management</h2>
+    </div>
+  </div>
+
+  <!-- Main -->
+  <div class="flex flex-auto p-6 sm:p-10">
+    <div class="flex flex-col flex-auto w-full max-w-xs sm:max-w-5xl mx-auto">
+      <!-- Filters -->
+      <div class="
+          flex flex-col
+          sm:flex-row
+          items-center
+          w-full
+          max-w-xs
+          sm:max-w-none
+        ">
+        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-96">
+          <mat-select [value]="selectedServiceCategory">
+            <ng-container *ngFor="let service of serviceList$ | async; trackBy: trackByFn">
+              <mat-option [value]="service.masterdata_id">{{
+                service.data_name
+                }}</mat-option>
+            </ng-container>
+          </mat-select>
+        </mat-form-field>
+        <mat-form-field class="fuse-mat-no-subscript w-full sm:w-96 mt-4 sm:mt-0 sm:ml-4" [floatLabel]="'always'">
+          <mat-icon matPrefix class="icon-size-5" [svgIcon]="'heroicons_solid:search'"></mat-icon>
+          <input [(ngModel)]="searchService" placeholder="Search for Service" matInput #query />
+        </mat-form-field>
+        <button class="ml-4" mat-flat-button [color]="'primary'" (click)="addNewService()" disabled>
+          <mat-icon [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+          <span class="ml-2 mr-1">Add New Service</span>
+        </button>
+      </div>
+      <!-- Courses -->
+        <div class="
+            grid grid-cols-1
+            sm:grid-cols-2
+            lg:grid-cols-4
+            gap-8
+            mt-8
+            sm:mt-10
+          ">
+          <div class="
+              flex flex-col
+              items-center
+              justify-center
+              rounded-lg
+              cursor-pointer
+              border-2 border-gray-300 border-dashed
+              hover:bg-hover
+              transition-colors
+              duration-150
+              ease-in-out
+            " (click)="addNewService()">
+            <mat-icon class="icon-size-12 text-hint" [svgIcon]="'heroicons_outline:plus'"></mat-icon>
+            <div class="mt-4 text-2xl text-blue-800 font-medium">
+              Add New Service
+            </div>
+          </div>
+          <ng-container *ngIf="(subsriptionsList$ | async)?.length; else noServices">
+          <ng-container *ngFor="let data of (subsriptionsList$ | async) | searchSubscription : searchService">
+            <!-- Course -->
+            <div class="
+                flex flex-col
+                h-80
+                shadow
+                rounded-2xl
+                overflow-hidden
+                bg-card
+              ">
+              <div class="flex flex-col p-6">
+                <div class="flex items-center justify-between">
+                  <div
+                    class="py-0.5 px-3 rounded-full text-sm font-semibold text-blue-800 bg-blue-100 dark:text-blue-50 dark:bg-blue-500">
+                    {{ data.planname }}</div>
+                  <div class="flex items-center">
+                    <button mat-icon-button [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+                      <mat-icon>more_vert</mat-icon>
+                    </button>
+                    <mat-menu #menu="matMenu">
+                      <button mat-menu-item (click)="editService(data)">
+                        <mat-icon>edit</mat-icon>
+                        <span>Edit</span>
+                      </button>
+                      <button mat-menu-item (click)="deleteService(data)">
+                        <mat-icon>delete</mat-icon>
+                        <span>Delete</span>
+                      </button>
+                    </mat-menu>
+                  </div>
+                </div>
+                <!-- Course title & description -->
+                <div class="mt-4 text-lg font-medium">{{ data.title }}</div>
+                <div class="mt-0.5 line-clamp-2 text-secondary">
+                  {{ data.description }}
+                </div>
+                <div class="w-12 h-1 my-6 border-t-2"></div>
+                <!-- Course time -->
+                <div class="flex items-center leading-5 text-md text-secondary">
+                  <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:clock'"></mat-icon>
+                  <div class="ml-1.5">{{ data.duration_in_months }} Months</div>
+                </div>
+
+                <div class="
+                    flex
+                    mt-2
+                    items-center
+                    leading-5
+                    text-md text-secondary
+                  ">
+                  <mat-icon class="icon-size-5 text-hint" [svgIcon]="'heroicons_solid:currency-rupee'"></mat-icon>
+                  <div class="ml-1.5">{{ data.price }}</div>
+                </div>
+              </div>
+              <!-- Footer -->
+              <div class="flex flex-col w-full mt-auto">
+                <!-- Course progress -->
+
+                <!-- Course launch button -->
+                <div class="px-6 py-4 text-right bg-gray-50 dark:bg-transparent">
+                  <button mat-stroked-button [routerLink]="'/apps/tasks'" [queryParams]="{ id: data.subscription_id }" class="hover:text-blue-800 w-full">
+                    <span class="inline-flex items-center">
+                      <!-- Started -->
+                      <ng-container *ngIf="data.offer_count != 0; else noOffer">
+                        <span class="font-semibold text-blue-800 mr-1">{{data.offer_count}}</span>
+                        <span>Offers linked</span>
+                      </ng-container>
+                      <ng-template #noOffer>
+                        <span class="font-semibold text-blue-800 mr-1">Add Offer</span>
+                      </ng-template>
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </ng-container>
+          </ng-container>
+        </div>
+      <!-- No courses -->
+      <ng-template #noServices>
+        <div class="
+            flex flex-auto flex-col
+            items-center
+            justify-center
+            bg-gray-100
+            dark:bg-transparent
+          ">
+          <mat-icon class="icon-size-20" [svgIcon]="'iconsmind:file_search'"></mat-icon>
+          <div class="mt-6 text-2xl font-semibold tracking-tight text-secondary">
+            No services found!
+          </div>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</div>

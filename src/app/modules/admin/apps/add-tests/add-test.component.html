@@ -1,0 +1,237 @@
+<div
+  class="sm:absolute sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
+>
+  <div
+    class="sm:inset-0 flex flex-col flex-auto min-w-0 sm:overflow-hidden bg-card dark:bg-transparent"
+  > 
+    <table class="mr-8 mt-5">
+      <tr class="">
+        <td class="pl-9 pb-5">
+          <mat-label class="pl-9 pt-5" ><b>Clintel Master Test List</b></mat-label>
+            <mat-form-field
+            class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-3/4 ml-5 pt-5"
+            floatLabel="always"
+          >
+            <mat-icon
+              class="icon-size-5"
+              matPrefix
+              [svgIcon]="'heroicons_solid:search'"
+            ></mat-icon> 
+            <input
+              [(ngModel)]="masterSearch"
+              matInput
+              (keyup)="applyFilter($event.target.value)"
+              [autocomplete]="'off'"
+              [placeholder]="'Search for Test Name'"
+            /> </mat-form-field>
+          <button mat-flat-button [color]="'primary'" (click)="addNewTest()" class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded ml-4 mr-1">
+            Add Test
+          </button>
+        </td>
+        
+        <td class="pl-9 pb-5">
+          <mat-label class="pl-9 pt-5"><b>Organization Master Test List</b> </mat-label>
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript fuse-mat-rounded w-11/12 ml-5 pt-5"  floatLabel="always">
+            <mat-icon
+              class="icon-size-5"
+              matPrefix
+              [svgIcon]="'heroicons_solid:search'"
+            ></mat-icon> 
+            <input
+              matInput
+              (keyup)="filterOrganizationMasterTestList($event.target.value)"
+              [autocomplete]="'off'"
+              [placeholder]="'Search for Test Name'"
+            /> </mat-form-field>
+          
+        </td>
+      </tr>
+      <tr class="w-full"> 
+        <td class="w-6/12">
+          <div class="example-container mat-elevation-z8">
+            <mat-table #table [dataSource]="dataSource" 
+            (scroll)="onScrollDown($event)" 
+           >
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <mat-header-cell *matHeaderCellDef>
+                  <!-- <mat-checkbox
+                    (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"
+                  >
+                  </mat-checkbox> -->
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <!-- <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? selection.toggle(row) : null"
+                    [checked]="selection.isSelected(row)"
+                  >
+                  </mat-checkbox> -->
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="name">
+                <mat-header-cell *matHeaderCellDef> Name </mat-header-cell>
+
+                <mat-cell *matCellDef="let element">
+                  {{ element.test_name }}
+                </mat-cell>
+              </ng-container>
+
+              <ng-container matColumnDef="unit">
+                <mat-header-cell *matHeaderCellDef class="">
+                  Unit
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.unit ? element.unit : '--'}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="rangetext">
+                <mat-header-cell *matHeaderCellDef class="">
+                  Range text
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.range ? element.range : '--'}} </mat-cell>
+              </ng-container>
+
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="symbol">
+                <mat-header-cell *matHeaderCellDef>
+                  <!-- <mat-icon
+                    class="cursor-pointer text-blue-500"
+                    (click)="transferSelectedRows()"
+                    svgIcon="heroicons_outline:arrow-right"
+                  ></mat-icon> -->
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element">
+                  <!-- <button mat-icon-button  class="bg-transparent" [disabled]="element.loadingAction" (click)="addNewTest(element)" > -->
+                    <mat-icon
+                    class="cursor-pointer"
+                    [disabled]="element.loadingAction" (click)="addNewTest(element)"
+                    svgIcon="heroicons_outline:pencil"
+                  ></mat-icon>
+                  <!-- </button> -->
+
+                  <!-- <button mat-icon-button (click)="transferSelectedRows(element)" class="bg-transparent" [disabled]="element.loadingAction"> -->
+                    <mat-icon
+                    class="cursor-pointer text-blue-500  ml-3"
+                    (click)="transferSelectedRows(element)" [disabled]="element.loadingAction"
+                    svgIcon="heroicons_outline:arrow-right"
+                  ></mat-icon>
+                  <!-- </button> -->
+            
+                
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row
+                *matHeaderRowDef="displayedColumns"
+              ></mat-header-row>
+              <tr class="mat-row font-medium py-10 flex items-center  justify-center w-full h-full rounded-full text-lg" *matNoDataRow>
+                <td class="text-center nodatacenter">No data</td> 
+              </tr>
+              <mat-row *matRowDef="let row; columns: displayedColumns">
+              </mat-row>
+            </mat-table>
+            <!-- <div  
+            style="display: flex; justify-content: center;  background: white;">
+           <mat-progress-spinner *ngIf="!isLoading" 
+             color="primary" 
+             mode="indeterminate">
+           </mat-progress-spinner>
+         </div> -->
+            <!-- <mat-paginator #paginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
+            </mat-paginator> -->
+          </div>
+        </td>
+
+        <td class="w-6/12">
+          <div class="example-container mat-elevation-z8">
+            <mat-table #table [dataSource]="checkedDataSource" (scroll)="onOrganizedScrollDown($event)">
+              <!-- Checkbox Column -->
+              <ng-container matColumnDef="select">
+                <mat-header-cell *matHeaderCellDef>
+                  <!-- <mat-checkbox
+                    (change)="$event ? masterCheckedToggle() : null"
+                    [checked]="
+                      checkedSelection.hasValue() && isAllCheckedSelected()
+                    "
+                    [indeterminate]="
+                      checkedSelection.hasValue() && !isAllCheckedSelected()
+                    "
+                  >
+                  </mat-checkbox> -->
+                </mat-header-cell>
+                <mat-cell *matCellDef="let row">
+                  <!-- <mat-checkbox
+                    (click)="$event.stopPropagation()"
+                    (change)="$event ? checkedSelection.toggle(row) : null"
+                    [checked]="checkedSelection.isSelected(row)"
+                  >
+                  </mat-checkbox> -->
+                </mat-cell>
+              </ng-container>
+
+              <!-- Name Column -->
+              <ng-container matColumnDef="hname">
+                <mat-header-cell *matHeaderCellDef>
+                  Name
+                 </mat-header-cell>
+
+                <mat-cell *matCellDef="let element">
+                  {{ element.hospital_test_name }}
+                </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="unit">
+                <mat-header-cell *matHeaderCellDef class="">
+                  Unit
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.unit ? element.unit : '--'}} </mat-cell>
+              </ng-container>
+              <ng-container matColumnDef="rangetext">
+                <mat-header-cell *matHeaderCellDef class="">
+                  Range text
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element"> {{element.range ? element.range : '--'}} </mat-cell>
+              </ng-container>
+
+              <!-- Symbol Column -->
+              <ng-container matColumnDef="action">
+                <mat-header-cell *matHeaderCellDef>
+                 
+                </mat-header-cell>
+                <mat-cell *matCellDef="let element" >
+                  <mat-icon
+                  (click)="openReangeTest(element)"
+                    class="cursor-pointer"
+                    svgIcon="heroicons_outline:pencil"
+                  ></mat-icon>
+
+                  <mat-icon
+                  class="cursor-pointer text-blue-500 ml-3"
+                  color="primary"
+                  (click)="removeSelectedRows(element)"
+                  svgIcon="heroicons_outline:arrow-left"
+                ></mat-icon>
+                </mat-cell>
+              </ng-container>
+
+              <mat-header-row
+                *matHeaderRowDef="seconddisplayedColumns"
+              ></mat-header-row>
+              <tr class="mat-row font-medium py-10 flex items-center  justify-center w-full h-full rounded-full text-lg" *matNoDataRow>
+                <td class="text-center nodatacenter">No data</td> 
+              </tr>
+              <mat-row *matRowDef="let row; columns: seconddisplayedColumns">
+              </mat-row>
+            </mat-table>
+            <!-- <div *ngIf="!checkedDataSource.data.length" style="display: flex; justify-content: center;">
+              No records found
+            </div> -->
+            <!-- <mat-paginator #checkedpaginator [pageSize]="10" [pageSizeOptions]="[5, 10, 20]">
+            </mat-paginator> -->
+          </div>
+        </td>
+      </tr>
+    </table>
+  </div>
+</div>

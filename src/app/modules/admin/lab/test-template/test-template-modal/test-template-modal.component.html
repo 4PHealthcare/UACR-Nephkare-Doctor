@@ -1,0 +1,234 @@
+<div class="flex flex-col h-screen">
+  <header>
+    <div
+      class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+    >
+      <div class="ml-3 text-2xl font-semibold tracking-tight">Test Template</div>
+      <!-- (click)="dismiss()" -->
+      <button class="ml-auto" mat-icon-button (click)="dismiss()">
+        <mat-icon
+          class="text-current"
+          [svgIcon]="'heroicons_outline:x'"
+        ></mat-icon>
+      </button>
+    </div>
+  </header>
+  <main class="flex-1 overflow-y-auto">
+    <form
+      [formGroup]="testGroupForm"
+      #testGroupNGForm="ngForm"
+      class="flex-auto px-6 pt-9 pb-6 md:p-8 md:pb-6 lg:pl-12 lg:pr-12 lg:pt-3 back-ground-sky-100"
+    >
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-1 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Test Group Name <span>*</span></mat-label>
+            <input
+              matInput
+              [formControlName]="'test_group_name'"
+              [placeholder]="'Enter'"
+            />
+           
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-1 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Department<span>*</span></mat-label>
+
+            <mat-select [formControlName]="'specialityid'" placeholder="Select">
+              <ng-container *ngFor="let data of specialities">
+                <mat-option [value]="data.data_name">{{
+                  data.data_name
+                }}</mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-1 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Sample Type <span>*</span></mat-label>
+            <!-- <input
+              matInput
+              [formControlName]="'sampleType'"
+              [placeholder]="'Enter'"
+            /> -->
+            <mat-select
+            [placeholder]="'Select'"
+            [formControlName]="'sampleType'"
+          >
+            <mat-option [value]="data.data_name" *ngFor="let data of specimens">{{data.data_name}}</mat-option>
+          </mat-select>
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-1 form-group">
+          <button
+            class="ml-4 mt-6"
+            mat-flat-button
+            [color]="'primary'"
+            [disabled]="testGroupForm.invalid"
+            (click)="saveTestGroupDetails()"
+            *ngIf="!editBtn"
+          >
+            <mat-icon [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+            <span class="ml-2 mr-1">{{ mode == 'edit' ? 'Update' : 'Add'}}</span>
+          </button>
+          <button
+          class="ml-4 mt-6"
+          mat-flat-button
+          [color]="'primary'"
+          [disabled]="testGroupForm.invalid"
+          (click)="enableFields()"
+          *ngIf="editBtn"
+        >
+          <mat-icon [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+          <span class="ml-2 mr-1">Edit</span>
+        </button>
+        </div>
+      </div>
+    </form>
+    <form
+      [formGroup]="testSubGroupForm"
+      #testSubGroupNGForm="ngForm"
+      class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3"
+    >
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-2 form-group">
+          <!-- <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Test Name</mat-label>
+            <mat-select [formControlName]="'specialityid'" placeholder="Select">
+              <ng-container *ngFor="let data of selectedTestServiceList">
+                <mat-option [value]="data.hospital_test_name">{{
+                  data.hospital_test_name
+                }}</mat-option>
+              </ng-container>
+            </mat-select>
+          </mat-form-field> -->
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Test Name <span>*</span></mat-label>
+          
+          <mat-icon svgIcon="heroicons_outline:search"></mat-icon>
+          <input
+            matInput
+            formControlName="test_name"
+            [placeholder]="'Search'"
+            [disabled]="testSelectedId"
+            [matAutocomplete]="auto"
+            (input)="onSearchTest($event)"
+          />
+          <button *ngIf="testSelectedId" matSuffix mat-icon-button aria-label="Clear" (click)="clearReports()">
+            <mat-icon>close</mat-icon>
+          </button>
+
+
+          <mat-autocomplete #auto="matAutocomplete">
+            <mat-option
+              *ngFor="let data of filteredOptions$ | async"
+              (onSelectionChange)="onSelectionChangeTest(data)"
+              [value]="data.hospital_test_name"
+              [ngClass]="_allowSelection(data.hospital_test_name)"
+              
+            >
+              {{ data.hospital_test_name }}
+            </mat-option>
+          </mat-autocomplete>
+        </mat-form-field>
+        </div>
+        <div class="sm:col-span-1 form-group">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Test Method</mat-label>
+            <input
+              matInput
+              [formControlName]="'test_method'"
+              [placeholder]="'Enter'"
+            />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-1 form-group">
+          <button
+            class="ml-4 mt-6"
+            [color]="'primary'"
+            mat-flat-button
+           [disabled]="!groupId || testSubGroupForm.invalid || !testSelectedId"
+            (click)="saveIndividualTestDetails()"
+          >
+            <mat-icon [svgIcon]="'heroicons_solid:plus-circle'"></mat-icon>
+            <span class="ml-2 mr-1">Add</span>
+          </button>
+        </div>
+      </div>
+    </form>
+    <ng-container>
+      <div class="grid">
+        <!-- Header -->
+        <div
+          class="temlate-list-modal-grid z-10 sticky top-0 grid gap-4 py-4 px-6 md:px-8 shadow text-md text-font-500 text-secondary bg-gray-50 dark:bg-black dark:bg-opacity-5"
+        >
+          <div class="hidden md:block items-center">Test Name</div>
+          <div class="hidden md:block items-center">Units</div>
+          <div class="hidden md:block items-center">Ref. Range</div>
+          <div class="hidden md:block items-center">Method</div>
+          <div class="hidden md:block items-center">Action</div>
+        </div>
+        <!--  *ngFor="let data of relationsList; let i = index"-->
+        <ng-container *ngIf="testByGroupList.length > 0; else noTests">
+          <ng-container *ngFor="let data of testByGroupList; let i = index">            <ng-container *ngIf="data.isActive">
+              <div
+              class="temlate-list-modal-grid grid items-center gap-4 py-3 px-6 md:px-8 border-b"
+            >
+              <div>{{data.testName}}</div>
+              <div>{{data.unit ? data.unit : '--'}}</div>
+              <div>{{data.range ? data.range : '--'}}</div>
+              <div>{{data.method ? data.method : '--'}}</div>
+              <div><button
+                class="min-w-10 min-h-7 h-7 px-2 leading-6"
+                mat-stroked-button (click)="delete(data, i)"
+              >
+                <mat-icon
+                  class="icon-size-5"
+                  [matTooltip]="'Delete'"
+                  
+                  [svgIcon]="'heroicons_solid:trash'"
+                >
+                </mat-icon>
+              </button></div>
+            </div>
+            </ng-container> 
+          </ng-container> 
+        </ng-container>
+        <ng-template #noTests >
+         <div class="p-8 sm:p-16 border-t text-4xl font-semibold tracking-tight text-center">
+          No tests
+         </div>
+        </ng-template>
+      </div>
+    </ng-container>
+  </main>
+  <footer>
+    <div class="flex items-center justify-end px-6 py-9"> 
+      <button type="submit" mat-flat-button [color]="'primary'" (click)="createTemplate()"  [disabled]="testByGroupList?.length == 0">
+        <span class="ml-2 mr-1" 
+          >{{mode=='edit'? 'Update Template' : 'Create Template' }}</span
+        >
+      </button>
+     
+    </div>
+  </footer>
+</div>

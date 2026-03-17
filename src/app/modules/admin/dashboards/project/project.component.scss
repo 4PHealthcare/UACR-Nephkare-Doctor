@@ -1,0 +1,50 @@
+.inventory-grid {
+  grid-template-columns: 20% 15% 15% 15% 15% 10%;
+  @screen sm {
+    grid-template-columns: 20% 15% 15% 15% 15% 10%;  }
+
+  @screen md {
+    grid-template-columns: 20% 15% 15% 15% 15% 10%;}
+  @screen lg {
+    grid-template-columns: 20% 15% 15% 15% 15% 10%;
+  }
+}
+.doctor-inventory-grid {
+  grid-template-columns: 20% 20% 20% 20% 15%;
+
+  @screen sm {
+    grid-template-columns: 20% 20% 20% 20% 15% ;
+  }
+
+  @screen md {
+    grid-template-columns: 20% 20% 20% 20% 15%;
+  }
+
+  @screen lg {
+    grid-template-columns: 20% 20% 20% 20% 15%;
+  }
+}
+.requested-inventory-grid{
+    grid-template-columns: 48px auto 40px;
+  
+    @screen sm {
+      grid-template-columns: 48px auto 112px 72px;
+    }
+  
+    @screen md {
+      grid-template-columns: 160px auto 112px 72px;
+    }
+  
+    @screen lg {
+      grid-template-columns: 25% 20% 20% 20% 15%;
+    }
+  }
+  .top-5px{
+    top: 5px !important;
+  }
+  .dash-select{
+    .mat-select-placeholder{
+      -webkit-text-fill-color:black !important;
+     color: black !important;
+   }
+  }

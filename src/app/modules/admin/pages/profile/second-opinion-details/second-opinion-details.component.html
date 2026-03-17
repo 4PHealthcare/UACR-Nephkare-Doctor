@@ -1,0 +1,66 @@
+<div class="flex flex-auto w-full mx-auto space-x-6">
+    <div class="grid grid-cols-4 xl:grid-cols-4 gap-4 w-full mt-1 items-baseline">
+      <div class="grid gap-8 sm:grid-flow-col xl:grid-flow-row col-span-4 items-start">
+        <div class="flex flex-col flex-auto bg-card shadow rounded-2xl overflow-hidden pb-9">
+          <div class="flex items-start justify-between m-6 mb-2 pb-2 border-b">
+            <div class="text-lg font-bold tracking-tight leading-6 truncate inline-flex">
+                Second Opinion Details
+            </div>
+            <div class="ml-2">
+                <button mat-flat-button class="bg-blue-400 text-white ml-4" (click)="open_clinical_data_modal()">
+                    <mat-icon [svgIcon]="'heroicons_outline:plus-circle'"></mat-icon><span class="ml-2 mr-1"> Clinical Data</span>
+                </button>
+            </div>
+          </div>
+          <!-- Main -->
+          <div class="flex flex-row items-center justify-between py-2 pl-0 sm:pl-0 sm:pr-0 px-0.5">
+          <div class="flex flex-col m-6">
+            <div class="font-bold">Medical History
+              <span class="text-sm ml-2">
+                <mat-icon
+                  class="mh-15 cursor-pointer"
+                  svgIcon="heroicons_outline:pencil"
+                  [matTooltip]="'Edit'"
+                  (click)="open_clinical_data_modal(secondOpinionOverviewDetails)"
+                ></mat-icon>
+               
+              </span>
+            </div>
+            <div class="flex flex-col sm:flex-row sm:items-center mt-2 sm:mt-1 space-y-1 sm:space-y-0 sm:space-x-3">
+              <!-- *ngIf="isFormData" -->
+              <ul class="content-info-main" >
+                <li>
+                  <div class="content-header">About your health</div>
+                  <div class="content-info">{{secondOpinionOverviewDetails?.health_info}}</div>
+                </li>
+                <li>
+                  <div class="content-header">Describe health problem</div>
+                  <div class="content-info">
+                    {{secondOpinionOverviewDetails?.health_problem}}
+                  </div>
+                </li>
+                <li>
+                  <div class="content-header">Symptoms</div>
+                  <div class="content-info">{{secondOpinionOverviewDetails?.symptoms}}</div>
+                </li>
+                <li>
+                  <div class="content-header">Risk Factors</div>
+                  <div class="content-info">{{secondOpinionOverviewDetails?.risk_factors}}</div> 
+                </li>
+                <li>
+                  <div class="content-header"  >
+                    <a (click)="openDocuments(secondOpinionOverviewDetails?.reports)">View Medical Reports</a>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+          <div class="flex flex-col flex-auto items-center justify-center h-full p-6 sm:p-10" *ngIf="!secondOpinionOverviewDetails"> 
+            <div class="mt-12 sm:mt-24 text-4xl md:text-7xl font-extrabold tracking-tight leading-tight md:leading-none text-center">No data...!</div>   
+        </div>
+        </div>
+      </div>
+    </div>
+</div>
+

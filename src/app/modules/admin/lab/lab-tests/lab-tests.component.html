@@ -1,0 +1,164 @@
+<div class="flex flex-col w-full overflow-auto bg-card">
+  <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
+    <div  class="ml-3 text-2xl font-semibold tracking-tight">
+     {{isFormInEdit ? 'Update' : 'Add'}} Lab Tests
+    </div>
+    
+
+    <button class="ml-auto" mat-icon-button (click)="dismiss()">
+      <mat-icon class="text-current" [svgIcon]="'heroicons_outline:x'"></mat-icon>
+    </button>
+  </div>
+  <ng-container *ngIf="patientUrl; else apptUrl">
+    <form class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-8 lg:pr-8 lg:pt-3" [formGroup]="patientAppointmentForm" #patientaAppointmentNGForm="ngForm"
+      >
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+        <div class="sm:col-span-4 form-group">
+          <mat-form-field class="fuse-mat-dense fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Search Patient <span>*</span></mat-label>
+            
+
+            
+            <mat-icon class="icon-size-5" matPrefix   [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput [matAutocomplete]="auto"  (input)="onSearchPatient($event)"
+                [placeholder]="'Search for Patient Name, Phone Number, UHID'" [value]="selectedPatient$ | async" [disabled]="patientId != 0 || selectedPatientId">
+               
+                <button  *ngIf="patientId == 0 && selectedPatientId"  matSuffix mat-icon-button aria-label="Clear" (click)="clearReports()">
+                  <mat-icon>close</mat-icon>
+                </button>
+              
+                <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChangePatient($event)">
+                  <mat-option *ngFor="let option of filteredPatientOptions$ | async" [id]="option.patientid" [value]="option.full_name + ' - ' + option.age+'yrs'+ ' - ' +(option.gender).charAt(0).toUpperCase().concat((option.gender).slice(1))">
+                    <b>{{option.full_name}} </b> - {{option.age}}yrs - <span class="capitalize">{{option.gender}}</span>
+                  </mat-option>
+                </mat-autocomplete>
+        </mat-form-field> 
+        <!-- <div *ngIf="patientAppointmentForm.controls.searchpat.touched &&
+        patientAppointmentForm.controls.searchpat.invalid"
+        class="alert alert-danger">
+      <div *ngIf="patientAppointmentForm.controls.searchpat.errors &&
+      patientAppointmentForm?.controls?.searchpat.errors.required">required</div>
+      </div> -->
+      
+        <div *ngIf="(filteredPatientOptions$ | async)?.length == 0 && inputText" class="pt-1 italic text-blue-500">
+          No Data Found <a class="underline cursor-pointer" (click)="addPatient()"><strong>Add Patient</strong></a>
+        </div>
+
+      </div>
+       
+        <div class="sm:col-span-4 form-group">
+          <mat-form-field class="w-full"  appearance="fill" floatLabel="always">
+            <mat-label>Test Name <span>*</span></mat-label>
+            <mat-chip-list #chipList aria-label="Select">
+              <ng-container *ngFor="let lab of labs"  >
+                <mat-chip
+                *ngIf="lab.isactive"
+                (removed)="removeLab(lab)"
+              >
+                {{ lab.testname }}: Rs {{lab.price}}
+                <button matChipRemove>
+                  <mat-icon>cancel</mat-icon>
+                </button>
+              </mat-chip>
+              </ng-container>
+          
+              <input
+                [placeholder]="'Enter'"
+                #labInput
+                [formControl]="fruitCtrl"
+                [matAutocomplete]="auto3"
+                [matChipInputFor]="chipList"
+                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                (input)="searchTestsTerm($event)"
+              />
+            </mat-chip-list>
+            <mat-autocomplete
+              #auto3="matAutocomplete"
+              (optionSelected)="selectedLab($event)"
+            >
+              <mat-option
+              *ngFor="let option of filteredTestsOptions$ | async"
+              [id]="option.service_type"
+              [value]="option"
+              >
+                {{ option.service_type }}: Rs{{option.price}}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+         <!-- <div *ngIf="fruitCtrl.touched && fruitCtrl.invalid"
+         class="alert alert-danger">
+          <div *ngIf="fruitCtrl.errors && fruitCtrl.errors.required">testname required
+
+          </div>
+         </div> -->
+        </div>
+       
+      </div>
+
+      <div class="mt-11 mb-10 border-t"></div>
+      <div class="flex items-center justify-end" *ngIf="!isFormInEdit">
+        <button mat-flat-button type="button" (click)="clear()"
+        class="border-solid border-primary-500 text-primary-500 mr-1" 
+
+
+>
+          <span class="ml-2 mr-1">Clear</span>
+        </button>
+        <button type="submit" mat-flat-button [color]="'primary'" (click)="addService()" [disabled]="!disablebtn || labs.length ==0" 
+         >
+          <span class="ml-2 mr-1">Save</span>
+        </button>
+      </div>
+      <div class="flex items-center justify-end" *ngIf="isFormInEdit">
+        <button mat-flat-button type="button" (click)="cancel()"
+        class="border-solid border-primary-500 text-primary-500 mr-1" 
+
+
+>
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+        <button type="submit" mat-flat-button [color]="'primary'" (click)="addService()" [disabled]="!disablebtn || labs.length ==0" 
+         >
+          <span class="ml-2 mr-1">Update</span>
+        </button>
+      </div>
+    </form>
+  </ng-container>
+
+  <ng-template #apptUrl>
+    <form class="flex-auto px-6 pt-9 pb-12 md:p-8 md:pb-12 lg:pl-12 lg:pr-12 lg:pt-3" [formGroup]="appointmentForm"
+      #appointmentNGForm="ngForm">
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-4 form-group" *ngIf="!isDoctor">
+          <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+            <mat-label>Search doctor <span>*</span></mat-label>
+
+            <mat-icon class="icon-size-5" matPrefix [svgIcon]="'heroicons_solid:search'"></mat-icon>
+            <input matInput [matAutocomplete]="auto" (input)="onSearchTerm($event)" [placeholder]="'Search for Name'"
+              [formControlName]="'appId'" />
+            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="onSelectionChange($event)">
+              <mat-option *ngFor="let option of filteredOptions$ | async" [value]="option.details"
+                [id]="option.doctorid">
+                {{ option.details }}
+              </mat-option>
+            </mat-autocomplete>
+          </mat-form-field>
+        </div>
+
+       
+       
+      </div>
+
+      <div class="mt-11 mb-10 border-t"></div>
+      <div class="flex items-center justify-end">
+        <button mat-flat-button type="button" (click)="dialogRef.close()"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+        <button type="submit" mat-flat-button [color]="'primary'" 
+          >
+          <span class="ml-2 mr-1">Save</span>
+        </button>
+      </div>
+    </form>
+  </ng-template>
+</div>

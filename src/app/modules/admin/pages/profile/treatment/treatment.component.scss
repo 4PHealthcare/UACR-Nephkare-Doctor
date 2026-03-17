@@ -1,0 +1,56 @@
+
+
+.form-border {
+  border: 1px solid #C7C9CB;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 10px;
+
+  .mat-checkbox {
+    padding-right: 15px;
+    padding-bottom: 10px;
+  }
+}
+
+.mat-mdc-radio-button ~ .mat-mdc-radio-button {
+  margin-left: 16px;
+}
+
+.sub-header {
+  font-size: 16px;
+  padding-bottom: 15px;
+}
+
+mat-radio-group  mat-radio-button {
+  margin-right: 25px; 
+  font-weight: 600;
+  font-size: 12px;
+  margin-bottom: 10px;
+}
+
+.vital-options {
+  padding: 10px 50px 10px 10px;
+  background-color: #F7F7F7;
+  margin-top: 5px;
+  border-radius: 8px;
+  mat-checkbox {
+      padding-right: 15px;
+  }
+}
+
+.question {
+  padding-top: 10px;
+  padding-bottom: 20px;
+  mat-checkbox {
+    padding-right: 15px;
+}
+  
+}
+
+.main-vital {
+  font-size: 16px;
+  font-weight: 600;
+  padding-bottom: 5px;
+}
+
+

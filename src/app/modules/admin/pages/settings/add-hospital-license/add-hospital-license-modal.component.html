@@ -1,0 +1,244 @@
+<div class="h-screen flex flex-col">
+  <div
+    class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary"
+  >
+    <div class="text-2xl font-semibold tracking-tight">
+      Update Profile
+    </div>
+    <button
+      class="ml-auto"
+      mat-icon-button
+      [matTooltip]="'Close'"
+      (click)="dialogRef.close(isDataUpdated)"
+    >
+      <mat-icon
+        class="text-current"
+        [svgIcon]="'heroicons_outline:x'"
+      ></mat-icon>
+    </button>
+  </div>
+
+  <div class="p-6 mb-auto overflow-y-auto">
+    <form [formGroup]="userForm">
+      <div class="mt-8">
+        <label class="hoverable bg-gray-300" for="fileInput">
+          <img
+            [src]="
+              photo ? photo : 'https://www.w3schools.com/howto/img_avatar.png'
+            "
+          />
+          <!-- <div class="hover-text">
+                    Choose file
+                    <h4 class="success-message" *ngIf="uploaded"> Uploaded Successfully </h4>
+                    </div> -->
+          <div class="background"></div>
+          <div class="ml-12 mt-3 flex items-center justify-between">
+            <div
+              class="bg-gy py-0.5 px-3 rounded-full text-sm font-semibold text-pink-800 bg-gray-100 dark:text-pink-50 dark:bg-gray-500 ng-star-inserted"
+            >
+              Upload
+            </div>
+            <div class="flex items-center"></div>
+          </div>
+        </label>
+
+        <br />
+        <input id="fileInput" type="file" (change)="onSelectFile($event)" />
+      </div>
+
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+        <div class="sm:col-span-2">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Name <span>*</span></mat-label>
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'hospitalName'"
+            />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2">
+          <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Address <span>*</span></mat-label>
+
+            <input
+              matInput
+              #addressInput
+              [placeholder]="'Enter'"
+              ngx-google-places-autocomplete
+              [options]="options"
+              (onAddressChange)="handleAddressChange($event)"
+              [formControlName]="'clinicAddress'"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+        <div class="sm:col-span-2">
+            <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>City <span>*</span></mat-label>
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'cityName'"
+            />
+          </mat-form-field>
+        </div>
+        <div class="sm:col-span-2">
+            <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Pincode</mat-label>
+            <input
+              matInput
+              
+              type="number"
+              [placeholder]="'Enter'"
+              [formControlName]="'pincode'"
+            />
+          </mat-form-field>
+        </div>
+      </div>
+
+
+
+      
+
+
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+        <div class="sm:col-span-2">
+            <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Area (locality)</mat-label>
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'locality'"
+            />
+          </mat-form-field>
+        </div>
+        <!-- <div class="sm:col-span-2">
+            <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Clinic Phone Number <span>*</span></mat-label>
+            <mat-label class="clr-black" matPrefix>+91</mat-label>
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'clinicMobileNumber'"
+            />
+          </mat-form-field>
+          <span
+            *ngIf="
+              (userForm.controls.clinicMobileNumber.errors?.required &&
+                userForm.controls.clinicMobileNumber.touched) ||
+              userForm.controls.clinicMobileNumber.errors?.pattern
+            "
+            class="text-red-500 text-xs italic"
+          >
+            Please enter a valid phone number
+          </span>
+        </div> -->
+        <div class="sm:col-span-2">
+          <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Support Email <span>*</span></mat-label>
+          <input
+            matInput
+          
+            [placeholder]="'Enter'"
+            [formControlName]="'supportemail'"
+          />
+        </mat-form-field>
+      </div>
+      </div>
+
+      <div class="grid sm:grid-cols-4 gap-6 w-full mt-4">
+      
+        <!-- <div class="sm:col-span-2">
+            <mat-form-field
+            class="fuse-mat-no-subscript w-full"
+            floatLabel="always"
+          >
+            <mat-label>Hospital Emergency Number <span>*</span></mat-label>
+            <mat-label class="clr-black" matPrefix>+91</mat-label>
+            <input
+              matInput
+              [placeholder]="'Enter'"
+              [formControlName]="'customerSupportNumber'"
+            />
+          </mat-form-field>
+          <span
+            *ngIf="
+            (userForm.controls.customerSupportNumber.errors?.required &&
+            userForm.controls.customerSupportNumber.touched) ||
+              userForm.controls.customerSupportNumber.errors?.pattern
+            "
+            class="text-red-500 text-xs italic"
+          >
+            Please enter a valid Customer Support Number
+          </span>
+        </div> -->
+        
+
+      </div>
+
+      
+   
+      
+      <!-- <div class="mt-8">
+                <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+                    <mat-label>Role</mat-label>
+                    <mat-select [formControlName]="'roleId'" disabled>
+                        <ng-container *ngFor="let data of roles">
+                            <mat-option [value]="data.masterdata_id">{{
+                                data.data_name
+                                }}</mat-option>
+                        </ng-container>
+                    </mat-select>
+                </mat-form-field>
+            </div> -->
+    </form>
+  </div>
+
+  <footer class="my-4 mx-4">
+    <div class="flex">
+      <div class="flex ml-auto gap-2">
+        <button mat-flat-button (click)="dialogRef.close()" [disabled]="userForm.pristine"  class="border-solid border-primary-500 text-primary-500 mr-1" >
+          <span class="ml-2 mr-1">Cancel</span>
+        </button>
+      
+        <button
+          mat-flat-button
+          [color]="'primary'"
+          (click)="addUser()"
+          [disabled]="userForm.invalid || userActionLoading || userForm.pristine"
+        >
+          <span class="ml-2 mr-1">Update</span>
+          <mat-progress-spinner
+            *ngIf="userActionLoading"
+            [diameter]="24"
+            [mode]="'indeterminate'"
+          ></mat-progress-spinner>
+        </button>
+      </div>
+    </div>
+  </footer>
+</div>
