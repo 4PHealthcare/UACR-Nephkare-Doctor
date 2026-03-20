@@ -188,14 +188,14 @@ export const compactNavigation: FuseNavigationItem[] = [
     children: [], // This will be filled from defaultNavigation so we don't have to manage multiple sets of the same navigation
   },
   
-  {
-    id: "calendar",
-    title: "Appointments",
-    type: "basic",
-    link: "/calr/calendar",
-    icon: "heroicons_outline:calendar", 
-    children: [], // This will be filled from defaultNavigation so we don't have to manage multiple sets of the same navigation
-  },
+  // {
+  //   id: "calendar",
+  //   title: "Appointments",
+  //   type: "basic",
+  //   link: "/calr/calendar",
+  //   icon: "heroicons_outline:calendar", 
+  //   children: [], // This will be filled from defaultNavigation so we don't have to manage multiple sets of the same navigation
+  // },
   
   {
     id: "hospitalFollowup",
@@ -245,14 +245,14 @@ export const compactNavigation: FuseNavigationItem[] = [
     icon: "heroicons_outline:user",  
     children: [], // This will be filled from defaultNavigation so we don't have to manage multiple sets of the same navigation
   },
-  {
-    id: "tests",
-    title: "Tests",
-    type: "basic",
-    link: "/apps/tests",
-    icon: "heroicons_outline:document-text",
-    children: [], // This will be filled from defaultNavigation so we don't have to manage multiple sets of the same navigation
-  },
+  // {
+  //   id: "tests",
+  //   title: "Tests",
+  //   type: "basic",
+  //   link: "/apps/tests",
+  //   icon: "heroicons_outline:document-text",
+  //   children: [], // This will be filled from defaultNavigation so we don't have to manage multiple sets of the same navigation
+  // },
   {
     id: "addtests", 
     title: "Add Tests",

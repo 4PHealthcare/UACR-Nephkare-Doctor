@@ -49,29 +49,11 @@ export class AddStaffModalComponent implements OnInit {
   /** Subject that emits when the component has been destroyed. */
   protected _onDestroy = new Subject<void>();
 
-  // roles= [
-  //   {
-  //     "masterdata_id": 474,
-  //     "data_name": "Frontdesk"
-  //   },
-  //   {
-  //     "masterdata_id": 82564,
-  //     "data_name": "Care Coordinator"
-  //   },
-  //   {
-  //     "masterdata_id": 477,
-  //     "data_name": "Lab"
-  //   },
-  //   {
-  //     "masterdata_id": 82577,
-  //     "data_name": "Physician Assistant"
-  //   }
-
-  // ];
+  
   roles= [
     
     {
-      "masterdata_id": 82564,
+      "masterdata_id": 4,
       "data_name": "Health Worker"
     },
    
@@ -85,7 +67,7 @@ export class AddStaffModalComponent implements OnInit {
     public dialog: MatDialog,
     public dialogRef: MatDialogRef<any>,
     private _formBuilder: FormBuilder,
-    @Inject(MAT_DIALOG_DATA) public data: any,
+    @Inject(MAT_DIALOG_DATA) public data: any, 
     private httpService: APIService,
     private auth: AuthService,
     private snackBar: MatSnackBar) {
@@ -98,9 +80,9 @@ export class AddStaffModalComponent implements OnInit {
     
   }
 
-  ngOnInit(): void {
+  ngOnInit(): void { 
     
-    console.log(this.userInfo)
+    console.log(this.data)
     this.userForm = this._formBuilder.group({ 
       // firstName: ["", [Validators.required]],
       // lastName: ["", [Validators.required]],
@@ -121,29 +103,14 @@ export class AddStaffModalComponent implements OnInit {
       roleId: ['', [Validators.required]],
     });
 
-    // const inputElement = document.getElementById('#phone');
-    // if(inputElement){
-    //   intlTelInput(inputElement,{
-    //     initialCountry:'in',
-    //     separateDialCode:true,
-    //     utilsScript:'https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/11.0.0/js/utils.js'
-    //   })
-    // }
+    
 
-    // this.userForm.get('doctorId').disable();
-
-    // if(this.data && this.data.accountInfo){
-    //   this.userForm.patchValue({
-    //     name: this.data.full_name,
-    //     clinicId: this.data.isadmin_account ? this.userInfo.user_id : this.data.refered_clinicid,
-    //     email: this.data.email_address,
-    //     mobileNumber: this.data.mobile_no,
-    //     roleId: this.data.role_id,
-    //   });
-    // }
-  //  this.getSubClinics(this.userInfo.user_id);
-    this.getDoctorsList();
-    this.getUserInfo(this.userInfo.admin_account);
+    
+    //this.getDoctorsList();
+    if(this.data.accountInfo.user_id){
+       this.getUserInfo(this.data.accountInfo.user_id);
+    } 
+   
 
    
   }
@@ -153,10 +120,11 @@ export class AddStaffModalComponent implements OnInit {
   }
 
  getUserInfo(userId: number) {
-    this.httpService.get("api/User/GetUsersById?userId=", userId).subscribe( 
+    this.httpService.getAll(`api/adminstaff/get-adminstaff-by-id/${userId}` ).subscribe( 
       (res: any) => {
         console.log(res)
         this.setCountryBasedOnDetails(res);
+        this.patchForm(res.data);
       },
       (error: any) => {
         console.warn("error", error);
@@ -165,8 +133,8 @@ export class AddStaffModalComponent implements OnInit {
   }
 
  setCountryBasedOnDetails(res) {
-    const dialCode = res.data.countrycode_details.dialcode;
-    this.selectedCountryISO = this.getCountryISOByDialCode(dialCode);
+    // const dialCode = res.data.countrycode_details.dialcode;
+    // this.selectedCountryISO = this.getCountryISOByDialCode(dialCode);
   }
 
 
@@ -190,21 +158,16 @@ export class AddStaffModalComponent implements OnInit {
   }
 
   patchForm(data: any) {
-    console.log(data)
-    let doctorIds = [];
-    if (data.coordinate_team) {
-      data.coordinate_team.forEach(element => {
-        doctorIds.push(element.team_id);
-      }); 
-    }
+   
+   
     
     this.userForm.patchValue({
-      name: data.full_name,
-      clinicId: this.userInfo.admin_account,
-      email: data.email_address,
-      mobileNumber: data.mobile_no,
-      roleId: data.role_id,
-      doctorId: doctorIds,
+      name: data.user.fullname,
+      
+      email: data.user.email,
+      mobileNumber: data.user.mobile,
+      roleId: data.user.role_id,
+      
 
     });
     const phoneNumberControl= this.userForm.controls.mobileNumber;
@@ -218,31 +181,14 @@ export class AddStaffModalComponent implements OnInit {
     });
     this.labId = data.role_id;
 
-    if (data.role_id == 82564) {
-      this.userForm.get('doctorId').setValidators([Validators.required]);
-    }
+   
   
-    this.userForm.get('doctorId').enable();
-    this.userForm.get('doctorId').updateValueAndValidity();
+   
    // this.getDoctorsList();
   }
 
   getSubClinics(userId: number) {
-    this.httpService.get("api/User/GetSubClinics?mainbranchid=", userId).subscribe(
-      (res: any) => {
-        if(res.data && res.data.length !== 0) {
-          this.hospitals = [...this.hospitals, ...res.data];
-          if(this.data && this.data.accountInfo) {
-            
-          }
-        }else {
-          
-        }
-      },
-      (error: any) => {
-        console.warn("error", error);
-      }
-    );
+    
   }
 
   formatPhoneNumber(phoneNumber: string): string {
@@ -276,39 +222,63 @@ export class AddStaffModalComponent implements OnInit {
     
     
     const body = {
-      userid: this.data && this.data.accountInfo ? this.data.accountInfo.user_id : 0,
+       userId: this.data && this.data.accountInfo ? this.data.accountInfo.user_id : 0,
       username: this.userForm.get("email").value,
-      password: 'test@1234',
-      firstname: firstName,
-      lastname: lastName,
-      clinicid: this.userInfo.admin_account,
-      adminaccount: this.userInfo.admin_account,
-      undermainbranch: this.userInfo.user_id == this.userForm.get("clinicId").value ? true : false,
-      emailaddress: this.userForm.get("email").value,
-      mobileno: this.formatPhoneNumber(this.userForm.get("mobileNumber").value.nationalNumber),
-      countrycode:this.userForm.get("mobileNumber").value.dialCode,
-      roleid: parseInt(this.userForm.get("roleId").value),
-      actionby: this.userInfo.user_id,
-      coordinate_team : this.userForm.get("roleId").value == 474 ? doctors :this.userForm.get("doctorId").value ? this.userForm.get("doctorId").value : undefined,
-      appname: "HWR",
-      "countrycode_details": {
-        "country_id": 0,
-        "user_id": 0,
-        "countrycode_name": this.userForm.get("mobileNumber").value.countryCode,
-        "dialcode": this.userForm.get("mobileNumber").value.dialCode,
-        "e164_number": this.userForm.get("mobileNumber").value.e164Number,
-        "internation_no":this.userForm.get("mobileNumber").value.internationalNumber,
-        "national_no": this.userForm.get("mobileNumber").value.nationalNumber,
-        "number": this.userForm.get("mobileNumber").value.number
-      },
+      fullname: this.userForm.get("name").value,
+      email: this.userForm.get("email").value,
+      mobile: this.formatPhoneNumber(
+        this.userForm.get("mobileNumber").value.nationalNumber,
+      ),
+      roleId: 4,
+      actionBy: this.userInfo.user_id,
+      isAdmin: false,
+       adminAccount: this.userInfo.admin_account,
+     
+      countryCode: this.userForm.get("mobileNumber").value.dialCode,
+      countryCodeDetails: {
+        countryId: 0,
+
+        countryName: this.userForm.get("mobileNumber").value.countryCode,
+        dialCode: this.userForm.get("mobileNumber").value.dialCode,
+        e164: this.userForm.get("mobileNumber").value.e164Number,
+        international:
+          this.userForm.get("mobileNumber").value.internationalNumber,
+        national: this.userForm.get("mobileNumber").value.nationalNumber,
+        number: this.userForm.get("mobileNumber").value.number
+      }
+      // userid: this.data && this.data.accountInfo ? this.data.accountInfo.user_id : 0,
+      // username: this.userForm.get("email").value,
+      // password: 'test@1234',
+      // firstname: firstName,
+      // lastname: lastName,
+      // clinicid: this.userInfo.admin_account,
+      // adminaccount: this.userInfo.admin_account,
+      // undermainbranch: this.userInfo.user_id == this.userForm.get("clinicId").value ? true : false,
+      // emailaddress: this.userForm.get("email").value,
+      // mobileno: this.formatPhoneNumber(this.userForm.get("mobileNumber").value.nationalNumber),
+      // countrycode:this.userForm.get("mobileNumber").value.dialCode,
+      // roleid: parseInt(this.userForm.get("roleId").value),
+      // actionby: this.userInfo.user_id,
+      // coordinate_team : this.userForm.get("roleId").value == 474 ? doctors :this.userForm.get("doctorId").value ? this.userForm.get("doctorId").value : undefined,
+      // appname: "HWR",
+      // "countrycode_details": { 
+      //   "country_id": 0,
+      //   "user_id": 0,
+      //   "countrycode_name": this.userForm.get("mobileNumber").value.countryCode,
+      //   "dialcode": this.userForm.get("mobileNumber").value.dialCode,
+      //   "e164_number": this.userForm.get("mobileNumber").value.e164Number,
+      //   "internation_no":this.userForm.get("mobileNumber").value.internationalNumber,
+      //   "national_no": this.userForm.get("mobileNumber").value.nationalNumber,
+      //   "number": this.userForm.get("mobileNumber").value.number
+      // },
     };
 
-    this.httpService.create("api/User/AddUser", body).subscribe(
+    this.httpService.create("api/adminstaff/save-adminstaff", body).subscribe(
       (res: any) => {
 
         if(res?.isSuccess) {
           this.dialogRef.close(true);
-          this.SaveActivity();
+          //this.SaveActivity();
           this.snackBar.open('User added successfully. ', 'close', {
             panelClass: "snackBarSuccess",
             duration: 2000,
@@ -353,30 +323,30 @@ export class AddStaffModalComponent implements OnInit {
 
   getDoctorsList(isReset?:boolean) {
     
-    const url = `api/User/GetHospitalbasedUsers?roleid`;
-    const body = {
-      roleid: 82580,
-      pageSize: 100,
-      pageNo: 1,
-      clinicid: this.userInfo.admin_account,
-      ismainbranch: this.userInfo.isadmin_account ? true : false,
-      ishwradmin: true,
-      userid: this.userInfo.user_id
-    };
-    this.httpService.create(url, body).subscribe((res: any) => {
-      if(res.data.userdata) {
-        this.doctors = res.data.userdata
-        // if(!isReset) {
-        //   this.userForm.get('doctorId').setValue([this.data.accountInfo.created_by]);
-        // }
+    // const url = `api/User/GetHospitalbasedUsers?roleid`;
+    // const body = {
+    //   roleid: 82580,
+    //   pageSize: 100,
+    //   pageNo: 1,
+    //   clinicid: this.userInfo.admin_account,
+    //   ismainbranch: this.userInfo.isadmin_account ? true : false,
+    //   ishwradmin: true,
+    //   userid: this.userInfo.user_id
+    // };
+    // this.httpService.create(url, body).subscribe((res: any) => {
+    //   if(res.data.userdata) {
+    //     this.doctors = res.data.userdata
+    //     // if(!isReset) {
+    //     //   this.userForm.get('doctorId').setValue([this.data.accountInfo.created_by]);
+    //     // }
 
         
-        if(this.data && this.data.accountInfo) {
-          this.patchForm(this.data.accountInfo);
-        }
+    //     if(this.data && this.data.accountInfo) {
+    //       this.patchForm(this.data.accountInfo);
+    //     }
         
-      }
-    });
+    //   }
+    // });
   }
 
   changeRole(value){

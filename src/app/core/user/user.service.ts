@@ -56,10 +56,10 @@ export class UserService
         let user = auth.user;
         if(user) {
             user = JSON.parse(user || '{}');
-            return this.apiUser.get("api/User/GetUsersById?userId=", user.user_id)
+            return this.apiUser.getAll(`api/adminstaff/get-adminstaff-by-id/${user.user_id}`)
             .pipe(
                 tap((user) => {                    
-                    this._user.next(user.data);
+                    this._user.next(user.data.user);
                 })
             );
 

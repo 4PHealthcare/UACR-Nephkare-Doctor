@@ -16,15 +16,15 @@
   <!-- User Text -->
   <div class="flex flex-col leading-tight">
 
-    <span *ngIf="user && user.admin_account != 3 && user.isadmin_account">
+    <span>
       {{
-        user.contactperson_name?.length > 25
-          ? (user.contactperson_name | slice: 0 : 25) + " ..."
-          : user.contactperson_name?.trim()
+        user.fullname?.length > 25
+          ? (user.fullname | slice: 0 : 25) + " ..."
+          : user.fullname?.trim()
       }}
     </span>
 
-    <span *ngIf="user && (!user.isadmin_account || user.admin_account == 3)">
+    <!-- <span *ngIf="user && (!user.isadmin_account || user.admin_account == 3)">
       <span *ngIf="user?.role_id == 5">Dr. </span>
       {{
         user.full_name?.length > 25
@@ -39,7 +39,7 @@
           ? "Admin"
           : user?.role_name
       }}
-    </span>
+    </span> -->
 
   </div>
 
@@ -48,27 +48,15 @@
 <mat-menu class="custom-mat-menu" [xPosition]="'before'" #userActions="matMenu">
   <button mat-menu-item>
     <span class="flex flex-col leading-none">
-      <span *ngIf="user && user.admin_account != 3 && user.isadmin_account">
-        <span *ngIf="user?.role_id == 5"> </span
+      <span >
+        <span > </span
         >{{
-          user.contactperson_name?.length > 25
-            ? (user.contactperson_name | slice: 0 : 25) + " ..."
-            : user.contactperson_name?.trim()
+          user.fullname?.length > 25
+            ? (user.fullname | slice: 0 : 25) + " ..."
+            : user.fullname?.trim()
         }}
       </span>
-      <span *ngIf="user && (!user.isadmin_account || user.admin_account == 3)">
-        <span *ngIf="user?.role_id == 5">Dr. </span
-        >{{
-          user.full_name?.length > 25
-            ? (user.full_name | slice: 0 : 25) + " ..."
-            : user.full_name?.trim()
-        }}
-      </span>
-      <span class="mt-1.5 text-md font-bold" *ngIf="user">{{
-        user.admin_account != 3 && user.isadmin_account
-          ? "Admin"
-          : user?.role_name
-      }}</span>
+      
     </span>
   </button>
   <mat-divider class="my-2"></mat-divider>
@@ -79,7 +67,7 @@
   <button
     mat-menu-item
     (click)="goToSettings('clinicsettings')"
-    *ngIf="user.isadmin_account || user.role_id == 82580 || user.role_id == 5"
+    
   >
     <mat-icon [svgIcon]="'heroicons_outline:cog'"></mat-icon>
     <span>Settings</span>

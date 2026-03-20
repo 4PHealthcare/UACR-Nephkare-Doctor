@@ -1,46 +1,59 @@
 <div class="w-full max-w-3xl">
   <!-- Form -->
-  
-    <!-- Section -->
-    <div class="w-full">
-      <!-- <div class="text-xl">Profile</div>  -->
-      <!-- <div class="text-secondary">
+
+  <!-- Section -->
+  <div class="w-full">
+    <!-- <div class="text-xl">Profile</div>  -->
+    <!-- <div class="text-secondary">
         Following information is publicly displayed, be careful!
       </div> -->
-      <div class="mt-8">
-        <label class="hoverable" for="fileInput" (mouseenter)="onMouseEnter()">
-          <img [src]="photo ? photo : 'assets/images/avatars/img_avatar.png'"/> 
-         
-          <div class="background"></div>
-          <div (mouseenter)="onMouseEnter()" class=" ml-12 mt-3 flex items-center justify-between"><div class="bg-gy py-0.5 px-3 rounded-full text-sm font-semibold text-pink-800 bg-gray-100 dark:text-pink-50 dark:bg-gray-500 ng-star-inserted"> Upload </div><div class="flex items-center"></div></div>
-        </label>
-        
-        
-        <br/>
-        <input id="fileInput"  type='file' (change)="onSelectFile($event)">
-       <div class="delete-trash">
-       
-       
-      </div>
-      </div>
-      
+    <div class="mt-8">
+      <label class="hoverable" for="fileInput" (mouseenter)="onMouseEnter()">
+        <img [src]="photo ? photo : 'assets/images/avatars/img_avatar.png'" />
+
+        <div class="background"></div>
+        <div
+          (mouseenter)="onMouseEnter()"
+          class="ml-12 mt-3 flex items-center justify-between"
+        >
+          <div
+            class="bg-gy py-0.5 px-3 rounded-full text-sm font-semibold text-pink-800 bg-gray-100 dark:text-pink-50 dark:bg-gray-500 ng-star-inserted"
+          >
+            Upload
+          </div>
+          <div class="flex items-center"></div>
+        </div>
+      </label>
+
+      <br />
+      <input id="fileInput" type="file" (change)="onSelectFile($event)" />
+      <div class="delete-trash"></div>
     </div>
-    <form [formGroup]="accountForm">
-    
-    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8"> 
-      <div class="sm:col-span-2"> 
-        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
-          <mat-label>Name<span>*</span></mat-label> 
+  </div>
+  <form [formGroup]="accountForm">
+    <div class="grid sm:grid-cols-4 gap-6 w-full mt-8">
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Name<span>*</span></mat-label>
           <mat-icon
             class="icon-size-5"
-            [svgIcon]="'heroicons_solid:user'"   
+            [svgIcon]="'heroicons_solid:user'"
             matPrefix
           ></mat-icon>
-          <input autofocus placeholder="Enter" class="capitalize" [formControlName]="'name'"  matInput />
+          <input
+            autofocus
+            placeholder="Enter"
+            class="capitalize"
+            [formControlName]="'name'"
+            matInput
+          />
         </mat-form-field>
       </div>
-      
-      <div class="sm:col-span-2" *ngIf="!accountInfo?.isadmin_account">  
+
+      <!-- <div class="sm:col-span-2" *ngIf="!accountInfo?.isadmin_account">  
         <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
           <mat-label>Gender<span>*</span></mat-label>
           <mat-select placeholder="Select" [formControlName]="'gender'">
@@ -50,134 +63,111 @@
           </mat-select>
         
         </mat-form-field>
-      </div>
+      </div> -->
       <!-- Email -->
       <div class="sm:col-span-2">
-        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
           <mat-label>Email<span>*</span></mat-label>
           <mat-icon
             class="icon-size-5"
             [svgIcon]="'heroicons_solid:mail'"
             matPrefix
           ></mat-icon>
-          <input placeholder="Enter" [formControlName]="'email'" matInput disabled />
+          <input
+            placeholder="Enter"
+            [formControlName]="'email'"
+            matInput
+            disabled
+          />
         </mat-form-field>
       </div>
       <!-- Phone -->
       <div class="sm:col-span-2">
-       
-          <mat-label>Phone<span>*</span></mat-label>
-          <ngx-intl-tel-input
-                      [cssClass]="'custom'"
-                      [preferredCountries]="preferredCountries"
-                      [enableAutoCountrySelect]="true"
-                      [enablePlaceholder]="true"
-                      [searchCountryFlag]="true"
-                      [searchCountryField]="[
-                        SearchCountryField.Iso2,
-                        SearchCountryField.Name
-                      ]"
-                      [selectFirstCountry]="false"
-                      [selectedCountryISO]="CountryISO.India" 
-                      [maxLength]="15"
-                      [phoneValidation]="true"
-                      [separateDialCode]="separateDialCode" 
-                      [numberFormat]="PhoneNumberFormat.International"
-                      name="phone"
-                      formControlName="phone"
-                    >
-                    </ngx-intl-tel-input>
         
+        <mat-label style="font-weight: 500;font-size: 14px;margin-bottom: 10px;">Phone<span>*</span></mat-label>
+        <ngx-intl-tel-input
+          [cssClass]="'custom'"
+          [preferredCountries]="preferredCountries"
+          [enableAutoCountrySelect]="true"
+          [enablePlaceholder]="true"
+          [searchCountryFlag]="true"
+          [searchCountryField]="[
+            SearchCountryField.Iso2,
+            SearchCountryField.Name,
+          ]"
+          [selectFirstCountry]="false"
+          [selectedCountryISO]="CountryISO.India"
+          
+          [phoneValidation]="true"
+          [separateDialCode]="separateDialCode"
+          [numberFormat]="PhoneNumberFormat.International"
+          name="phone"
+          formControlName="phone"
+        >
+        </ngx-intl-tel-input>
+        <div class="text-red-500"
+          *ngIf="
+            accountForm.get('phone')?.invalid &&
+            accountForm.get('phone')?.touched
+          "
+        >
+          Invalid phone number
+        </div>
       </div>
-      <div class="sm:col-span-2" *ngIf="userInfo?.role_id==5 && !(this.userInfo.admin_account === this.userInfo.user_id)">
-        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
-          <mat-label>Speciality<span>*</span></mat-label>
-          <mat-select [formControlName]="'specialityid'" placeholder="Select">
-            <ng-container *ngFor="let data of specialities">
-                <mat-option [value]="data.masterdata_id">{{
-                    data.data_name
-                    }}</mat-option>
-            </ng-container>
-        </mat-select>
+      
+
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>City<span>*</span></mat-label>
+          
+          <input
+            autofocus
+            placeholder="Enter"
+            class="capitalize"
+            [formControlName]="'city'"
+            matInput
+          />
         </mat-form-field>
       </div>
-      <!-- Medical Registration No -->
-      <div class="sm:col-span-2" *ngIf="userInfo?.role_id==5 && !(this.userInfo.admin_account === this.userInfo.user_id)">
-        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
-          <mat-label>Medical Registration No<span>*</span></mat-label>
-          <mat-icon
-            class="icon-size-5"
-            [svgIcon]="'heroicons_solid:identification'"
-            matPrefix
-          ></mat-icon>
-          <input placeholder="Enter" [formControlName]="'medRegn'" matInput />
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>State<span>*</span></mat-label>
+          
+          <input
+            autofocus
+            placeholder="Enter"
+            class="capitalize"
+            [formControlName]="'state'"
+            matInput
+          />
         </mat-form-field>
       </div>
-      <!-- Education -->
-      <div class="sm:col-span-2" *ngIf="userInfo?.role_id==5 && !(this.userInfo.admin_account === this.userInfo.user_id)"> 
-        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
-          <mat-label>Education<span>*</span></mat-label>
-          <mat-icon
-            class="icon-size-5"
-            [svgIcon]="'heroicons_solid:academic-cap'"
-            matPrefix
-          ></mat-icon>
-
-          <input placeholder="Enter" [formControlName]="'education'" matInput />
+      <div class="sm:col-span-2">
+        <mat-form-field
+          class="fuse-mat-no-subscript w-full"
+          floatLabel="always"
+        >
+          <mat-label>Country<span>*</span></mat-label>
+          
+          <input
+            autofocus
+            placeholder="Enter"
+            class="capitalize"
+            [formControlName]="'countryname'"
+            matInput
+          />
         </mat-form-field>
       </div>
-      <!-- Experience -->
-      <div class="sm:col-span-2" *ngIf="userInfo?.role_id==5 && !(this.userInfo.admin_account === this.userInfo.user_id)">
-        <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
-        <mat-label>Years of Experience<span>*</span></mat-label>
-        <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:document-text'" matPrefix></mat-icon>
-
-        <input placeholder="Enter" matInput [formControlName]="'expYears'">
-        
-        <mat-select
-            [value]="'years'"
-            matSuffix>
-            <mat-option [value]="'years'">years</mat-option>
-            <mat-option [value]="'months'">months</mat-option>
-            
-        </mat-select>
-    </mat-form-field>
-      </div>
-
-      <!-- Fee -->
-      <!-- <div class="sm:col-span-2">
-        <mat-form-field class="fuse-mat-no-subscript w-full">
-          <mat-label>Consultation Fee</mat-label>
-          <mat-icon
-            class="icon-size-5"
-            [svgIcon]="'heroicons_solid:currency-rupee'"
-            matPrefix
-          ></mat-icon>
-          <input [formControlName]="'fees'" matInput />
-        </mat-form-field>
-      </div> -->
-
-      <div class="sm:col-span-4" *ngIf="userInfo?.role_id==5 && !(this.userInfo.admin_account === this.userInfo.user_id)">
-        <mat-label class="cursor-default">Languages<span>*</span></mat-label>
-        <!-- <mat-icon class="icon-size-5" [svgIcon]="'heroicons_solid:document-text'"></mat-icon> -->
-
-        <ng-select [formControlName]="'languages'"  class="cursor-pointer mat-profile-select" placeholder="Select" [multiple]="true" >
-          <ng-option *ngFor="let language of languages"  [value]="language.data_name">{{language.data_name}}</ng-option>
-       </ng-select>
-       
-       
-      </div>
-
-
-      <!-- About -->
-      <div class="sm:col-span-4" *ngIf="userInfo?.role_id==5 && !(this.userInfo.admin_account === this.userInfo.user_id)">
-        <mat-form-field class="fuse-mat-no-subscript w-full h-132px" floatLabel="always">
-          <mat-label>About</mat-label>
-        
-
-          <textarea placeholder="Enter" class="min-h-26" [formControlName]="'profiledescription'" matInput ></textarea>
-        </mat-form-field>
-      </div>
+      
     </div>
 
     <!-- Divider -->
@@ -186,8 +176,8 @@
     <!-- Actions -->
     <div class="flex items-center justify-end">
       <button
-      class="border-solid border-primary-500 text-primary-500 mr-1" 
-      mat-flat-button
+        class="border-solid border-primary-500 text-primary-500 mr-1"
+        mat-flat-button
         type="button"
         [disabled]="accountForm.pristine"
         (click)="cancelUpdate()"
@@ -198,14 +188,15 @@
         class="ml-4"
         mat-flat-button
         type="button"
-        [disabled]="accountForm.pristine || accountForm.invalid "
+        [disabled]="accountForm.pristine || accountForm.invalid"
         [color]="'primary'"
         (click)="updateAccount()"
       >
         Update<mat-progress-spinner
-        *ngIf="isLoadingSpinner"
-         [diameter]="24"
-         [mode]="'indeterminate'"></mat-progress-spinner>
+          *ngIf="isLoadingSpinner"
+          [diameter]="24"
+          [mode]="'indeterminate'"
+        ></mat-progress-spinner>
       </button>
     </div>
   </form>

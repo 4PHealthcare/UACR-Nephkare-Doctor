@@ -117,28 +117,20 @@ export class DoctorProfileComponent implements OnInit {
 
   }
 
-  getStaffs() {
-    const url = `api/User/GetHospitalbasedStaff?roleid`;
+  getStaffs() { 
+    const url = `api/adminstaff/get-adminstaff`;
     const body = {
-      roleid: 82564,
+       pageNumber: this.staffCurrentPage + 1,
       pageSize: this.pageSize,
-      pageNo: this.staffCurrentPage + 1,
-      searchtext: this.filterStaffVal,
-      clinicid: this.adminInfo.admin_account ,
-      ismainbranch:  false,
-      // fromdate: this.dateForm.get('fromDate').value
-      //   ? moment(this.dateForm.get('fromDate').value).format('YYYY-MM-DD')
-      //   : null,
-      // todate: this.dateForm.get('toDate').value
-      //   ? moment(this.dateForm.get('toDate').value).format('YYYY-MM-DD')
-      //   : null,
-      sortBy: this.sortBy,
-      sortDirection: this.sortDirection,
-      userid: this.adminInfo.user_id
+      roleId: 4,
+       adminAccount: this.adminInfo.admin_account,
+      // createdBy: 1,
+       search: this.filterStaffVal,
+      
     };
     this.httpService.create(url, body).subscribe((res: any) => {
-      this.staffList$.next(res.data.userdata);
-      this.totalStaffRecords$.next(res.data.totalrecords);
+      this.staffList$.next(res.data.data);
+      this.totalStaffRecords$.next(res.data.totalCount);
     });
   } 
 
@@ -232,6 +224,7 @@ export class DoctorProfileComponent implements OnInit {
   }
 
   deleteSelectedDoctor(data: any, type?:string): void {
+
     console.log(data);
     const confirmation = this._fuseConfirmationService.open({
       title: 'Delete Doctor',
@@ -243,12 +236,12 @@ export class DoctorProfileComponent implements OnInit {
       },
     });
 
-    // Subscribe to the confirmation dialog closed action
+    // Subscribe to the confirmation dialog closed action 
     confirmation.afterClosed().subscribe((result) => {
       // If the confirm button pressed...
       if (result === 'confirmed') {
-        const url = `api/User/DeleteUser?userId=${data.user_id}&actionBy=${this.adminInfo.user_id}`;
-        this.httpService.create(url, {}).subscribe(
+        const url = `api/adminstaff/delete-adminstaff/${data.user_id}`;
+        this.httpService.deleteAll(url).subscribe(
       (res: any) => {
         if(type) {
           this.getStaffs();
@@ -347,7 +340,7 @@ export class DoctorProfileComponent implements OnInit {
   }
 
 
-  openAddStaff(accountInfo?:any) {
+  openAddStaff(accountInfo?:any) { 
     this.dialog
     .open(AddStaffModalComponent, {
       width: '25rem',

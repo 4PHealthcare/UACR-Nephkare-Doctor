@@ -5,6 +5,7 @@ import { fuseAnimations } from '@fuse/animations';
 import { FuseAlertType } from '@fuse/components/alert';
 import { AuthService } from 'app/core/auth/auth.service';
 import { APIService } from 'app/core/api/api';
+import { Router } from '@angular/router';
 
 @Component({
     selector     : 'auth-forgot-password',
@@ -30,6 +31,7 @@ export class AuthForgotPasswordComponent implements OnInit
         private _authService: AuthService,
         private _formBuilder: FormBuilder,
         private httpService: APIService,
+        private router: Router
     )
     {
     }
@@ -45,7 +47,8 @@ export class AuthForgotPasswordComponent implements OnInit
     {
         // Create the form
         this.forgotPasswordForm = this._formBuilder.group({
-            email: ['', [Validators.required, Validators.email]]
+            email: ['', [Validators.required, Validators.email]],
+            password : ['', Validators.required],
         });
     }
 
@@ -56,7 +59,7 @@ export class AuthForgotPasswordComponent implements OnInit
     /**
      * Send the reset link
      */
-    sendResetLink(): void
+   sendResetLink(): void
     {
         // Return if the form is invalid
         if ( this.forgotPasswordForm.invalid )
@@ -69,11 +72,15 @@ export class AuthForgotPasswordComponent implements OnInit
 
         // Hide the alert
         this.showAlert = false;
+        const payLoad={
+            "email":this.forgotPasswordForm.get('email').value,
+            "newPassword": this.forgotPasswordForm.get('password').value
+        }
 
         // Forgot password
         // this._authService.forgotPassword(this.forgotPasswordForm.get('email').value);
-        const url = `api/User/ForgotPassword?emailId=${this.forgotPasswordForm.get('email').value}`;
-        this.httpService.create(url, {})
+        const url = `api/adminstaff/forgot-password`;
+        this.httpService.create(url, payLoad)
             .pipe(
                 finalize(() => {
 
@@ -91,10 +98,11 @@ export class AuthForgotPasswordComponent implements OnInit
                 (response) => {
 
                     // Set the alert
-                    this.alert = {
+                    this.alert = { 
                         type   : 'success',
-                        message: 'Password reset sent! You\'ll receive an email if you are registered on our system.'
+                        message: 'Password Changed Successfully.' 
                     };
+                    this.router.navigateByUrl('/sign-out')
                 },
                 (response) => {
 

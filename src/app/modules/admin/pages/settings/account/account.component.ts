@@ -28,7 +28,7 @@ import { SearchCountryField, CountryISO, PhoneNumberFormat } from 'ngx-intl-tel-
 })
 export class SettingsAccountComponent implements OnInit {
 
-  separateDialCode = true;
+  separateDialCode = true; 
 	SearchCountryField = SearchCountryField;
 	CountryISO = CountryISO;
   PhoneNumberFormat = PhoneNumberFormat;
@@ -67,20 +67,19 @@ export class SettingsAccountComponent implements OnInit {
     // Create the form
     console.log(this.userInfo)
     this.getUserInfo(this.userInfo.user_id);
-    this.getMasterData();
-    this.getSpecialityList();
+    
     this.intitForm();
   }
   getSpecialityList() {
-    const url = `api/User/GetMasterData?mastercategoryid=`+21;
+    // const url = `api/User/GetMasterData?mastercategoryid=`+21;
      
-    this.httpService.getAll(url).subscribe((res: any) => {
-        this.specialities=res.data;
-        // this.getUserInfo(this.userInfo.user_id);
-    },
-    (error: any) => {
-        console.log('error', error);
-    });
+    // this.httpService.getAll(url).subscribe((res: any) => {
+    //     this.specialities=res.data;
+    //     // this.getUserInfo(this.userInfo.user_id);
+    // },
+    // (error: any) => {
+    //     console.log('error', error);
+    // });
   }
 
   intitForm() {
@@ -90,66 +89,27 @@ export class SettingsAccountComponent implements OnInit {
         Validators.required,
         Validators.email,
       ]),
-      phone: new FormControl("", [Validators.required]),
-      medRegn: new FormControl("", [Validators.required,this.noWhitespaceValidator]),
-      specialityid: new FormControl("", [Validators.required]),
-      education: new FormControl("", [Validators.required]),
-      expYears: new FormControl("", [Validators.required,this.noWhitespaceValidator]),
-      fees: new FormControl(""),
-      gender: new FormControl("", [Validators.required]), 
-      languages: new FormControl("", [Validators.required]),
-      profiledescription: new FormControl(""),
+      phone: new FormControl("", [Validators.required]), 
+      city: new FormControl("", [Validators.required]),
+      state: new FormControl("", [Validators.required]),
+      countryname: new FormControl("", [Validators.required]),
+      
       isPhotoUpdated:new FormControl(false)
     });
     
-    if ( this.userInfo.role_id != 5 ) {
-      this.accountForm.controls.medRegn.setValidators([]);
-      this.accountForm.controls.education.setValidators([]);
-      this.accountForm.controls.expYears.setValidators([]);
-      this.accountForm.controls.fees.setValidators([]);
-      this.accountForm.controls.languages.setValidators([]);
-      this.accountForm.controls.profiledescription.setValidators([]);
-    }
-    if (this.userInfo.admin_account === this.userInfo.user_id ) {
-      this.accountForm.controls.specialityid.clearValidators();
-      this.accountForm.controls.medRegn.clearValidators();
-      this.accountForm.controls.education.clearValidators();
-      this.accountForm.controls.expYears.clearValidators();
-      this.accountForm.controls.fees.clearValidators();
-      this.accountForm.controls.languages.clearValidators();
-      this.accountForm.controls.gender.clearValidators();
-    }
+   
   }
-  getMasterData() {
-    this.httpService.getAll("api/User/GetMasterData?mastercategoryid=53").subscribe(
-      (res: any) => {
-        
-        if (res.data) {
+  
 
-          this.languages = res.data;
-
-        }
-      },
-      (error: any) => {
-        console.warn("error", error);
-      }
-    );
-  }
-
-  getUserInfo(userId: number) {
-    this.httpService.get("api/User/GetUsersById?userId=", userId).subscribe( 
+  getUserInfo(userId: number) { 
+    this.httpService.getAll(`api/adminstaff/get-adminstaff-by-id/${userId}` ).subscribe( 
       (res: any) => {
         this.accountInfo = res.data;
         this.cd.detectChanges();
-        if(this.accountInfo.photo_folderpath && this.accountInfo.photo_filename) {
-          this.photo = `https://hellokidneydata.s3.ap-south-1.amazonaws.com/${this.accountInfo.photo_folderpath}/${this.accountInfo.photo_filename}`;
-          this.disable_btn = false;
-        }
+       
         this.patchForm(this.accountInfo);
         
-        if(this.accountInfo?.isadmin_account){
-          this.accountForm.get('gender').clearValidators();
-        }
+       
       },
       (error: any) => {
         console.warn("error", error);
@@ -160,48 +120,26 @@ export class SettingsAccountComponent implements OnInit {
   patchForm(data: any) {
     
    
-    let languages:any[] = [];
-    if(data.languages && data.languages[0]) {
-      languages = data.languages[0].language.split(",");
-      
-    }
-    let newlanguages = languages.map(item => item.trim());
-    let name = data.full_name ? data.full_name : data.first_name + ' ' + data.last_name;
-
-    if(data.admin_account !==3 && data.isadmin_account) {
-      name = data.contactperson_name; 
-    }
+   
     this.accountForm.patchValue({
-      name: name,
-      email: data.email_address,
+      name: data.user.fullname,
+      email: data.user.email,
+      city: data.user.city,
+      state: data.user.state,
+      countryname: data.user.country,
       phone: ({
-        number: data.countrycode_details.number,
-        internationalNumber: data.countrycode_details.internation_no,
-        nationalNumber: data.countrycode_details.national_no,
-        countryCode: data.countrycode_details.countrycode_name,
-        dialCode: data.countrycode_details.dialcode,
-        e164Number:data.countrycode_details.e164_number
+        number: data.countryCode?.number,
+        internationalNumber: data.countryCode?.internation_no,
+        nationalNumber: data.countryCode?.national_no,
+        countryCode: data.countryCode?.countrycode_name,
+        dialCode: data.countryCode?.dialcode,
+        e164Number:data.countryCode?.e164_number
       }),
-      medRegn: data.medical_registrationno,
-      specialityid:data?.speciality_id,
-      education: data.education,
-      expYears: data.exp_years,
-      gender: data.gender,
-      profiledescription: data.profile_description,
-      fees: data.fee,
-      languages: newlanguages,
-      isPhotoUpdated: false
+      
     });
+    this.photo = data.user.profile_pic
     
-    // const phoneNumberControl= this.accountForm.controls.phone;
-    // phoneNumberControl.setValue({
-    //   number: data.countrycode_details.number,
-    //   internationalNumber: data.countrycode_details.internation_no,
-    //   nationalNumber: data.countrycode_details.national_no,
-    //   countryCode: data.countrycode_details.countrycode_name,
-    //   dialCode: data.countrycode_details.dialcode,
-    //   e164Number:data.countrycode_details.e164_number
-    // });
+   
     setTimeout(() => {
       this.cd.detectChanges();
       
@@ -210,96 +148,171 @@ export class SettingsAccountComponent implements OnInit {
   }
 
   updateAccount() {
-    // console.log(this.photo);
-    this.isLoadingSpinner=true;
-    let nameParts = this.accountForm.get("name").value.trim().split(/\s+/); // Split by spaces and remove extra spaces
-    let firstName = nameParts.slice(0, 2).join(" "); // Take the first two words as first name
-    let lastName = nameParts.slice(2).join(" "); // Take the rest as last name
-    this.accountForm.markAsPristine();
-    console.log(name)
-    let body:any
-    if(this.accountInfo?.isadmin_account){
-      body ={
-        userid: this.userInfo.user_id,
-        username: this.accountForm.get("email").value,
-        emailaddress:this.accountForm.get("email").value,
-        firstname:this.capitalizeFirstLetter(firstName),
-        lastname: this.capitalizeFirstLetter(lastName),
-       
-        mobileno: this.accountForm.get("phone").value.number,  
-        roleid: this.accountInfo.role_id,
-        actionby: this.userInfo.user_id,
-        
-        isphoto_updated: this.accountForm.get("isPhotoUpdated").value,
-        
-        adminaccount: this.accountInfo.admin_account,
-        clinicid: this.accountInfo.refered_clinicid,
-        undermainbranch: this.accountInfo.under_mainbranch,
-        isadminaccount: this.accountInfo.isadmin_account,
-        contactperson: undefined,
-        appname:'HLKD',
-      }
-    }else{
-      body = {
-        userid: this.userInfo.user_id,
-        username: this.accountForm.get("email").value,
-        password: "test@1234",
-        firstname:this.capitalizeFirstLetter(firstName),
-        lastname: this.capitalizeFirstLetter(lastName),
-        emailaddress: this.accountForm.get("email").value,
-        mobileno: this.accountForm.get("phone").value.mobileno,
-        roleid: this.accountInfo.role_id,
-        actionby: this.userInfo.user_id,
-        medicalregistrationno: this.accountForm.get("medRegn").value,
-        specialityid:this.accountForm.get("specialityid").value,
-        education_info: this.accountForm.get("education").value,
-        expyears: parseInt(this.accountForm.get("expYears").value),
-        profiledescription: this.accountForm.get("profiledescription").value,
-        fees:this.accountForm.get("fees").value,
-        languages:this.accountForm.get("languages").value,
-        isphoto_updated: this.accountForm.get("isPhotoUpdated").value,
-        user_gender: this.accountForm.get("gender").value,
-        adminaccount: this.accountInfo.admin_account,
-        clinicid: this.accountInfo.refered_clinicid,
-        undermainbranch: this.accountInfo.under_mainbranch,
-        isadminaccount: this.accountInfo.isadmin_account,
-        contactperson: undefined,
-        appname:'HLKD',
-      };
-    }
-    
-    
-    if (this.mimetype && this.fileBase64) {
-      body["photo"] = {
-        patientreportid: 0,
+     this.isLoadingSpinner=true;
+
+    const body = {
+      userId: this.accountInfo?.user.user_id ? this.accountInfo?.user.user_id : 0,
+      username: this.accountForm.get("email").value,
+      fullname: this.accountForm.get("name").value,
+      email: this.accountForm.get("email").value,
+      mobile: this.formatPhoneNumber(
+        this.accountForm.get("phone").value.nationalNumber,
+      ),
+      roleId: 2,
+      actionBy: this.userInfo.user_id,
+      isAdmin: true,
+      // adminAccount: 1,
+      city: this.accountForm.get("city").value,
+      state: this.accountForm.get("state").value,
+      country: this.accountForm.get("countryname").value,
+      countryCode: this.accountForm.get("phone").value.dialCode,
+      countryCodeDetails: {
+        countryId: 0,
+
+        countryName: this.accountForm.get("phone").value.countryCode,
+        dialCode: this.accountForm.get("phone").value.dialCode,
+        e164: this.accountForm.get("phone").value.e164Number,
+        international:
+          this.accountForm.get("phone").value.internationalNumber,
+        national: this.accountForm.get("phone").value.nationalNumber,
+        number: this.accountForm.get("phone").value.number,
+      },
+
+      photo: {
         filename: this.filename,
         mimetype: this.mimetype,
-        fileBase64: this.fileBase64,
-      }
-    }
-    // if(this.accountInfo.admin_account !== 3 && this.accountInfo.isadmin_account) {
-    //   body.isadminaccount = true;
-    //   body.contactperson = this.capitalizeFirstLetter(this.accountForm.get("name").value);
-    //   body.firstname = undefined;
-    //   body.lastname = undefined
-    // }
-    console.log(body);
-    this.httpService.create("api/User/UpdateUser", body).subscribe(
-      (res: any) => { 
+        base64: this.fileBase64,
+      },
+      createdBy: this.userInfo.user_id,
+    }; 
+
+    this.httpService.create("api/adminstaff/save-adminstaff", body).subscribe(
+      (res: any) => {
+        if (res?.isSuccess) {
+           this.dataService.setData(body["photo"]);
+
+          //this.dialogRef.close(true);
+          // this.SaveActivity();
+          this.snackBar.open("User added successfully. ", "close", {
+            panelClass: "snackBarSuccess",
+            duration: 2000,
+          });
+        } else {
+          this.snackBar.open(res.data, "close", {
+            panelClass: "snackBarWarning",
+            duration: 2000,
+          });
+        }
         this.isLoadingSpinner=false;
-        console.warn(res);
-        this.dataService.setData(body["photo"]);
-        this.getUserInfo(this.userInfo.user_id);
-        this.SaveActivity();
-        this.snackBar.open("User updated successfully.", "close", {
-          panelClass: "snackBarSuccess",
-          duration: 2000,
-        }); 
       },
       (error: any) => {
+       this.isLoadingSpinner=false;
         console.warn("error", error);
-      }
+      },
     );
+    // // console.log(this.photo);
+    // this.isLoadingSpinner=true;
+    // let nameParts = this.accountForm.get("name").value.trim().split(/\s+/); // Split by spaces and remove extra spaces
+    // let firstName = nameParts.slice(0, 2).join(" "); // Take the first two words as first name
+    // let lastName = nameParts.slice(2).join(" "); // Take the rest as last name
+    // this.accountForm.markAsPristine();
+    // console.log(name)
+    // let body:any
+    // if(this.accountInfo?.isadmin_account){
+    //   body ={
+    //     userid: this.userInfo.user_id,
+    //     username: this.accountForm.get("email").value,
+    //     emailaddress:this.accountForm.get("email").value,
+    //     firstname:this.capitalizeFirstLetter(firstName),
+    //     lastname: this.capitalizeFirstLetter(lastName),
+       
+    //     mobileno: this.accountForm.get("phone").value.number,  
+    //     roleid: this.accountInfo.role_id,
+    //     actionby: this.userInfo.user_id,
+        
+    //     isphoto_updated: this.accountForm.get("isPhotoUpdated").value,
+        
+    //     adminaccount: this.accountInfo.admin_account,
+    //     clinicid: this.accountInfo.refered_clinicid,
+    //     undermainbranch: this.accountInfo.under_mainbranch,
+    //     isadminaccount: this.accountInfo.isadmin_account,
+    //     contactperson: undefined,
+    //     appname:'HLKD',
+    //   }
+    // }else{
+    //   body = {
+    //     userid: this.userInfo.user_id,
+    //     username: this.accountForm.get("email").value,
+    //     password: "test@1234",
+    //     firstname:this.capitalizeFirstLetter(firstName),
+    //     lastname: this.capitalizeFirstLetter(lastName),
+    //     emailaddress: this.accountForm.get("email").value,
+    //     mobileno: this.accountForm.get("phone").value.mobileno,
+    //     roleid: this.accountInfo.role_id,
+    //     actionby: this.userInfo.user_id,
+    //     medicalregistrationno: this.accountForm.get("medRegn").value,
+    //     specialityid:this.accountForm.get("specialityid").value,
+    //     education_info: this.accountForm.get("education").value,
+    //     expyears: parseInt(this.accountForm.get("expYears").value),
+    //     profiledescription: this.accountForm.get("profiledescription").value,
+    //     fees:this.accountForm.get("fees").value,
+    //     languages:this.accountForm.get("languages").value,
+    //     isphoto_updated: this.accountForm.get("isPhotoUpdated").value,
+    //     user_gender: this.accountForm.get("gender").value,
+    //     adminaccount: this.accountInfo.admin_account,
+    //     clinicid: this.accountInfo.refered_clinicid,
+    //     undermainbranch: this.accountInfo.under_mainbranch,
+    //     isadminaccount: this.accountInfo.isadmin_account,
+    //     contactperson: undefined,
+    //     appname:'HLKD',
+    //   };
+    // }
+    
+    
+    // if (this.mimetype && this.fileBase64) {
+    //   body["photo"] = {
+    //     patientreportid: 0,
+    //     filename: this.filename,
+    //     mimetype: this.mimetype,
+    //     fileBase64: this.fileBase64,
+    //   }
+    // }
+    // // if(this.accountInfo.admin_account !== 3 && this.accountInfo.isadmin_account) {
+    // //   body.isadminaccount = true;
+    // //   body.contactperson = this.capitalizeFirstLetter(this.accountForm.get("name").value);
+    // //   body.firstname = undefined;
+    // //   body.lastname = undefined
+    // // } 
+    // console.log(body);
+    // this.httpService.create("api/User/UpdateUser", body).subscribe(
+    //   (res: any) => { 
+    //     this.isLoadingSpinner=false;
+    //     console.warn(res);
+    //     this.dataService.setData(body["photo"]);
+    //     this.getUserInfo(this.userInfo.user_id);
+    //     this.SaveActivity();
+    //     this.snackBar.open("User updated successfully.", "close", {
+    //       panelClass: "snackBarSuccess",
+    //       duration: 2000,
+    //     }); 
+    //   },
+    //   (error: any) => {
+    //     console.warn("error", error);
+    //   }
+    // );
+  }
+
+  formatPhoneNumber(phoneNumber: string): string {
+    // Remove all spaces
+    //let formattedNumber = phoneNumber.replace(/\s+/g, '');
+    let formattedNumber = phoneNumber.replace(/[\s\(\)\-\+]/g, "");
+
+    // Remove the leading zero, if it exists
+    if (formattedNumber.startsWith("0")) {
+      formattedNumber = formattedNumber.substring(1);
+    }
+
+    return formattedNumber;
   }
 
   SaveActivity() {

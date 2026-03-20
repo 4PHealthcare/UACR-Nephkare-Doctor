@@ -49,44 +49,79 @@ export class SettingsSecurityComponent implements OnInit {
     });
   }
 
-  changePassword() {
-    this.isLoadingSpinner=true;
-    if (this.securityForm.get('currentPassword').value === this.securityForm.get('newPassword').value) {
-      this.snackBar.open('Please enter the valid new password. ', 'close', {
+  // changePassword() {
+  //   this.isLoadingSpinner=true;
+  //   if (this.securityForm.get('currentPassword').value === this.securityForm.get('newPassword').value) {
+  //     this.snackBar.open('Please enter the valid new password. ', 'close', {
+  //       panelClass: "snackBarFailure",
+  //       duration: 2000,
+  //     });
+  //   }
+  //   else if (this.accountInfo?.password === this.securityForm.get('currentPassword').value) {
+  //     const url = `api/User/ChangePassword`;
+  //     const body = {
+  //         userId: this.userInfo.user_id,
+  //         oldPassword: this.securityForm.get('currentPassword').value,
+  //         newPassword: this.securityForm.get('newPassword').value
+  //     }
+  //     this.httpService.create(url,body).subscribe((res: any) => { 
+  //       this.isLoadingSpinner=false;
+  //       this.securityForm.reset();
+  //       this.SaveActivity();
+  //         this.snackBar.open('Password updated successfully. ', 'close', {
+  //             panelClass: "snackBarSuccess",
+  //             duration: 2000,
+  //           });
+
+  //     },
+  //     (error: any) => {
+  //         console.warn('error', error);
+  //     })
+  //   }
+  //   else {
+  //     this.snackBar.open('Please enter the valid current password. ', 'close', {
+  //       panelClass: "snackBarFailure",
+  //       duration: 2000,
+  //     });
+  //   }
+
+  // }
+ changePassword() {
+   this.isLoadingSpinner=true;
+    if (
+      this.securityForm.get("currentPassword").value ===
+      this.securityForm.get("newPassword").value
+    ) {
+       const url = `api/adminstaff/forgot-password`;
+      
+      const payLoad = {
+        email: this.userInfo.username,
+        newPassword: this.securityForm.get("newPassword").value,
+      };
+      this.httpService.create(url, payLoad).subscribe(
+        (res: any) => {
+          this.securityForm.reset();
+          
+           this._router.navigate(['/sign-out']);
+         
+        },
+        (error: any) => {
+          console.warn("error", error);
+        },
+      );
+      
+      
+    
+    
+      
+    } else {
+     
+      this.snackBar.open("Please enter the valid current password. ", "close", {
         panelClass: "snackBarFailure",
         duration: 2000,
       });
     }
-    else if (this.accountInfo?.password === this.securityForm.get('currentPassword').value) {
-      const url = `api/User/ChangePassword`;
-      const body = {
-          userId: this.userInfo.user_id,
-          oldPassword: this.securityForm.get('currentPassword').value,
-          newPassword: this.securityForm.get('newPassword').value
-      }
-      this.httpService.create(url,body).subscribe((res: any) => { 
-        this.isLoadingSpinner=false;
-        this.securityForm.reset();
-        this.SaveActivity();
-          this.snackBar.open('Password updated successfully. ', 'close', {
-              panelClass: "snackBarSuccess",
-              duration: 2000,
-            });
-
-      },
-      (error: any) => {
-          console.warn('error', error);
-      })
-    }
-    else {
-      this.snackBar.open('Please enter the valid current password. ', 'close', {
-        panelClass: "snackBarFailure",
-        duration: 2000,
-      });
-    }
-
   }
-
   SaveActivity() {
     const body = {
       activityid: 0,

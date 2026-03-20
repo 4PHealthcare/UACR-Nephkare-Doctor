@@ -4,8 +4,7 @@
 
 export const environment = {
     production: false,
-    apiURL: 'https://api.hellokidney.ai/'
-   //apiURL: 'https://nephkareapi.hellokidney.ai/'
+   apiURL: 'https://apiuacrweb.hellokidney.ai/'
 };
 
 /*

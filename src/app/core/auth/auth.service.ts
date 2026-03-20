@@ -78,50 +78,28 @@ export class AuthService {
     // {
     //     return throwError('User is already logged in.');
     // }
-    let promise = new Promise((resolve, reject) => {
-      this._apiService.create("api/User/Login", credentials).subscribe(
+    let promise = new Promise((resolve, reject) => { 
+      this._apiService.create("api/adminstaff/Stafflogin", credentials).subscribe(
         (result) => {
           console.log(result.data);
-          if (result.responseCode == 200 && result.data) {
+          if (result.isSuccess && result.data) {
             if (
-              !(
-                result.data.role_id == 1 ||
-                result.data.role_id == 2 ||
-                result.data.role_id == 3
-              ) &&
-              result.data.admin_account !== 3 &&
-              result.data.app_name === "HWR"
+              (
+                result.data.user.role_id == 1 ||
+                result.data.user.role_id == 2 ||
+                result.data.user.role_id == 3
+              )
+              
             ) {
-              // Store the access token in the local storage
-              if (result.data.isadmin_account) {
-                const payload = [
-                  {
-                    adminid: result.data.admin_account,
-                    createdby: result.data.admin_account,
-                    is_active: true,
-                    specialityid: 65,
-                    specialityname: "Nephrology",
-                  },
-                ];
-                const url = `api/Doctor/SaveDoctorSpecialities_forHospitals`;
-                this._apiService.create(url, payload).subscribe(
-                  (res: any) => {
-                    if (res.data) {
-                    }
-                  },
-                  (error: any) => {
-                    console.log("error", error);
-                  }
-                );
-              }
+             
               this.accessToken = result.data.token;
 
               // Set the authenticated flag to true
               this._authenticated = true;
 
               // Store the user on the user service
-              this.user = result.data;
-              this._userService.user = result.data;
+              this.user = result.data.user;
+              this._userService.user = result.data.user;
               resolve(result);
             } else {
               reject(result);

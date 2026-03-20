@@ -1,4 +1,4 @@
-<div class="h-screen flex flex-col">
+<div class="h-screen flex flex-col"> 
     <div class="flex flex-row items-center px-6 h-20 min-h-20 text-white bg-primary">
         <div class="text-2xl font-semibold tracking-tight">{{this.data && this.data.accountInfo ? 'Edit' : 'Add'}} Health Worker</div>
         <button
@@ -31,27 +31,21 @@
             </div>
 
 
-            <div class="mt-4"  >
+            <!-- <div class="mt-4"  >
                 
-                <!-- <mat-label>Doctor</mat-label>
-
-                <ng-select [formControlName]="'doctorId'"  placeholder="Search Doctor" [searchable]="true" [clearOnBackspace]="false" notFoundText="No Doctors Found" [clearable]="true" >
-                    <ng-option *ngFor="let doctor of doctors" [value]="doctor.doctorid">{{doctor.full_name}}</ng-option>
-                 </ng-select> -->
+               
 
                     <mat-label >Choose Primary Physician</mat-label>
                     <mat-form-field class="fuse-mat-no-subscript w-full" floatLabel="always">
 
                     <mat-select [formControlName]="'doctorId'" placeholder="Select" multiple>
                         <ng-container *ngFor="let data of doctors"> 
-                            <!-- <mat-option [value]="data.user_id">{{
-                                data.isadmin_account ? data.contactperson_name + ' - ' + data.speciality  : data.full_name + ' - ' + data.speciality
-                                }} </mat-option> -->
+                           
                             <mat-option [value]="data.user_id">{{ data.isadmin_account ? data.contactperson_name + ' - ' + data.speciality  : data.full_name }} </mat-option>
                         </ng-container>
                     </mat-select>
                 </mat-form-field>
-            </div>
+            </div> -->
 
             <div class="mt-4">
                     <mat-label>Full Name</mat-label>
